@@ -2,9 +2,13 @@
   "name": "simpleworkout",
   "version": "1.0.0",
   "description": "Simple web app that allows user to log their outdoor workouts",
-  "main": "app.js",
+  "main": "src/js/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile-scss": "sass --color --stop-on-error --no-error-css scss/style.scss css/style.css",
+    "dev-build": "parcel src/html/index.html",
+    "dev-all-build": "npm run compile-scss && npm run dev-build",
+    "build": "parcel --build src/html/index.html"
   },
   "repository": {
     "type": "git",
@@ -18,5 +22,18 @@
   "bugs": {
     "url": "https://github.com/koxx4/SimpleWorkOut/issues"
   },
-  "homepage": "https://github.com/koxx4/SimpleWorkOut#readme"
+  "homepage": "https://github.com/koxx4/SimpleWorkOut#readme",
+  "dependencies": {
+    "@popperjs/core": "^2.9.3",
+    "bootstrap": "^5.1.0",
+    "bootstrap-icons": "^1.5.0",
+    "core-js": "^3.16.4",
+    "leaflet": "^1.7.1",
+    "lodash-es": "^4.17.21",
+    "regenerator-runtime": "^0.13.9",
+    "sass": "^1.38.2"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-rc.0"
+  }
 }
