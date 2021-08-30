@@ -1,0 +1,22 @@
+{
+  "name": "simpleworkout",
+  "version": "1.0.0",
+  "description": "Simple web app that allows user to log their outdoor workouts",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koxx4/SimpleWorkOut.git"
+  },
+  "keywords": [
+    "workout"
+  ],
+  "author": "Piotr Wilk",
+  "license": "LGPL-2.1-or-later",
+  "bugs": {
+    "url": "https://github.com/koxx4/SimpleWorkOut/issues"
+  },
+  "homepage": "https://github.com/koxx4/SimpleWorkOut#readme"
+}
