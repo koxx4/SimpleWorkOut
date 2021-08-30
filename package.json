@@ -2,13 +2,14 @@
   "name": "simpleworkout",
   "version": "1.0.0",
   "description": "Simple web app that allows user to log their outdoor workouts",
-  "main": "src/js/app.js",
+  "default": "src/html/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile-scss": "sass --color --stop-on-error --no-error-css scss/style.scss css/style.css",
+    "compile-scss-live": "sass --watch --color --stop-on-error --no-error-css scss/style.scss css/style.css",
     "dev-build": "parcel src/html/index.html",
     "dev-all-build": "npm run compile-scss && npm run dev-build",
-    "build": "parcel --build src/html/index.html"
+    "build": "parcel build src/html/index.html --dist-dir ./dist"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "sass": "^1.38.2"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-rc.0"
+    "parcel": "^2.0.0-rc.0",
+    "prettier": "^2.3.2"
   }
 }

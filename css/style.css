@@ -11112,5 +11112,16 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+html {
+  height: 100%;
+}
+
+body {
+  background: #22c1c3;
+  background: -moz-linear-gradient(0deg, #22c1c3 0%, #fdbb2d 100%);
+  background: -webkit-linear-gradient(0deg, #22c1c3 0%, #fdbb2d 100%);
+  background: linear-gradient(0deg, #22c1c3 0%, #fdbb2d 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#22c1c3",endColorstr="#fdbb2d",GradientType=1);
+}
 
 /*# sourceMappingURL=style.css.map */
