@@ -16,7 +16,8 @@
     "url": "git+https://github.com/koxx4/SimpleWorkOut.git"
   },
   "keywords": [
-    "workout"
+    "workout",
+    "netlify"
   ],
   "author": "Piotr Wilk",
   "license": "LGPL-2.1-or-later",
