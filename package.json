@@ -5,11 +5,18 @@
   "default": "src/html/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile-scss": "sass --color --stop-on-error --no-error-css scss/style.scss css/style.css",
-    "compile-scss-live": "sass --watch --color --stop-on-error --no-error-css scss/style.scss css/style.css",
-    "dev-build": "parcel src/html/index.html",
-    "dev-all-build": "npm run compile-scss && npm run dev-build",
-    "build": "parcel build src/html/index.html --dist-dir ./dist"
+    "scss:compile": "sass --color --stop-on-error --no-error-css scss/style.scss css/style.css",
+    "scss:start-server": "sass --watch --color --no-error-css scss/style.scss css/style.css",
+    "build:dev": "parcel watch src/html/index.html --dist-dir ./dev-dist",
+    "build:dev-start-server": "parcel src/html/index.html --dist-dir ./dev-dist --open",
+    "build:dev-all": "npm-run-all scss:compile build:dev",
+    "build:dev-start-all-servers": "npm-run-all -n -p scss:start-server build:dev-start-server",
+    "build:production": "parcel build src/html/index.html --dist-dir ./dist",
+    "build": "npm-run-all -n scss:compile build:production",
+    "clean:dist": "rm -rf dist/*",
+    "clean:dev-dist": "rm -rf dev-dist/*",
+    "clean:compiled-css": "rm -rf css/*",
+    "clean": "npm-run-all -p clean:dist clean:dev-dist clean:compiled-css"
   },
   "repository": {
     "type": "git",
@@ -36,6 +43,8 @@
     "sass": "^1.38.2"
   },
   "devDependencies": {
+    "@parcel/transformer-image": "^2.0.0-rc.0",
+    "npm-run-all": "^4.1.5",
     "parcel": "^2.0.0-rc.0",
     "prettier": "^2.3.2"
   }
