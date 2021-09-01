@@ -13,6 +13,7 @@ body{
   @extend .ps-5;
   @extend .pe-5;
   @extend .mb-4;
+  @extend .gy-4;
 }
 
 .workout-submit-btn{
@@ -24,10 +25,9 @@ body{
 
 #map{
   min-height: 600px;
-  width: 100%;
 }
 
-#map {
+#map{
   img{
     max-height: none;
   }
