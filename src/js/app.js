@@ -1,7 +1,16 @@
 import "core-js";
 import "regenerator-runtime";
+import "../../scss/style.scss";
+import "leaflet/dist/leaflet.css"
 import {initializeLeafletMap} from "./leafletMap";
 
+export class App {
 
-const map = initializeLeafletMap();
-map.invalidateSize();
+    constructor() {
+
+    }
+
+    initializeMap(options){
+        this.map = initializeLeafletMap(options);
+    }
+}
