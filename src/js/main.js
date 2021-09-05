@@ -1,23 +1,51 @@
 import {App} from "./app";
 
-
-const app = new App();
-
-const options = {
+const mapInitialOptions = {
     mapOptions: {},
     mapZoom: 13,
     mapCenter: [51.505, -0.09],
     tileProvider: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 };
 
-navigator.geolocation.getCurrentPosition(
-    (location) => {
-        options.mapCenter[0] = location.coords.latitude;
-        options.mapCenter[1] = location.coords.longitude;
-        app.initializeMap(options);
-    },
-    () => alert(`Could not get your position! Using default ${userInitialPosition}`)
-);
+let userPositionObtained = false;
+let userPositionLeftTries = 5;
+let userGeolocationIntervalID;
+
+const app = new App();
+app.initializeMap(mapInitialOptions);
+
+
+const getUserGeolocationSuccess = function (location){
+    app.updateMapPosition(location.coords.latitude,
+        location.coords.longitude);
+    userPositionObtained = true;
+    clearInterval(userGeolocationIntervalID);
+}
+
+const getUserGeolocationFallback = function (){
+
+    if(userPositionLeftTries <= 0) {
+        clearInterval(userGeolocationIntervalID);
+        return;
+    }
+
+    console.log(userPositionLeftTries);
+    userPositionLeftTries--;
+    alert(`${6 - userPositionLeftTries}.Could not get your position! Using defaults! (${mapInitialOptions.mapCenter})`)
+}
+
+const tryGetUsersGeolocation = function (){
+    navigator.geolocation.getCurrentPosition(getUserGeolocationSuccess, getUserGeolocationFallback);
+};
+
+
+userGeolocationIntervalID = setInterval(tryGetUsersGeolocation, 3000);
+
+
+
+
+
+
 
 
 
