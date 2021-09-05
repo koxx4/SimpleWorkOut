@@ -17,12 +17,11 @@ const leafletIconWorkaround = function (){
 
 export const initializeLeafletMap = function (options) {
     leafletIconWorkaround();
+    
     const {mapOptions, mapCenter, mapZoom, tileProvider} = options;
     let leafletMap = map('map', mapOptions).setView(mapCenter, mapZoom);
 
-    tileLayer(tileProvider, {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(leafletMap);
+    tileLayer(tileProvider).addTo(leafletMap);
 
     return leafletMap;
 }
