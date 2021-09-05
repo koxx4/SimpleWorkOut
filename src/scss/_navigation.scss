@@ -1,5 +1,4 @@
 .app-bar{
-  position: sticky;
   font-family: 'Roboto', sans-serif;
   background-color: #2F5233;
   height: 4rem;
@@ -37,4 +36,25 @@
 
 .app-bar__logo{
   filter: brightness(2);
+}
+
+@media (max-width: 540px) {
+
+  .app-bar{
+    height: fit-content;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .app-bar__nav{
+    max-height: 5rem;
+    width: 90%;
+    flex-grow: 10;
+  }
+
+  .app-bar__logo{
+    flex-grow: 0;
+  }
+
+
 }

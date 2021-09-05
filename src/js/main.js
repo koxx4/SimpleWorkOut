@@ -39,7 +39,7 @@ const tryGetUsersGeolocation = function (){
 };
 
 
-userGeolocationIntervalID = setInterval(tryGetUsersGeolocation, 3000);
+//userGeolocationIntervalID = setInterval(tryGetUsersGeolocation, 3000);
 
 
 
