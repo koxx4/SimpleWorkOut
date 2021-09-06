@@ -1,6 +1,7 @@
 @use 'background';
 @use 'cssReset';
 @use 'navigation';
+@use 'presentation';
 
 @mixin standardGreenBorder($width, $radius){
   border-color: #2F5233;
@@ -12,6 +13,10 @@
 #map{
   background-color: #94c973;
   height: 30rem;
+}
+
+.map-section{
+  display: none;
 }
 
 .map-section__note{
