@@ -62,7 +62,7 @@
     border-width: 3px 0 0 0;
     border-style: solid;
     border-radius: 0.2em;
-    max-height: 5rem;
+    flex-basis: 5rem;
     width: 95%;
   }
 
@@ -70,6 +70,22 @@
     width: 200px;
     flex-basis: 100px;
   }
+}
 
+@media (max-width: 380px) {
+  .app-bar__nav{
+    flex-basis: 15rem;
+    flex-direction: column;
+  }
 
+  .nav__button{
+     flex-basis: 3.5em;
+  }
+}
+
+@media (max-width: 199px) {
+  .app-bar__logo{
+    max-width: 100px;
+    flex-basis: 100px;
+  }
 }

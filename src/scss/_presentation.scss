@@ -5,6 +5,7 @@
    background-image: url("../../img/man-running-large.jpg");
    background-size: cover;
    background-blend-mode: darken;
+   background-position: center;
 }
 
 .presentation__body{
@@ -33,10 +34,4 @@
 
 .presentation__body p{
     font-size: 1.3rem;
-}
-
-@media (min-width: 900px) {
-  #presentation{
-    background-position: center;
-  }
 }
