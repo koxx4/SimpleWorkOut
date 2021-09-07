@@ -9,19 +9,25 @@
     </head>
 
     <body>
-        <section class="app-bar">
+        <section class="app-bar" class="">
             <img class="app-bar__logo" src="../../img/logo.png" alt="Simple WorkOut"/>
             <nav class="app-bar__nav">
-                <button class="nav__button">Home page</button>
-                <button class="nav__button">Try demo</button>
-                <button class="nav__button">Login</button>
+                <button id="nav__button-home" class="nav__button">Home page</button>
+                <button id="nav__button-demo" class="nav__button">Try demo</button>
+                <button id="nav__button-login" class="nav__button">Login</button>
             </nav>
         </section>
-        <section id="presentation">
+        <section id="presentation" class="">
             <div class="presentation__body">
                 <h3>Lorem ipsum dolor sit amet?</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam deleniti explicabo fugiat ipsa modi provident repudiandae similique sunt voluptates!</p>
             </div>
+        </section>
+        <section id="map-section" class="hidden">
+            <div id="map"></div>
+            <p class="map-section__note">
+                &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+            </p>
         </section>
     </body>
 

@@ -16,6 +16,17 @@
 }
 
 .map-section{
+}
+
+.transparent{
+  opacity: 0;
+}
+
+.not-transparent{
+  opacity: 1;
+}
+
+.hidden{
   display: none;
 }
 
@@ -27,4 +38,26 @@
 
 .map-section__note a {
   text-decoration: none;
+}
+
+/* ! there is some ugly flashing when fade animation is shorter than 0.6s !*/
+.element-fade-out{
+  opacity: 1;
+  animation: fade-out 0.6s ease-out;
+}
+
+/* ! there is some ugly flashing when fade animation is shorter than 0.6s !*/
+.element-fade-in{
+  opacity: 0;
+  animation: fade-in 0.6s ease-in;
+}
+
+@keyframes fade-out{
+  0%{ opacity: 1 }
+  100%{opacity: 0}
+}
+
+@keyframes fade-in{
+  0%{ opacity: 0 }
+  100%{opacity: 1}
 }
