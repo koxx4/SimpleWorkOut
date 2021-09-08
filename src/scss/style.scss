@@ -2,13 +2,10 @@
 @use 'cssReset';
 @use 'navigation';
 @use 'presentation';
-
-@mixin standardGreenBorder($width, $radius){
-  border-color: #2F5233;
-  border-style: solid;
-  border-width: $width;
-  border-radius: $radius;
-}
+@use 'presentation-body';
+@use 'presentation-body-photos';
+@use "presentation-body-text";
+@use 'text-card';
 
 #map{
   background-color: #94c973;
@@ -40,16 +37,14 @@
   text-decoration: none;
 }
 
-/* ! there is some ugly flashing when fade animation is shorter than 0.6s !*/
 .element-fade-out{
-  opacity: 1;
   animation: fade-out 0.6s ease-out;
+  animation-fill-mode: forwards;
 }
 
-/* ! there is some ugly flashing when fade animation is shorter than 0.6s !*/
 .element-fade-in{
-  opacity: 0;
   animation: fade-in 0.6s ease-in;
+  animation-fill-mode: forwards;
 }
 
 @keyframes fade-out{
@@ -60,4 +55,8 @@
 @keyframes fade-in{
   0%{ opacity: 0 }
   100%{opacity: 1}
+}
+
+.m1{
+  margin: 1em;
 }

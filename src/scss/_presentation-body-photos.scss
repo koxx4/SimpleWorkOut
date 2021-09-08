@@ -1,0 +1,95 @@
+#presentation__photos-compilation{
+  min-width: 50%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.photos-compilation__photo{
+  box-shadow: 2px 2px 20px 2px #22222266;
+  flex-basis: 200px;
+  width: 300px;
+  border-radius: 2em;
+  margin: 1em 0;
+  transition: transform 0.2s;
+}
+
+.photos-compilation__photo:hover{
+  transform:scale(1.05);
+}
+
+.photos-compilation__photo:nth-of-type(1){
+  background-image: url("../../img/stock-1.jpg");
+  background-size: cover;
+  animation-name: photo-drift;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.photos-compilation__photo:nth-of-type(2){
+  background-image: url("../../img/stock-2.jpg");
+  background-position: center;
+  background-size: cover;
+  align-self: center;
+  animation-name: photo-drift;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.photos-compilation__photo:nth-of-type(3){
+  background-image: url("../../img/stock-3.jpg");
+  background-position: center;
+  background-size: cover;
+  animation-name: photo-drift;
+  animation-duration: 4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.photos-compilation__photo:nth-of-type(4){
+  background-image: url("../../img/stock-4.jpg");
+  background-position: center;
+  background-size: cover;
+  align-self: flex-end;
+  animation-name: photo-drift;
+  animation-duration: 3.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes photo-drift {
+  100%{transform: translateX(7px)}
+}
+
+@media (max-width: 900px) {
+  #presentation__body{
+    border: 0;
+  }
+
+  #presentation__photos-compilation{
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-basis: 30em;
+    justify-content: space-around;
+    align-content: space-evenly;
+  }
+  .photos-compilation__photo{
+    margin: 0.5em;
+    flex-basis: 200px;
+    height: 200px;
+  }
+  .photos-compilation__photo:nth-of-type(2){
+    justify-self: end;
+  }
+  .photos-compilation__photo:nth-of-type(4){
+    justify-self: center;
+  }
+
+}

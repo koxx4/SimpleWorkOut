@@ -29,6 +29,10 @@ export class LeafletMap {
         return this._mapInitialized;
     }
 
+    updateMapPosition(latitude, longitude) {
+        this._leafletMap.setView([latitude, longitude]);
+    }
+
     _createMapAndAttachTileLayer() {
         this._leafletMap = map(
             this._initOptions.containerId,

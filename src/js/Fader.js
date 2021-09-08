@@ -17,7 +17,7 @@ export class Fader {
             setTimeout(() => {
                 element.classList.remove(this._fadeInClassName);
                 resolve();
-            }, duration);
+            }, duration + 50);
         });
     }
 
@@ -29,7 +29,7 @@ export class Fader {
                 element.classList.add(this._hiddenClassName);
                 element.classList.remove(this._fadeOutClassName);
                 resolve();
-            }, duration);
+            }, duration + 50);
         });
     }
 }

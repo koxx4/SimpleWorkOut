@@ -43,18 +43,10 @@ export class App {
         );
     }
 
-    initializeMap(options) {
-        this._map = initializeLeafletMap(options);
-    }
-
-    updateMapPosition(latitude, longitude) {
-        this._map.setView([latitude, longitude]);
-    }
-
     handleHomePageButton(event) {
         this._fader
             .fadeOut(this._mapSection, 600)
-            .then(() => this._fader.fadeIn(this._presentationSection, 1000));
+            .then(() => this._fader.fadeIn(this._presentationSection, 600));
     }
 
     async handleDemoButton(event) {
@@ -64,7 +56,7 @@ export class App {
 
         this._fader
             .fadeOut(this._presentationSection, 600)
-            .then(() => this._fader.fadeIn(this._mapSection, 1000))
+            .then(() => this._fader.fadeIn(this._mapSection, 600))
             .then(() => this._leafletMap.refreshMap());
     }
 
