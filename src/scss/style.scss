@@ -2,12 +2,19 @@
 @use 'cssReset';
 @use 'navigation';
 @use 'presentation';
+@use 'presentation-body';
+@use 'presentation-body-photos';
+@use "presentation-body-text";
 
 @mixin standardGreenBorder($width, $radius){
   border-color: #2F5233;
   border-style: solid;
   border-width: $width;
   border-radius: $radius;
+}
+
+p{
+  font-size: 1.7em;
 }
 
 #map{

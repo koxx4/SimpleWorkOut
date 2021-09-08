@@ -1,0 +1,21 @@
+#presentation__body__text-area{
+  margin: 1em;
+  background-color: #aaaaaaa2;
+  border-radius: 3em;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.presentation__body__text-area__text{
+  padding: 1em;
+  font-family: 'Roboto', sans-serif;
+}
+
+#presentation__body__text-area h3{
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#presentation__body__text-area p{
+}
