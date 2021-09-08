@@ -7,31 +7,15 @@
    background-blend-mode: darken;
    background-position: center;
    transition: display 1s;
+  height: 70vh;
 }
 
 .presentation__header__wrapper{
    box-shadow: 2px 3px 8px 2px rgba(40,40,40,0.7);
    background-color: #aaaaaaa2;
-   border-radius: 0.5em 2em;
    padding: 1em 2em;
    display: flex;
    flex-direction: column;
    justify-content: center;
    align-items: center;
-}
-
-.presentation__header__wrapper h3{
-    margin-bottom: 5px;
-    border-width: 0 0 2px 0;
-    border-style: solid;
-    border-color: black;
-    font-size: 3rem;
-    transition: transform 0.25s;
-}
-
-.presentation__header__wrapper h3:hover{
-    transform: translateX(10px);
-}
-
-.presentation__header__wrapper p{
 }

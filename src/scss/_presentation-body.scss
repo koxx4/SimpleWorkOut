@@ -1,4 +1,6 @@
 #presentation__body{
+  height: fit-content;
+  align-items: stretch;
   border-width: 5px 0 0 5px;
   border-radius: 4em;
   border-color: #00000011;
@@ -9,7 +11,7 @@
   flex-direction: row;
 }
 
-@media (max-width: 630px) {
+@media (max-width: 900px) {
   #presentation__body{
     flex-direction: column;
     border-width: 5px 0 0 0;
