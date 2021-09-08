@@ -7,6 +7,7 @@ import { Fader } from "./Fader";
 
 export class App {
     constructor() {
+        this._userPagePosition = "home";
         this._homeButton = document.querySelector("#nav__button-home");
         this._demoButton = document.querySelector("#nav__button-demo");
         this._loginButton = document.querySelector("#nav__button-login");
@@ -44,21 +45,45 @@ export class App {
     }
 
     handleHomePageButton(event) {
+        if (this._userPagePosition === "home") return;
+
         this._fader
             .fadeOut(this._mapSection, 600)
             .then(() => this._fader.fadeIn(this._presentationSection, 600));
+
+        this._userPagePosition = "home";
     }
 
     async handleDemoButton(event) {
+        if (this._userPagePosition === "demo") return;
+
         if (!this._leafletMap.isInitialized()) {
             await this._leafletMap.initializeLeafletMap();
         }
+
+        this.getUserGeolocation();
 
         this._fader
             .fadeOut(this._presentationSection, 600)
             .then(() => this._fader.fadeIn(this._mapSection, 600))
             .then(() => this._leafletMap.refreshMap());
+
+        this._userPagePosition = "demo";
     }
 
     handleLoginButton(event) {}
+
+    getUserGeolocation() {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                this._leafletMap.updateMapPosition(
+                    pos.coords.latitude,
+                    pos.coords.longitude
+                );
+            },
+            (error) => {
+                alert(error.message);
+            }
+        );
+    }
 }
