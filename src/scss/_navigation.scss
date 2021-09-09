@@ -14,8 +14,8 @@
   border-radius: 0.2em;
   height: 70%;
   display: flex;
-  flex-basis: 30em;
-  justify-content: space-evenly;
+  flex-basis: 30rem;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -23,7 +23,7 @@
   border: 0;
   font-weight: bold;
   box-shadow: 2px 3px 8px 2px rgba(40,40,40,0.7);
-  padding: 0.2em 2em;
+  padding: 0.4em 2em;
   font-family: inherit;
   font-size: 1em;
   border-radius: 3em;
@@ -49,9 +49,11 @@
   filter: brightness(2.4);
 }
 
-@media (max-width: 560px) {
+@media (max-width: 570px) {
 
   .app-bar{
+    height: -moz-fit-content;
+    height: -webkit-fit-content;
     height: fit-content;
     flex-direction: column;
     justify-content: center;
@@ -62,13 +64,18 @@
     border-width: 3px 0 0 0;
     border-style: solid;
     border-radius: 0.2em;
-    flex-basis: 5rem;
+    flex-basis: 6rem;
     width: 95%;
   }
 
   .app-bar__logo{
     width: 200px;
     flex-basis: 100px;
+  }
+
+  .nav__button{
+    min-height: 0;
+    flex-basis: 3em;
   }
 }
 
@@ -79,7 +86,8 @@
   }
 
   .nav__button{
-     flex-basis: 3.5em;
+     min-height: 0;
+     min-width: 0;
   }
 }
 
