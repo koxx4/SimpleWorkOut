@@ -7,17 +7,10 @@
 @use "presentation-body-text";
 @use 'text-card';
 @use 'app-footer';
-
-#map{
-  background-color: #94c973;
-  height: 30rem;
-}
+@use 'map';
 
 body{
   font-family: 'Roboto', sans-serif;
-}
-
-.map-section{
 }
 
 .transparent{
