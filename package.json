@@ -8,7 +8,7 @@
     "scss:compile": "sass --color --stop-on-error --no-error-css src/scss/style.scss css/style.css",
     "scss:start-server": "sass --watch --color --no-error-css src/scss/style.scss css/style.css",
     "build:dev": "parcel watch src/html/index.html --dist-dir ./dev-dist",
-    "build:dev-start-server": "parcel src/html/index.html --dist-dir ./dev-dist --open",
+    "build:dev-start-server": "parcel src/html/index.html --dist-dir ./dev-dist",
     "build:dev-all": "npm-run-all scss:compile build:dev",
     "build:dev-start-all-servers": "npm-run-all -n -p scss:start-server build:dev-start-server",
     "build:production": "parcel build src/html/index.html --dist-dir ./dist",

@@ -4,76 +4,75 @@ import "../scss/style.scss";
 import "leaflet/dist/leaflet.css";
 import { LeafletMap } from "./LeafletMap";
 import { Fader } from "./Fader";
+import { INITIAL_PAGE_POSITION, LEAFLET_CONFIG } from "./config/configuration";
 
 export class App {
     constructor() {
-        this._userPagePosition = "home";
-        this._homeButton = document.querySelector("#nav__button-home");
-        this._demoButton = document.querySelector("#nav__button-demo");
-        this._loginButton = document.querySelector("#nav__button-login");
-        this._mapSection = document.querySelector("#map-section");
-        this._presentationSection = document.querySelector("#presentation");
+        this._leafletMap = new LeafletMap(LEAFLET_CONFIG);
+        this._tryToInitializeLeafletMap();
+        this._initializeDOMHooks();
         this._fader = new Fader(
             "hidden",
             "element-fade-in",
             "element-fade-out"
         );
-        this._mapInitialOptions = {
-            containerId: "map",
-            mapOptions: {},
-            mapZoom: 13,
-            mapCenter: [51.505, -0.09],
-            tileProvider: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        };
-        this._leafletMap = new LeafletMap(this._mapInitialOptions);
         this._initializeEventListeners();
+
+        this._userPagePosition = INITIAL_PAGE_POSITION;
+        this._renderDemoPage();
+        this._getUserGeolocationAndApplyToMap();
+    }
+
+    async _tryToInitializeLeafletMap() {
+        const resultMsg = await this._leafletMap.initializeLeafletMap();
+        this._leafletMap.onMapClick();
+    }
+
+    _initializeDOMHooks() {
+        this._homeButton = document.querySelector("#nav__button-home");
+        this._demoButton = document.querySelector("#nav__button-demo");
+        this._loginButton = document.querySelector("#nav__button-login");
+        this._demoSection = document.querySelector("#demo-section");
+        console.log(this._demoSection);
+        this._presentationSection = document.querySelector("#presentation");
     }
 
     _initializeEventListeners() {
         this._homeButton.addEventListener(
             "click",
-            this.handleHomePageButton.bind(this)
+            this._handleHomePageButton.bind(this)
         );
         this._demoButton.addEventListener(
             "click",
-            this.handleDemoButton.bind(this)
+            this._handleDemoButton.bind(this)
         );
         this._loginButton.addEventListener(
             "click",
-            this.handleLoginButton.bind(this)
+            this._handleLoginButton.bind(this)
         );
     }
 
-    handleHomePageButton(event) {
+    _handleHomePageButton(event) {
         if (this._userPagePosition === "home") return;
-
-        this._fader
-            .fadeOut(this._mapSection, 600)
-            .then(() => this._fader.fadeIn(this._presentationSection, 600));
-
+        this._renderHomePage();
         this._userPagePosition = "home";
     }
 
-    async handleDemoButton(event) {
+    async _handleDemoButton(event) {
         if (this._userPagePosition === "demo") return;
 
         if (!this._leafletMap.isInitialized()) {
-            await this._leafletMap.initializeLeafletMap();
+            await this._tryToInitializeLeafletMap();
         }
 
-        this.getUserGeolocation();
-
-        this._fader
-            .fadeOut(this._presentationSection, 600)
-            .then(() => this._fader.fadeIn(this._mapSection, 600))
-            .then(() => this._leafletMap.refreshMap());
-
+        this._getUserGeolocationAndApplyToMap();
+        this._renderDemoPage();
         this._userPagePosition = "demo";
     }
 
-    handleLoginButton(event) {}
+    _handleLoginButton(event) {}
 
-    getUserGeolocation() {
+    _getUserGeolocationAndApplyToMap() {
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 this._leafletMap.updateMapPosition(
@@ -85,5 +84,18 @@ export class App {
                 alert(error.message);
             }
         );
+    }
+
+    _renderDemoPage() {
+        this._fader
+            .fadeOut(this._presentationSection, 600)
+            .then(() => this._fader.fadeIn(this._demoSection, 600))
+            .then(() => this._leafletMap.refreshMap());
+    }
+
+    _renderHomePage() {
+        this._fader
+            .fadeOut(this._demoSection, 600)
+            .then(() => this._fader.fadeIn(this._presentationSection, 600));
     }
 }

@@ -9,7 +9,7 @@
     </head>
 
     <body>
-        <section class="app-bar" class="">
+        <section class="app-bar">
             <img class="app-bar__logo" src="../../img/logo.png" alt="Simple WorkOut"/>
             <nav class="app-bar__nav">
                 <button id="nav__button-home" class="nav__button">Home page</button>
@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div id="presentation__body">
+            <div id="presentation__body" class="">
                 <div id="presentation__photos-compilation">
                     <div class="photos-compilation__photo"></div>
                     <div class="photos-compilation__photo"></div>
@@ -35,23 +35,73 @@
                 <div id="presentation__body__text-area">
                     <div class="text-card m1">
                         <h3 class="text-card__element">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis, sit.</h3>
-                        <p class="text-card__element">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus at autem dicta doloribus fuga, maiores maxime nulla obcaecati ut veritatis?</p>
-                        <p class="text-card__element">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, distinctio earum explicabo facere id natus, neque nihil nisi officiis quae quaerat qui sapiente sunt vero.</p>
+                        <p class="text-card__element">Sweet icing cookie sugar plum tiramisu halvah marshmallow. Marzipan I love biscuit dragée I love I love ice cream.</p>
+                        <p class="text-card__element"> Powder bear claw tart jelly-o I love donut powder I love oat cake. Gummi bears oat cake jujubes biscuit chocolate cake I love sugar plum ice cream I love.</p>
                     </div>
                     <div class="text-card m1">
                         <h3 class="text-card__element">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis, sit.</h3>
-                        <p class="text-card__element">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus at autem dicta doloribus fuga, maiores maxime nulla obcaecati ut veritatis?</p>
-                        <p class="text-card__element">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, distinctio earum explicabo facere id natus, neque nihil nisi officiis quae quaerat qui sapiente sunt vero.</p>
+                        <p class="text-card__element">Tiramisu biscuit shortbread jelly beans lollipop bonbon bonbon cotton candy cookie. Candy canes caramels jujubes cotton candy chocolate cake caramels caramels.</p>
+                        <p class="text-card__element">Fruitcake tart muffin powder I love jelly-o cotton candy dragée I love. I love danish sweet roll donut I love wafer.</p>
                     </div>
                 </div>
             </div>
-
         </section>
-        <section id="map-section" class="hidden">
+        <section id="demo-section" class="hidden">
             <div id="map"></div>
-            <p class="map-section__note">
-                &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
-            </p>
+            <div id="demo__workout-area">
+                <div id="demo__workout-area__workout-form">
+                    <form>
+                        <div class="input-group">
+                            <label for="workout-type-select">Workout type:</label>
+                            <select class="input-select" id="workout-type-select">
+                            <option>Walking</option>
+                            <option>Hiking</option>
+                            <option>Cycling</option>
+                        </select>
+                            <small>Lorem ipsum dolor.</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="workout-distance-input">Workout distance:</label>
+                            <input class="input-alphanumeric" type="number" id="workout-distance-input" placeholder="Type in distance [m]">
+                            <small>Lorem ipsum dolor.</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="workout-3-input">Workout distance:</label>
+                            <input class="input-alphanumeric" type="number" id="workout-3-input" placeholder="Type in distance [m]">
+                            <small>Lorem ipsum dolor.</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="workout-4-input">Workout distance:</label>
+                            <input class="input-alphanumeric" type="number" id="workout-4-input" placeholder="Type in distance [m]">
+                            <small>Lorem ipsum dolor.</small>
+                        </div>
+                    </form>
+                </div>
+                <div id="demo__workout-area__workout-history">
+                    <ul class="workout-history-list">
+                        <li class="workout-history-list__entry">
+                            <p>1.Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            <button>Show on map</button>
+                        </li>
+                        <li class="workout-history-list__entry">
+                            <p>1.Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            <button>Show on map</button>
+                        </li>
+                        <li class="workout-history-list__entry">
+                            <p>1.Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            <button>Show on map</button>
+                        </li>
+                        <li class="workout-history-list__entry">
+                            <p>1.Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            <button>Show on map</button>
+                        </li>
+                        <li class="workout-history-list__entry">
+                            <p>1.Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            <button>Show on map</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </section>
         <section id="app-footer">
             <footer>Images taken from <a href="https://unsplash.com/">Unsplash</a>. Thank you!</footer>
