@@ -1,0 +1,56 @@
+#demo__workout-area{
+  background-color: #00000044;
+  display: flex;
+  flex-direction: row;
+  padding: 1em;
+  justify-content: center;
+  align-items: center;
+}
+
+#demo__workout-area__workout-form{
+  border-right: 2px solid #00000033;
+  padding: 0.5em;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+
+#demo__workout-area__workout-history{
+  margin-left: 0.5em;
+  padding: 1em;
+  background-color: #77aa77;
+  border-radius: 0.2em 0.5em 0.5em 1.5em;
+  box-shadow: 2px 2px 6px 2px #00000044;
+  overflow-y: auto;
+  max-height: 300px;
+
+  /*Mozilla scrollbar specific properties*/
+  scrollbar-color: darkseagreen darkolivegreen;
+}
+
+/*Chromium scrollbar specific properties*/
+#demo__workout-area__workout-history::-webkit-scrollbar-track{
+  background-color: darkseagreen;
+}
+/*Chromium scrollbar specific properties*/
+#demo__workout-area__workout-history::-webkit-scrollbar{
+  width: 0.5em;
+}
+/*Chromium scrollbar specific properties*/
+#demo__workout-area__workout-history::-webkit-scrollbar-thumb {
+  background: darkolivegreen;
+}
+
+@media (max-width: 570px) {
+  #demo__workout-area{
+    flex-direction: column;
+  }
+  #demo__workout-area__workout-form{
+    border-right: 0;
+    border-bottom: 2px solid #00000033;
+    margin-bottom: 0.8em;
+  }
+  #demo__workout-area__workout-history{
+    margin-left: 0;
+  }
+}

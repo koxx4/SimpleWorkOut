@@ -1,5 +1,6 @@
 import { map } from "leaflet/src/map";
 import { Icon, tileLayer } from "leaflet/src/layer";
+import { control } from "leaflet/src/control";
 
 export class LeafletMap {
     constructor(initOptions) {
@@ -16,6 +17,7 @@ export class LeafletMap {
                 resolve("Leaflet map initialized properly");
             } catch (error) {
                 console.error(error.message);
+                this._leafletMap = null;
                 throw new Error("Failed to load the leaflet map!");
             }
         });
@@ -33,12 +35,28 @@ export class LeafletMap {
         this._leafletMap.setView([latitude, longitude]);
     }
 
+    onMapClick(callback) {
+        if (!this._mapInitialized)
+            throw new Error(
+                "Tried to add map callback but map wasn't initialized"
+            );
+
+        this._leafletMap.on("click", callback);
+    }
+
     _createMapAndAttachTileLayer() {
         this._leafletMap = map(
-            this._initOptions.containerId,
-            this._initOptions.mapOptions
-        ).setView(this._initOptions.mapCenter, this._initOptions.mapZoom);
-        tileLayer(this._initOptions.tileProvider).addTo(this._leafletMap);
+            this._initOptions.CONTAINER_ID,
+            this._initOptions.MAP_CONFIG
+        ).setView(
+            this._initOptions.MAP_INITIAL_CENTER,
+            this._initOptions.MAP_INITIAL_ZOOM
+        );
+        tileLayer(
+            this._initOptions.MAIN_TILE_PROVIDER,
+            this._initOptions.LAYER_CONFIGURATION
+        ).addTo(this._leafletMap);
+        control.scale().addTo(this._leafletMap);
     }
 
     _leafletIconWorkaround() {
