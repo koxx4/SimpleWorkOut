@@ -11,6 +11,16 @@ export const LEAFLET_CONFIG = {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
+    LOCATE_CONTROL_CONFIG: {
+        position: "topright",
+        setView: "once",
+        drawCircle: false,
+        showPopup: false,
+    },
 };
 
-export const INITIAL_PAGE_POSITION = "demo";
+export const INITIAL_PAGE_POSITION = "#home";
+export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
+export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";
+export const FADEIN_ELEMENT_CLASS_NAME = "element-fade-in";
+export const IS_FADE_ANIMATION_ACTIVE = false;

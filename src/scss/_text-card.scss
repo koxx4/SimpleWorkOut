@@ -13,6 +13,11 @@
 .text-card-unrounded{
   @extend .text-card;
   border-radius: 0.5em 2em;
+  width: fit-content;
+}
+
+.loading-card{
+  @extend .text-card;
 }
 
 .text-card h3{

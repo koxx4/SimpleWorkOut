@@ -1,16 +1,18 @@
-@use 'background';
-@use 'cssReset';
-@use 'navigation';
-@use 'presentation';
-@use 'presentation-body';
-@use 'presentation-body-photos';
-@use "presentation-body-text";
-@use 'text-card';
-@use 'app-footer';
-@use 'map';
-@use 'demo';
-@use 'form';
-@use 'workout-history';
+@use  'background';
+@use  'cssReset';
+@use  'navigation';
+@use  'home';
+@use  'presentation-body';
+@use  'presentation-body-photos';
+@use  'presentation-body-text';
+@use  'text-card';
+@use  'app-footer';
+@use  'map';
+@use  'demo';
+@use  'form';
+@use  'workout-history';
+@use  'loading';
+@use  'buttons';
 
 body{
   font-family: 'Roboto', sans-serif;
@@ -69,6 +71,11 @@ a:hover{
 
 .m1{
   margin: 1em;
+}
+
+.centered{
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (max-width: 350px){

@@ -1,14 +1,28 @@
 import { map } from "leaflet/src/map";
 import { Icon, tileLayer } from "leaflet/src/layer";
 import { control } from "leaflet/src/control";
+import "leaflet.locatecontrol";
+import { LEAFLET_CONFIG } from "../config/configuration";
 
+/**
+ * LeafletMap is a wrapper of leaflet's library map object.
+ * It simplifies creation of map and interaction with it.
+ * @class
+ */
 export class LeafletMap {
+    /**
+     * Creates this wrapper and saves leaflet configuration for later.
+     * To initialize map use initialize() method.
+     * @param initOptions
+     * @constructor
+     * @public
+     */
     constructor(initOptions) {
         this._initOptions = initOptions;
         this._mapInitialized = false;
     }
 
-    initializeLeafletMap() {
+    initialize() {
         return new Promise((resolve, reject) => {
             try {
                 this._leafletIconWorkaround();
@@ -57,6 +71,9 @@ export class LeafletMap {
             this._initOptions.LAYER_CONFIGURATION
         ).addTo(this._leafletMap);
         control.scale().addTo(this._leafletMap);
+        L.control
+            .locate(LEAFLET_CONFIG.LOCATE_CONTROL_CONFIG)
+            .addTo(this._leafletMap);
     }
 
     _leafletIconWorkaround() {

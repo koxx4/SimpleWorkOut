@@ -1,8 +1,7 @@
 #map{
   background-color: #94c973;
-  height: 30rem;
-}
+  min-height: 70vh;
+  resize: vertical;
+  overflow: auto;
 
-.map-section{
-  height: 60vh;
 }
