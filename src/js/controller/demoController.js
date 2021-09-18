@@ -35,14 +35,25 @@ class DemoController {
         });
     }
 
-    #showWorkoutForm() {
+    #startWorkoutForm(event) {
+        event.preventDefault();
         demoView.renderWorkoutForm();
+    }
+
+    #cancelWorkoutForm(event) {
+        event.preventDefault();
+        demoView.clearAndHideWorkoutForm();
     }
 
     registerEventHandlers() {
         demoView.addEventHandlerAddWorkoutButton(
             "click",
-            this.#showWorkoutForm
+            this.#startWorkoutForm
+        );
+
+        demoView.addEventHandlerCancelWorkoutFormButton(
+            "click",
+            this.#cancelWorkoutForm
         );
 
         mainView.addEventHandlerOnDemoSectionLoad(() => {

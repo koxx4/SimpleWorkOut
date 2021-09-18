@@ -5,7 +5,8 @@ class DemoView extends View {
     #mapElement;
     #workoutSection;
     #addWorkoutButton;
-    #workoutForm;
+    #cancelWorkoutFormButton;
+    #workoutHTMLForm;
 
     constructor() {
         super(document.querySelector("#demo-section"));
@@ -16,8 +17,11 @@ class DemoView extends View {
         this.#addWorkoutButton = this._rootElement.querySelector(
             ".button--add-workout"
         );
-        this.#workoutForm = this._rootElement.querySelector(
+        this.#workoutHTMLForm = this._rootElement.querySelector(
             "#demo__workout-area__workout-form form"
+        );
+        this.#cancelWorkoutFormButton = this._rootElement.querySelector(
+            "#demo__workout-area__workout-form .button--cancel-form"
         );
     }
 
@@ -25,9 +29,20 @@ class DemoView extends View {
         this.#addWorkoutButton.addEventListener(eventType, callback);
     }
 
+    addEventHandlerCancelWorkoutFormButton(eventType, callback) {
+        this.#cancelWorkoutFormButton.addEventListener(eventType, callback);
+    }
+
     renderWorkoutForm() {
         this.#addWorkoutButton.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
-        this.#workoutForm.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        this.#workoutHTMLForm.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+    }
+
+    clearAndHideWorkoutForm() {
+        //TODO: clearing form ...
+
+        this.#workoutHTMLForm.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
+        this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
     }
 
     renderMapLoadingIcon() {
