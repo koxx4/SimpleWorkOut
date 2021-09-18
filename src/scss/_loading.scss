@@ -1,0 +1,17 @@
+.loading-spinner{
+  background-image: url("../../img/spinner.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 2.5rem;
+  height: 2.5rem;
+  animation-timing-function: ease-in-out;
+  animation-duration: 2s;
+  animation-name: spinner-animation;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spinner-animation {
+  100%{
+    transform: rotate(360deg);
+  }
+}

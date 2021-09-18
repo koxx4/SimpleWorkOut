@@ -8,12 +8,15 @@
 }
 
 #demo__workout-area__workout-form{
+  flex-grow: 1;
   border-right: 2px solid #00000033;
   padding: 0.5em;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
 }
+
+#demo__workout-area__workout-form form{
+  width: 100%;
+}
+
 
 #demo__workout-area__workout-history{
   margin-left: 0.5em;

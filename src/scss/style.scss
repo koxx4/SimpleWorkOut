@@ -11,6 +11,7 @@
 @use 'demo';
 @use 'form';
 @use 'workout-history';
+@use 'loading';
 
 body{
   font-family: 'Roboto', sans-serif;
@@ -69,6 +70,11 @@ a:hover{
 
 .m1{
   margin: 1em;
+}
+
+.centered{
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (max-width: 350px){
