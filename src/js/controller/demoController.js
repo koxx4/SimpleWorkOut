@@ -1,28 +1,34 @@
 import demoView from "../view/demoView";
 import mainView from "../view/mainView";
 
-let leafletMap;
+class DemoController {
+    #leafletMap;
 
-const getUserGeolocationAndApplyToMap = function () {
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            this._leafletMap.updateMapPosition(
-                pos.coords.latitude,
-                pos.coords.longitude
-            );
-        },
-        (error) => {
-            alert(error.message);
-        }
-    );
-};
+    constructor() {}
 
-mainView.addEventHandlerOnDemoSectionLoad(() => {
-    demoView.renderMapLoadingIcon();
-});
+    #getUserGeolocationAndApplyToMap() {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                this.#leafletMap.updateMapPosition(
+                    pos.coords.latitude,
+                    pos.coords.longitude
+                );
+            },
+            (error) => {
+                alert(error.message);
+            }
+        );
+    }
 
-mainView.addEventHandlerOnHomeSectionLoad(() => {
-    demoView.deleteMapLoadingIcon();
-});
+    registerEventHandlers() {
+        mainView.addEventHandlerOnDemoSectionLoad(() => {
+            debugger;
+            demoView.renderMapLoadingIcon();
+        });
 
-const loadLeafletMap = function () {};
+        mainView.addEventHandlerOnDemoSectionExit(() => {
+            demoView.deleteMapLoadingIcon();
+        });
+    }
+}
+export default new DemoController();

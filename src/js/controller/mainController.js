@@ -4,41 +4,47 @@ import {
     INITIAL_PAGE_POSITION,
 } from "../config/configuration";
 
-let userPagePosition = INITIAL_PAGE_POSITION;
+class MainController {
+    constructor() {}
 
-const homePageButtonAction = function () {
-    if (userPagePosition === "home") return;
-
-    mainView.renderHomePage(IS_FADE_ANIMATION_ACTIVE);
-    userPagePosition = "home";
-};
-
-const demoPageButtonAction = function () {
-    if (userPagePosition === "demo") return;
-
-    mainView.renderDemoPage(IS_FADE_ANIMATION_ACTIVE);
-    userPagePosition = "demo";
-};
-
-const registerEventHandlers = function () {
-    mainView.addEventHandlerHomeButton("click", homePageButtonAction);
-    mainView.addEventHandlerDemoButton("click", demoPageButtonAction);
-};
-
-const showInitialPage = function () {
-    debugger;
-    switch (INITIAL_PAGE_POSITION) {
-        case "demo":
-            mainView.renderDemoPage(IS_FADE_ANIMATION_ACTIVE);
-            break;
-        case "home":
-            mainView.renderHomePage(IS_FADE_ANIMATION_ACTIVE);
-            break;
-        case "login":
-            mainView.renderLoginPage(IS_FADE_ANIMATION_ACTIVE);
-            break;
+    #homeButtonAction() {
+        if (location.hash === "#home") return;
+        location.hash = "#home";
     }
-};
 
-registerEventHandlers();
-showInitialPage();
+    #demoButtonAction() {
+        if (location.hash === "#demo") return;
+        location.hash = "#demo";
+    }
+
+    #loginButtonAction() {
+        if (location.hash === "#login") return;
+        location.hash = "#login";
+    }
+
+    #showAppropriatePageContent() {
+        switch (location.hash) {
+            case "#home":
+                mainView.renderHomePage(IS_FADE_ANIMATION_ACTIVE);
+                break;
+            case "#demo":
+                mainView.renderDemoPage(IS_FADE_ANIMATION_ACTIVE);
+                break;
+            case "#login":
+                mainView.renderLoginPage(IS_FADE_ANIMATION_ACTIVE);
+                break;
+        }
+    }
+
+    registerEventHandlers() {
+        mainView.addEventHandlerHomeButton("click", this.#homeButtonAction);
+        mainView.addEventHandlerDemoButton("click", this.#demoButtonAction);
+        mainView.addEventHandlerLoginButton("click", this.#loginButtonAction);
+        window.addEventListener("hashchange", this.#showAppropriatePageContent);
+    }
+
+    showInitialPage() {
+        location.hash = INITIAL_PAGE_POSITION;
+    }
+}
+export default new MainController();

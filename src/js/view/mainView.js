@@ -1,6 +1,9 @@
 import { View } from "./view";
 import { faderUtility } from "../helpers/helpers";
-import { HIDDEN_ELEMENT_CLASS_NAME } from "../config/configuration";
+import {
+    HIDDEN_ELEMENT_CLASS_NAME,
+    INITIAL_PAGE_POSITION,
+} from "../config/configuration";
 
 class MainView extends View {
     #homeButton;
@@ -8,7 +11,10 @@ class MainView extends View {
     #loginButton;
     #homeSection;
     #demoSection;
-    #sectionLoadEvent = new Event("sectionLoadEvent");
+    #loginSection;
+    #sectionLoadEvent = new Event("sectionload");
+    #sectionExitEvent = new Event("sectionexit");
+    #lastPagePosition;
 
     constructor() {
         super(document.querySelector("body"));
@@ -23,19 +29,51 @@ class MainView extends View {
     addEventHandlerHomeButton(eventType, callback) {
         this.#homeButton.addEventListener(eventType, callback);
     }
+
     addEventHandlerDemoButton(eventType, callback) {
         this.#demoButton.addEventListener(eventType, callback);
     }
+
     addEventHandlerLoginButton(eventType, callback) {
         this.#loginButton.addEventListener(eventType, callback);
     }
 
     addEventHandlerOnHomeSectionLoad(callback) {
-        this.#homeSection.addEventListener("sectionLoadEvent", callback);
+        this.#homeSection.addEventListener("sectionload", callback);
     }
 
     addEventHandlerOnDemoSectionLoad(callback) {
-        this.#demoSection.addEventListener("sectionLoadEvent", callback);
+        this.#demoSection.addEventListener("sectionload", callback);
+    }
+
+    addEventHandlerOnLoginSectionLoad(callback) {
+        this.#loginSection.addEventListener("sectionload", callback);
+    }
+
+    addEventHandlerOnHomeSectionExit(callback) {
+        this.#homeSection.addEventListener("sectionexit", callback);
+    }
+
+    addEventHandlerOnDemoSectionExit(callback) {
+        this.#demoSection.addEventListener("sectionexit", callback);
+    }
+
+    addEventHandlerOnLoginSectionExit(callback) {
+        this.#loginSection.addEventListener("sectionexit", callback);
+    }
+
+    #dispatchSectionExitEvents() {
+        switch (this.#lastPagePosition) {
+            case "#home":
+                this.#homeSection.dispatchEvent(this.#sectionExitEvent);
+                break;
+            case "#demo":
+                this.#demoSection.dispatchEvent(this.#sectionExitEvent);
+                break;
+            case "#login":
+                this.#loginSection.dispatchEvent(this.#sectionExitEvent);
+                break;
+        }
     }
 
     renderDemoPage(fadeTransition) {
@@ -48,6 +86,8 @@ class MainView extends View {
             this.#homeSection.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
         }
         this.#demoSection.dispatchEvent(this.#sectionLoadEvent);
+        this.#dispatchSectionExitEvents();
+        this.#lastPagePosition = location.hash;
     }
 
     renderHomePage(fadeTransition) {
@@ -62,6 +102,8 @@ class MainView extends View {
             this.#homeSection.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
         }
         this.#homeSection.dispatchEvent(this.#sectionLoadEvent);
+        this.#dispatchSectionExitEvents();
+        this.#lastPagePosition = location.hash;
     }
 
     renderLoginPage(fadeTransition) {}
