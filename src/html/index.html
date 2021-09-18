@@ -4,7 +4,6 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"/>
-        <link rel="stylesheet" href="../../node_modules/leaflet/dist/leaflet.css"/>
         <link rel="stylesheet" href="../scss/style.scss"/>
         <script defer src="../js/app.js" type="module"></script>
         <title>Simple WorkOut</title>
@@ -52,7 +51,8 @@
             <div id="map"></div>
             <div id="demo__workout-area">
                 <div id="demo__workout-area__workout-form">
-                    <form class="flex-form">
+                    <button class="button--add-workout button-primary">Add workout!</button>
+                    <form class="flex-form hidden">
                         <div class="input-group">
                             <label for="workout-type-select">Workout type:</label>
                             <select class="input-select" id="workout-type-select">
@@ -77,7 +77,8 @@
                             <input class="input-alphanumeric" type="number" id="workout-4-input" placeholder="Type in distance [m]">
                             <small>Lorem ipsum dolor.</small>
                         </div>
-                        <input type="submit" name="submitWorkoutData" value="Save!"/>
+                        <input class="button-primary" type="submit" name="submitWorkoutData" value="Save!"/>
+                        <button class="button-primary m1">Cancel</button>
                     </form>
                 </div>
                 <div id="demo__workout-area__workout-history">

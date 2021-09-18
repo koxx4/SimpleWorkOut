@@ -1,8 +1,15 @@
 import demoView from "../view/demoView";
 import mainView from "../view/mainView";
+import { LeafletMap } from "../helpers/leafletMap";
+import { LEAFLET_CONFIG } from "../config/configuration";
 
 class DemoController {
-    #leafletMap;
+    /**
+     *
+     * @type {LeafletMap}
+     * @private
+     */
+    #leafletMap = new LeafletMap(LEAFLET_CONFIG);
 
     constructor() {}
 
@@ -20,10 +27,29 @@ class DemoController {
         );
     }
 
+    #createLeafletMap() {
+        this.#leafletMap.initialize().then((msg) => {
+            demoView.deleteMapLoadingIcon();
+            this.#leafletMap.refreshMap();
+            console.log(msg);
+        });
+    }
+
+    #showWorkoutForm() {
+        demoView.renderWorkoutForm();
+    }
+
     registerEventHandlers() {
+        demoView.addEventHandlerAddWorkoutButton(
+            "click",
+            this.#showWorkoutForm
+        );
+
         mainView.addEventHandlerOnDemoSectionLoad(() => {
-            debugger;
-            demoView.renderMapLoadingIcon();
+            if (!this.#leafletMap.isInitialized()) {
+                demoView.renderMapLoadingIcon();
+                this.#createLeafletMap();
+            }
         });
 
         mainView.addEventHandlerOnDemoSectionExit(() => {
