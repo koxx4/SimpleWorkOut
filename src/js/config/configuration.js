@@ -19,7 +19,7 @@ export const LEAFLET_CONFIG = {
     },
 };
 
-export const INITIAL_PAGE_POSITION = "#home";
+export const INITIAL_PAGE_POSITION = "#demo";
 export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
 export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";
 export const FADEIN_ELEMENT_CLASS_NAME = "element-fade-in";

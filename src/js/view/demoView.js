@@ -1,5 +1,6 @@
 import { View } from "./view";
 import { HIDDEN_ELEMENT_CLASS_NAME } from "../config/configuration";
+import { faderUtility } from "../helpers/helpers";
 
 class DemoView extends View {
     #mapElement;
@@ -36,13 +37,15 @@ class DemoView extends View {
     renderWorkoutForm() {
         this.#addWorkoutButton.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
         this.#workoutHTMLForm.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        this.#workoutHTMLForm.scrollIntoView({ behavior: "smooth" });
     }
 
     clearAndHideWorkoutForm() {
         //TODO: clearing form ...
-
-        this.#workoutHTMLForm.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
-        this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        this.#mapElement.scrollIntoView({ behavior: "smooth" });
+        faderUtility.fadeOut(this.#workoutHTMLForm, 600).then(() => {
+            this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        });
     }
 
     renderMapLoadingIcon() {
