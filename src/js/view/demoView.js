@@ -8,6 +8,7 @@ class DemoView extends View {
     #addWorkoutButton;
     #cancelWorkoutFormButton;
     #workoutHTMLForm;
+    #inputGroups;
 
     constructor() {
         super(document.querySelector("#demo-section"));
@@ -24,6 +25,8 @@ class DemoView extends View {
         this.#cancelWorkoutFormButton = this._rootElement.querySelector(
             "#demo__workout-area__workout-form .button--cancel-form"
         );
+        this.#inputGroups = this._rootElement
+            .querySelectorAll("#demo__workout-area__workout-form form .input-group");
     }
 
     addEventHandlerAddWorkoutButton(eventType, callback) {
@@ -60,6 +63,10 @@ class DemoView extends View {
 
     deleteMapLoadingIcon() {
         this.#mapElement.querySelector(".loading-card")?.remove();
+    }
+
+    getInputGroups(){
+        return this.#inputGroups;
     }
 }
 

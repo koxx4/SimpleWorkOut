@@ -1,7 +1,7 @@
 import mainView from "../view/mainView";
 import {
     IS_FADE_ANIMATION_ACTIVE,
-    INITIAL_PAGE_POSITION,
+    INITIAL_PAGE_POSITION, INITIAL_PAGE_POSITION_DEBUG
 } from "../config/configuration";
 
 class MainController {
@@ -44,7 +44,10 @@ class MainController {
     }
 
     showInitialPage() {
-        location.hash = INITIAL_PAGE_POSITION;
+        if (process.env.NODE_ENV === 'development')
+            location.hash = INITIAL_PAGE_POSITION_DEBUG;
+        else
+            location.hash = INITIAL_PAGE_POSITION;
     }
 }
 export default new MainController();

@@ -120,4 +120,23 @@ export class LeafletMap {
     addEventHandlerOnMapClick(callback) {
         this._leafletMap.on("click", callback);
     }
+
+    distanceBetweenPoints(latlng1, latlng2){
+        return this._leafletMap.distance(latlng1, latlng2);
+    }
+
+    lineDistance(line){
+        let totalDistance = 0;
+        const linePoints = line.getLatLngs();
+
+        if (linePoints.length < 2) return;
+
+        linePoints.reduce((previousPoint, point) => {
+            totalDistance += this._leafletMap.distance(previousPoint, point);
+            return point;
+        });
+
+        return totalDistance;
+    }
+
 }

@@ -12,8 +12,10 @@ class DemoController {
     #leafletMap = new LeafletMap(LEAFLET_CONFIG);
     #isUserAddingNewWorkout = false;
     #userWorkoutTrail;
+    #userWorkoutTrailDistance;
 
-    constructor() {}
+    constructor() {
+    }
 
     #getUserGeolocationAndApplyToMap() {
         navigator.geolocation.getCurrentPosition(
@@ -80,6 +82,7 @@ class DemoController {
                     this.#createNewUserWorkoutTrail(event.latlng);
                 }
                 this.#userWorkoutTrail.addLatLng(event.latlng);
+                this.#updateTrailDistance();
             }
         });
     }
@@ -94,6 +97,12 @@ class DemoController {
     #deleteUserWorkoutTrail() {
         this.#leafletMap.deleteLine(this.#userWorkoutTrail);
         this.#userWorkoutTrail = null;
+    }
+
+    #updateTrailDistance() {
+        //TODO: hacky - change this
+        const smallElement = document.querySelector("#demo__workout-area__workout-form form .input-group--workout-distance small");
+        smallElement.textContent = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail)) + " meters calculated";
     }
 }
 export default new DemoController();
