@@ -1,5 +1,6 @@
 import { View } from "./view";
 import { HIDDEN_ELEMENT_CLASS_NAME } from "../config/configuration";
+import { faderUtility } from "../helpers/helpers";
 
 class DemoView extends View {
     #mapElement;
@@ -7,6 +8,7 @@ class DemoView extends View {
     #addWorkoutButton;
     #cancelWorkoutFormButton;
     #workoutHTMLForm;
+    #inputGroups;
 
     constructor() {
         super(document.querySelector("#demo-section"));
@@ -23,6 +25,8 @@ class DemoView extends View {
         this.#cancelWorkoutFormButton = this._rootElement.querySelector(
             "#demo__workout-area__workout-form .button--cancel-form"
         );
+        this.#inputGroups = this._rootElement
+            .querySelectorAll("#demo__workout-area__workout-form form .input-group");
     }
 
     addEventHandlerAddWorkoutButton(eventType, callback) {
@@ -36,13 +40,15 @@ class DemoView extends View {
     renderWorkoutForm() {
         this.#addWorkoutButton.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
         this.#workoutHTMLForm.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        this.#workoutHTMLForm.scrollIntoView({ behavior: "smooth" });
     }
 
     clearAndHideWorkoutForm() {
         //TODO: clearing form ...
-
-        this.#workoutHTMLForm.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
-        this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        this.#mapElement.scrollIntoView({ behavior: "smooth" });
+        faderUtility.fadeOut(this.#workoutHTMLForm, 600).then(() => {
+            this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+        });
     }
 
     renderMapLoadingIcon() {
@@ -57,6 +63,10 @@ class DemoView extends View {
 
     deleteMapLoadingIcon() {
         this.#mapElement.querySelector(".loading-card")?.remove();
+    }
+
+    getInputGroups(){
+        return this.#inputGroups;
     }
 }
 

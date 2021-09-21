@@ -1,6 +1,4 @@
-import { map } from "leaflet/src/map";
-import { Icon, tileLayer } from "leaflet/src/layer";
-import { control } from "leaflet/src/control";
+import { map, Icon, tileLayer, control, polyline } from "leaflet";
 import "leaflet.locatecontrol";
 import { LEAFLET_CONFIG } from "../config/configuration";
 
@@ -10,6 +8,8 @@ import { LEAFLET_CONFIG } from "../config/configuration";
  * @class
  */
 export class LeafletMap {
+    #lines = [];
+
     /**
      * Creates this wrapper and saves leaflet configuration for later.
      * To initialize map use initialize() method.
@@ -74,6 +74,19 @@ export class LeafletMap {
         L.control
             .locate(LEAFLET_CONFIG.LOCATE_CONTROL_CONFIG)
             .addTo(this._leafletMap);
+
+        // // create a red polyline from an array of LatLng points
+        // let latlngs = [
+        //     [45.51, -122.68],
+        //     [37.77, -122.43],
+        //     [34.04, -118.2],
+        // ];
+        //
+        // let poly = polyline(latlngs, { color: "red" }).addTo(this._leafletMap);
+        // poly.addLatLng([39, -112]);
+        //
+        // // zoom the map to the polyline
+        // this._leafletMap.fitBounds(poly.getBounds());
     }
 
     _leafletIconWorkaround() {
@@ -86,4 +99,44 @@ export class LeafletMap {
             shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
         });
     }
+
+    createNewLine(initialCoords, lineOptions) {
+        const newLine = polyline(initialCoords, lineOptions).addTo(
+            this._leafletMap
+        );
+        this.#lines.push(newLine);
+        return newLine;
+    }
+
+    deleteLine(line) {
+        const foundLineIndex = this.#lines.indexOf(line);
+        //If element was present in array
+        if (foundLineIndex > -1) {
+            line.removeFrom(this._leafletMap);
+            this.#lines.splice(foundLineIndex, 1);
+        }
+    }
+
+    addEventHandlerOnMapClick(callback) {
+        this._leafletMap.on("click", callback);
+    }
+
+    distanceBetweenPoints(latlng1, latlng2){
+        return this._leafletMap.distance(latlng1, latlng2);
+    }
+
+    lineDistance(line){
+        let totalDistance = 0;
+        const linePoints = line.getLatLngs();
+
+        if (linePoints.length < 2) return;
+
+        linePoints.reduce((previousPoint, point) => {
+            totalDistance += this._leafletMap.distance(previousPoint, point);
+            return point;
+        });
+
+        return totalDistance;
+    }
+
 }

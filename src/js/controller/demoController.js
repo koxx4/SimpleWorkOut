@@ -10,8 +10,12 @@ class DemoController {
      * @private
      */
     #leafletMap = new LeafletMap(LEAFLET_CONFIG);
+    #isUserAddingNewWorkout = false;
+    #userWorkoutTrail;
+    #userWorkoutTrailDistance;
 
-    constructor() {}
+    constructor() {
+    }
 
     #getUserGeolocationAndApplyToMap() {
         navigator.geolocation.getCurrentPosition(
@@ -31,29 +35,32 @@ class DemoController {
         this.#leafletMap.initialize().then((msg) => {
             demoView.deleteMapLoadingIcon();
             this.#leafletMap.refreshMap();
-            console.log(msg);
+            this.#registerMapEventHandlers();
         });
     }
 
     #startWorkoutForm(event) {
         event.preventDefault();
         demoView.renderWorkoutForm();
+        this.#isUserAddingNewWorkout = true;
     }
 
     #cancelWorkoutForm(event) {
         event.preventDefault();
         demoView.clearAndHideWorkoutForm();
+        this.#isUserAddingNewWorkout = false;
+        this.#deleteUserWorkoutTrail();
     }
 
     registerEventHandlers() {
         demoView.addEventHandlerAddWorkoutButton(
             "click",
-            this.#startWorkoutForm
+            this.#startWorkoutForm.bind(this)
         );
 
         demoView.addEventHandlerCancelWorkoutFormButton(
             "click",
-            this.#cancelWorkoutForm
+            this.#cancelWorkoutForm.bind(this)
         );
 
         mainView.addEventHandlerOnDemoSectionLoad(() => {
@@ -66,6 +73,36 @@ class DemoController {
         mainView.addEventHandlerOnDemoSectionExit(() => {
             demoView.deleteMapLoadingIcon();
         });
+    }
+
+    #registerMapEventHandlers() {
+        this.#leafletMap.addEventHandlerOnMapClick((event) => {
+            if (this.#isUserAddingNewWorkout) {
+                if (!this.#userWorkoutTrail) {
+                    this.#createNewUserWorkoutTrail(event.latlng);
+                }
+                this.#userWorkoutTrail.addLatLng(event.latlng);
+                this.#updateTrailDistance();
+            }
+        });
+    }
+
+    #createNewUserWorkoutTrail(latlng) {
+        const { lat, lng } = latlng;
+        this.#userWorkoutTrail = this.#leafletMap.createNewLine([[lat, lng]], {
+            color: "red",
+        });
+    }
+
+    #deleteUserWorkoutTrail() {
+        this.#leafletMap.deleteLine(this.#userWorkoutTrail);
+        this.#userWorkoutTrail = null;
+    }
+
+    #updateTrailDistance() {
+        //TODO: hacky - change this
+        const smallElement = document.querySelector("#demo__workout-area__workout-form form .input-group--workout-distance small");
+        smallElement.textContent = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail)) + " meters calculated";
     }
 }
 export default new DemoController();

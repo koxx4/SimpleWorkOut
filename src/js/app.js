@@ -8,4 +8,5 @@ import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 
 mainController.registerEventHandlers();
 demoController.registerEventHandlers();
+
 mainController.showInitialPage();
