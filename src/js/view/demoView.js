@@ -65,6 +65,10 @@ class DemoView extends View {
         this.#mapElement.querySelector(".loading-card")?.remove();
     }
 
+    setSmallTextWorkoutDistance(text){
+        this.#inputGroups.querySelector(".input-group--workout-distance small").textContent = text;
+    }
+
     getInputGroups(){
         return this.#inputGroups;
     }

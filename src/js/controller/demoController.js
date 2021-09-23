@@ -100,9 +100,9 @@ class DemoController {
     }
 
     #updateTrailDistance() {
-        //TODO: hacky - change this
-        const smallElement = document.querySelector("#demo__workout-area__workout-form form .input-group--workout-distance small");
-        smallElement.textContent = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail)) + " meters calculated";
+        const workoutDistance = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail));
+        const text =  + `${workoutDistance} meters calculated`;
+        demoView.setSmallTextWorkoutDistance(text);
     }
 }
 export default new DemoController();
