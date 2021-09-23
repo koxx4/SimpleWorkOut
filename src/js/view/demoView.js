@@ -7,8 +7,9 @@ class DemoView extends View {
     #workoutSection;
     #addWorkoutButton;
     #cancelWorkoutFormButton;
+    #submitWorkoutFormButton;
     #workoutHTMLForm;
-    #inputGroups;
+
 
     constructor() {
         super(document.querySelector("#demo-section"));
@@ -19,14 +20,16 @@ class DemoView extends View {
         this.#addWorkoutButton = this._rootElement.querySelector(
             ".button--add-workout"
         );
+        this.#submitWorkoutFormButton = this._rootElement.querySelector(
+            ".button--submit-workout-form"
+        )
         this.#workoutHTMLForm = this._rootElement.querySelector(
             "#demo__workout-area__workout-form form"
         );
         this.#cancelWorkoutFormButton = this._rootElement.querySelector(
-            "#demo__workout-area__workout-form .button--cancel-form"
+            "#demo__workout-area__workout-form .button--cancel-workout-form"
         );
-        this.#inputGroups = this._rootElement
-            .querySelectorAll("#demo__workout-area__workout-form form .input-group");
+
     }
 
     addEventHandlerAddWorkoutButton(eventType, callback) {
@@ -35,6 +38,14 @@ class DemoView extends View {
 
     addEventHandlerCancelWorkoutFormButton(eventType, callback) {
         this.#cancelWorkoutFormButton.addEventListener(eventType, callback);
+    }
+
+    addEventHandlerSubmitWorkoutFormButton(eventType, callback) {
+        this.#submitWorkoutFormButton.addEventListener(eventType, callback);
+    }
+
+    addEventHandlerSubmitWorkoutForm(callback) {
+        this.#workoutHTMLForm.addEventListener("submit", callback);
     }
 
     renderWorkoutForm() {
@@ -66,12 +77,25 @@ class DemoView extends View {
     }
 
     setSmallTextWorkoutDistance(text){
-        this.#inputGroups.querySelector(".input-group--workout-distance small").textContent = text;
+        this.#workoutHTMLForm.querySelector(".input-group--workout-distance small").textContent = text;
     }
 
-    getInputGroups(){
-        return this.#inputGroups;
+    getWorkoutTypeInput(){
+        return this.#workoutHTMLForm.querySelector("#workout-type-select");
     }
+
+    getWorkoutDistanceInput(){
+        return this.#workoutHTMLForm.querySelector("#workout-distance-input");
+    }
+
+    getWorkoutDateInput(){
+        return this.#workoutHTMLForm.querySelector("#workout-date-input");
+    }
+
+    getWorkoutNoteInput(){
+        return this.#workoutHTMLForm.querySelector("#workout-note-input");
+    }
+
 }
 
 export default new DemoView();
