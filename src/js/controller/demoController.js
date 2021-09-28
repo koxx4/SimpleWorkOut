@@ -2,6 +2,7 @@ import demoView from "../view/demoView";
 import mainView from "../view/mainView";
 import { LeafletMap } from "../helpers/leafletMap";
 import { LEAFLET_CONFIG } from "../config/configuration";
+import { WorkoutEntry } from "../data/workoutEntry";
 
 class DemoController {
     /**
@@ -45,11 +46,23 @@ class DemoController {
         this.#isUserAddingNewWorkout = true;
     }
 
-    #cancelWorkoutForm(event) {
+    #exitWorkoutForm(event) {
         event.preventDefault();
         demoView.clearAndHideWorkoutForm();
         this.#isUserAddingNewWorkout = false;
         this.#deleteUserWorkoutTrail();
+    }
+
+    #submitWorkout(event){
+        event.preventDefault();
+        const workoutType = demoView.getWorkoutTypeInput().value;
+        const workoutManuallDistance = demoView.getWorkoutDistanceInput().value;
+        const workoutDate = demoView.getWorkoutDateInput().value;
+        const workoutNote = demoView.getWorkoutNoteInput().value;
+        const workoutDistance = workoutManuallDistance ? workoutManuallDistance : this.#userWorkoutTrailDistance;
+        const newWorkoutEntry = new WorkoutEntry(workoutType, workoutDistance, workoutDate, workoutNote, this.#userWorkoutTrail);
+        console.log(newWorkoutEntry);
+        this.#exitWorkoutForm(event);
     }
 
     registerEventHandlers() {
@@ -60,8 +73,12 @@ class DemoController {
 
         demoView.addEventHandlerCancelWorkoutFormButton(
             "click",
-            this.#cancelWorkoutForm.bind(this)
+            this.#exitWorkoutForm.bind(this)
         );
+
+        demoView.addEventHandlerSubmitWorkoutForm(
+            this.#submitWorkout.bind(this)
+        )
 
         mainView.addEventHandlerOnDemoSectionLoad(() => {
             if (!this.#leafletMap.isInitialized()) {
@@ -100,9 +117,9 @@ class DemoController {
     }
 
     #updateTrailDistance() {
-        //TODO: hacky - change this
-        const smallElement = document.querySelector("#demo__workout-area__workout-form form .input-group--workout-distance small");
-        smallElement.textContent = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail)) + " meters calculated";
+        this.#userWorkoutTrailDistance = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail));
+        const text = `${this.#userWorkoutTrailDistance} meters calculated`;
+        demoView.setSmallTextWorkoutDistance(text);
     }
 }
 export default new DemoController();
