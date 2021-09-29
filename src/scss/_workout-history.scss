@@ -1,17 +1,15 @@
 .workout-history-list{
-
 }
 
 .workout-history-list__entry{
-  border-collapse: collapse;
   padding: 1em 0;
   border-top: 1px solid #00000044;
   border-bottom: 1px solid #00000044;
   transition: background-color 200ms;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
-  align-items: baseline;
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 .workout-history-list__entry:hover{
