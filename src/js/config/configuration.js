@@ -1,7 +1,11 @@
+import { Browser } from "leaflet";
+
 export const LEAFLET_CONFIG = {
     CONTAINER_ID: "map",
     MAP_CONFIG: {
         attributionControl: true,
+        dragging: !Browser.mobile,
+        touchZoom: true
     },
     MAP_INITIAL_ZOOM: 13,
     MAP_INITIAL_CENTER: [51.505, -0.09],

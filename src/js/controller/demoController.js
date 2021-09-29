@@ -2,6 +2,8 @@ import demoView from "../view/demoView";
 import mainView from "../view/mainView";
 import { LeafletMap } from "../helpers/leafletMap";
 import { LEAFLET_CONFIG } from "../config/configuration";
+import { WorkoutEntry } from "../data/workoutEntry";
+import demoModel from "../model/demoModel";
 
 class DemoController {
     /**
@@ -12,23 +14,10 @@ class DemoController {
     #leafletMap = new LeafletMap(LEAFLET_CONFIG);
     #isUserAddingNewWorkout = false;
     #userWorkoutTrail;
-    #userWorkoutTrailDistance;
+    #userWorkoutTrailDistance = 0;
 
     constructor() {
-    }
-
-    #getUserGeolocationAndApplyToMap() {
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                this.#leafletMap.updateMapPosition(
-                    pos.coords.latitude,
-                    pos.coords.longitude
-                );
-            },
-            (error) => {
-                alert(error.message);
-            }
-        );
+        demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
     }
 
     #createLeafletMap() {
@@ -45,11 +34,38 @@ class DemoController {
         this.#isUserAddingNewWorkout = true;
     }
 
-    #cancelWorkoutForm(event) {
+    #exitWorkoutForm(event) {
         event.preventDefault();
         demoView.clearAndHideWorkoutForm();
         this.#isUserAddingNewWorkout = false;
         this.#deleteUserWorkoutTrail();
+        this.#userWorkoutTrailDistance = 0;
+    }
+
+    #submitWorkout(event) {
+        event.preventDefault();
+        const newWorkoutEntry = this.#constructWorkoutEntry();
+        demoModel.addWorkoutEntry(newWorkoutEntry);
+        demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+        this.#exitWorkoutForm(event);
+    }
+
+    #constructWorkoutEntry() {
+        const workoutType = demoView.getWorkoutTypeInput().value;
+        const workoutManuallDistance = demoView.getWorkoutDistanceInput().value;
+        const workoutDate = demoView.getWorkoutDateInput().value;
+        const workoutNote = demoView.getWorkoutNoteInput().value;
+        const workoutDistance =
+            workoutManuallDistance > 0
+                ? workoutManuallDistance
+                : this.#userWorkoutTrailDistance;
+        return new WorkoutEntry(
+            workoutType,
+            workoutDistance,
+            workoutDate,
+            workoutNote,
+            this.#userWorkoutTrail
+        );
     }
 
     registerEventHandlers() {
@@ -60,7 +76,16 @@ class DemoController {
 
         demoView.addEventHandlerCancelWorkoutFormButton(
             "click",
-            this.#cancelWorkoutForm.bind(this)
+            this.#exitWorkoutForm.bind(this)
+        );
+
+        demoView.addEventHandlerSubmitWorkoutForm(
+            this.#submitWorkout.bind(this)
+        );
+
+        demoView.addEventHandlerWorkoutList(
+            "click",
+            this.#handleWorkoutEntryInteraction.bind(this)
         );
 
         mainView.addEventHandlerOnDemoSectionLoad(() => {
@@ -100,9 +125,39 @@ class DemoController {
     }
 
     #updateTrailDistance() {
-        //TODO: hacky - change this
-        const smallElement = document.querySelector("#demo__workout-area__workout-form form .input-group--workout-distance small");
-        smallElement.textContent = Math.round(this.#leafletMap.lineDistance(this.#userWorkoutTrail)) + " meters calculated";
+        this.#userWorkoutTrailDistance = Math.round(
+            this.#leafletMap.lineDistance(this.#userWorkoutTrail)
+        );
+        const text = `${this.#userWorkoutTrailDistance} meters calculated`;
+        demoView.setSmallTextWorkoutDistance(text);
+    }
+
+    #handleWorkoutEntryInteraction(event) {
+        const targetButtonValue = event.target.value;
+        const targetWorkoutEntryID = event.target.dataset.workoutId;
+        switch (targetButtonValue) {
+            case "show":
+                this.#showWorkoutEntryOnMap(targetWorkoutEntryID);
+                break;
+            case "delete":
+                this.#deleteWorkoutEntry(targetWorkoutEntryID);
+                break;
+            case "note":
+                this.#showWorkoutEntryNote(targetWorkoutEntryID);
+                break;
+        }
+    }
+
+    #deleteWorkoutEntry(workoutID) {
+        demoModel.deleteWorkoutEntryByID(workoutID);
+        demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+    }
+
+    #showWorkoutEntryOnMap(workoutID) {}
+
+    #showWorkoutEntryNote(workoutID) {
+        const workout = demoModel.getWorkoutEntryByID(workoutID);
+        if (demoModel.getWorkoutEntryByID(workoutID)) alert(workout.notes);
     }
 }
 export default new DemoController();

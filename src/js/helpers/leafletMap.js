@@ -74,19 +74,6 @@ export class LeafletMap {
         L.control
             .locate(LEAFLET_CONFIG.LOCATE_CONTROL_CONFIG)
             .addTo(this._leafletMap);
-
-        // // create a red polyline from an array of LatLng points
-        // let latlngs = [
-        //     [45.51, -122.68],
-        //     [37.77, -122.43],
-        //     [34.04, -118.2],
-        // ];
-        //
-        // let poly = polyline(latlngs, { color: "red" }).addTo(this._leafletMap);
-        // poly.addLatLng([39, -112]);
-        //
-        // // zoom the map to the polyline
-        // this._leafletMap.fitBounds(poly.getBounds());
     }
 
     _leafletIconWorkaround() {
@@ -121,11 +108,11 @@ export class LeafletMap {
         this._leafletMap.on("click", callback);
     }
 
-    distanceBetweenPoints(latlng1, latlng2){
+    distanceBetweenPoints(latlng1, latlng2) {
         return this._leafletMap.distance(latlng1, latlng2);
     }
 
-    lineDistance(line){
+    lineDistance(line) {
         let totalDistance = 0;
         const linePoints = line.getLatLngs();
 
@@ -138,5 +125,4 @@ export class LeafletMap {
 
         return totalDistance;
     }
-
 }
