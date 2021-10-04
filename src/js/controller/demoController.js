@@ -51,14 +51,17 @@ class DemoController {
     }
 
     #constructWorkoutEntry() {
-        const workoutType = demoView.getWorkoutTypeInput().value;
-        const workoutManuallDistance = demoView.getWorkoutDistanceInput().value;
-        const workoutDate = demoView.getWorkoutDateInput().value;
-        const workoutNote = demoView.getWorkoutNoteInput().value;
-        const workoutDistance =
-            workoutManuallDistance > 0
-                ? workoutManuallDistance
+        let workoutType = demoView.getWorkoutTypeInput().value;
+        let workoutDistance = demoView.getWorkoutDistanceInput().value;
+        let workoutDate = demoView.getWorkoutDateInput().value;
+        let workoutNote = demoView.getWorkoutNoteInput().value;
+
+        workoutDistance =
+            workoutDistance > 0
+                ? workoutDistance
                 : this.#userWorkoutTrailDistance;
+        workoutDate = workoutDate ? workoutDate : "some beautiful day";
+
         return new WorkoutEntry(
             workoutType,
             workoutDistance,
@@ -134,7 +137,8 @@ class DemoController {
 
     #handleWorkoutEntryInteraction(event) {
         const targetButtonValue = event.target.value;
-        const targetWorkoutEntryID = event.target.dataset.workoutId;
+        const targetWorkoutEntryID =
+            event.target.parentElement.dataset.workoutId;
         switch (targetButtonValue) {
             case "show":
                 this.#showWorkoutEntryOnMap(targetWorkoutEntryID);

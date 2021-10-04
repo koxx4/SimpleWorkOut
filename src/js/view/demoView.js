@@ -119,9 +119,9 @@ class DemoView extends View {
         return `
             <li data-workout-id="${workoutEntry.id}" class="workout-history-list__entry">                   
                 <p>${workoutEntry.type} on ${workoutEntry.date}. Total of ${distance}.</p>
-                <button value="show" data-workout-id="${workoutEntry.id}"   class="button--show-workout-on-map">Show on map</button>
-                <button value="delete" data-workout-id="${workoutEntry.id}" class="button--delete-workout-entry">Delete entry</button>
-                <button value="note" data-workout-id="${workoutEntry.id}"   class="button--delete-workout-note">Show note</button>
+                <button value="show" class="button--show-workout-on-map">Show on map</button>
+                <button value="delete" class="button--delete-workout-entry">Delete entry</button>
+                <button value="note" class="button--delete-workout-note">Show note</button>
                 <p class="workout-history-list__entry-note ${HIDDEN_ELEMENT_CLASS_NAME}">${workoutEntry.notes}</p>
             </li>`;
     }
