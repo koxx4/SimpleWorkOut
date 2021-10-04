@@ -157,7 +157,7 @@ class DemoController {
 
     #showWorkoutEntryNote(workoutID) {
         const workout = demoModel.getWorkoutEntryByID(workoutID);
-        if (demoModel.getWorkoutEntryByID(workoutID)) alert(workout.notes);
+        if (workout) demoView.toggleWorkoutEntryNote(workoutID);
     }
 }
 export default new DemoController();

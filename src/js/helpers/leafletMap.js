@@ -1,4 +1,4 @@
-import { map, Icon, tileLayer, control, polyline } from "leaflet";
+import { map, Icon, tileLayer, control, polyline, Control } from "leaflet";
 import "leaflet.locatecontrol";
 import { LEAFLET_CONFIG } from "../config/configuration";
 
@@ -71,6 +71,10 @@ export class LeafletMap {
             this._initOptions.LAYER_CONFIGURATION
         ).addTo(this._leafletMap);
         control.scale().addTo(this._leafletMap);
+
+        //I used this by global L variable
+        //because couldn't get this working
+        //with importing module
         L.control
             .locate(LEAFLET_CONFIG.LOCATE_CONTROL_CONFIG)
             .addTo(this._leafletMap);

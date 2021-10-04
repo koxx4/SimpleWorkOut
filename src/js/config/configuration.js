@@ -4,8 +4,7 @@ export const LEAFLET_CONFIG = {
     CONTAINER_ID: "map",
     MAP_CONFIG: {
         attributionControl: true,
-        dragging: !Browser.mobile,
-        touchZoom: true
+        touchZoom: true,
     },
     MAP_INITIAL_ZOOM: 13,
     MAP_INITIAL_CENTER: [51.505, -0.09],
@@ -18,12 +17,10 @@ export const LEAFLET_CONFIG = {
     LOCATE_CONTROL_CONFIG: {
         position: "topright",
         setView: "once",
-        drawCircle: false,
+        drawCircle: true,
         showPopup: false,
     },
 };
-
-
 
 export const INITIAL_PAGE_POSITION = "#home";
 export const INITIAL_PAGE_POSITION_DEBUG = "#demo";
