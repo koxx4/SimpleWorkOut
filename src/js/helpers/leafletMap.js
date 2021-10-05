@@ -8,7 +8,10 @@ import { LEAFLET_CONFIG } from "../config/configuration";
  * @class
  */
 export class LeafletMap {
-    #lines = [];
+    #lines = new Set();
+    #initOptions;
+    #mapInitialized = false;
+    #leafletMap;
 
     /**
      * Creates this wrapper and saves leaflet configuration for later.
@@ -18,69 +21,68 @@ export class LeafletMap {
      * @public
      */
     constructor(initOptions) {
-        this._initOptions = initOptions;
-        this._mapInitialized = false;
+        this.#initOptions = initOptions;
     }
 
     initialize() {
         return new Promise((resolve, reject) => {
             try {
-                this._leafletIconWorkaround();
-                this._createMapAndAttachTileLayer();
-                this._mapInitialized = true;
+                this.#leafletIconWorkaround();
+                this.#createMapAndAttachTileLayer();
+                this.#mapInitialized = true;
                 resolve("Leaflet map initialized properly");
             } catch (error) {
                 console.error(error.message);
-                this._leafletMap = null;
+                this.#leafletMap = null;
                 throw new Error("Failed to load the leaflet map!");
             }
         });
     }
 
     refreshMap() {
-        this._leafletMap.invalidateSize();
+        this.#leafletMap.invalidateSize();
     }
 
     isInitialized() {
-        return this._mapInitialized;
+        return this.#mapInitialized;
     }
 
     updateMapPosition(latitude, longitude) {
-        this._leafletMap.setView([latitude, longitude]);
+        this.#leafletMap.setView([latitude, longitude]);
     }
 
     onMapClick(callback) {
-        if (!this._mapInitialized)
+        if (!this.#mapInitialized)
             throw new Error(
                 "Tried to add map callback but map wasn't initialized"
             );
 
-        this._leafletMap.on("click", callback);
+        this.#leafletMap.on("click", callback);
     }
 
-    _createMapAndAttachTileLayer() {
-        this._leafletMap = map(
-            this._initOptions.CONTAINER_ID,
-            this._initOptions.MAP_CONFIG
+    #createMapAndAttachTileLayer() {
+        this.#leafletMap = map(
+            this.#initOptions.CONTAINER_ID,
+            this.#initOptions.MAP_CONFIG
         ).setView(
-            this._initOptions.MAP_INITIAL_CENTER,
-            this._initOptions.MAP_INITIAL_ZOOM
+            this.#initOptions.MAP_INITIAL_CENTER,
+            this.#initOptions.MAP_INITIAL_ZOOM
         );
         tileLayer(
-            this._initOptions.MAIN_TILE_PROVIDER,
-            this._initOptions.LAYER_CONFIGURATION
-        ).addTo(this._leafletMap);
-        control.scale().addTo(this._leafletMap);
+            this.#initOptions.MAIN_TILE_PROVIDER,
+            this.#initOptions.LAYER_CONFIGURATION
+        ).addTo(this.#leafletMap);
+        control.scale().addTo(this.#leafletMap);
 
         //I used this by global L variable
         //because couldn't get this working
         //with importing module
         L.control
             .locate(LEAFLET_CONFIG.LOCATE_CONTROL_CONFIG)
-            .addTo(this._leafletMap);
+            .addTo(this.#leafletMap);
     }
 
-    _leafletIconWorkaround() {
+    #leafletIconWorkaround() {
         //Known leaflet bug that prevents from proper rendering of markers on the map
         //https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-483402699
         delete Icon.Default.prototype._getIconUrl;
@@ -91,29 +93,33 @@ export class LeafletMap {
         });
     }
 
-    createNewLine(initialCoords, lineOptions) {
+    createAndRegisterNewLine(initialCoords, lineOptions) {
         const newLine = polyline(initialCoords, lineOptions).addTo(
-            this._leafletMap
+            this.#leafletMap
         );
-        this.#lines.push(newLine);
+        this.#lines.add(newLine);
         return newLine;
     }
 
-    deleteLine(line) {
-        const foundLineIndex = this.#lines.indexOf(line);
-        //If element was present in array
-        if (foundLineIndex > -1) {
-            line.removeFrom(this._leafletMap);
-            this.#lines.splice(foundLineIndex, 1);
-        }
+    registerLine(line) {
+        line.addTo(this.#leafletMap);
+        this.#lines.add(line);
+    }
+
+    unregisterLine(line) {
+        //If line was not registered
+        if (!this.#lines.has(line)) return;
+
+        line.removeFrom(this.#leafletMap);
+        this.#lines.delete(line);
     }
 
     addEventHandlerOnMapClick(callback) {
-        this._leafletMap.on("click", callback);
+        this.#leafletMap.on("click", callback);
     }
 
     distanceBetweenPoints(latlng1, latlng2) {
-        return this._leafletMap.distance(latlng1, latlng2);
+        return this.#leafletMap.distance(latlng1, latlng2);
     }
 
     lineDistance(line) {
@@ -123,10 +129,16 @@ export class LeafletMap {
         if (linePoints.length < 2) return;
 
         linePoints.reduce((previousPoint, point) => {
-            totalDistance += this._leafletMap.distance(previousPoint, point);
+            totalDistance += this.#leafletMap.distance(previousPoint, point);
             return point;
         });
 
         return totalDistance;
+    }
+
+    fitLine(line) {
+        if (!this.#lines.has(line)) return;
+
+        this.#leafletMap.fitBounds(line.getBounds());
     }
 }

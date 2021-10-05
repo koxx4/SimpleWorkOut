@@ -4,6 +4,7 @@ import { LeafletMap } from "../helpers/leafletMap";
 import { LEAFLET_CONFIG } from "../config/configuration";
 import { WorkoutEntry } from "../data/workoutEntry";
 import demoModel from "../model/demoModel";
+import { stripHTML } from "../helpers/helpers";
 
 class DemoController {
     /**
@@ -31,15 +32,16 @@ class DemoController {
     #startWorkoutForm(event) {
         event.preventDefault();
         demoView.renderWorkoutForm();
+        this.#deleteUserWorkoutTrail();
         this.#isUserAddingNewWorkout = true;
     }
 
     #exitWorkoutForm(event) {
         event.preventDefault();
-        demoView.clearAndHideWorkoutForm();
+        demoView.hideWorkoutForm();
         this.#isUserAddingNewWorkout = false;
         this.#deleteUserWorkoutTrail();
-        this.#userWorkoutTrailDistance = 0;
+        this.#clearWorkoutFormValues();
     }
 
     #submitWorkout(event) {
@@ -50,17 +52,23 @@ class DemoController {
         this.#exitWorkoutForm(event);
     }
 
+    #clearWorkoutFormValues() {
+        demoView.getWorkoutForm().reset();
+    }
+
     #constructWorkoutEntry() {
-        let workoutType = demoView.getWorkoutTypeInput().value;
-        let workoutDistance = demoView.getWorkoutDistanceInput().value;
-        let workoutDate = demoView.getWorkoutDateInput().value;
-        let workoutNote = demoView.getWorkoutNoteInput().value;
+        const workoutForm = demoView.getWorkoutForm();
+        let workoutType = workoutForm.type.value;
+        let workoutDistance = workoutForm.distance.value;
+        let workoutDate = workoutForm.date.value;
+        let workoutNote = workoutForm.note.value;
 
         workoutDistance =
             workoutDistance > 0
                 ? workoutDistance
                 : this.#userWorkoutTrailDistance;
         workoutDate = workoutDate ? workoutDate : "some beautiful day";
+        workoutNote = stripHTML(workoutNote);
 
         return new WorkoutEntry(
             workoutType,
@@ -117,14 +125,18 @@ class DemoController {
 
     #createNewUserWorkoutTrail(latlng) {
         const { lat, lng } = latlng;
-        this.#userWorkoutTrail = this.#leafletMap.createNewLine([[lat, lng]], {
-            color: "red",
-        });
+        this.#userWorkoutTrail = this.#leafletMap.createAndRegisterNewLine(
+            [[lat, lng]],
+            {
+                color: "red",
+            }
+        );
     }
 
     #deleteUserWorkoutTrail() {
-        this.#leafletMap.deleteLine(this.#userWorkoutTrail);
+        this.#leafletMap.unregisterLine(this.#userWorkoutTrail);
         this.#userWorkoutTrail = null;
+        this.#userWorkoutTrailDistance = 0;
     }
 
     #updateTrailDistance() {
@@ -157,7 +169,25 @@ class DemoController {
         demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
     }
 
-    #showWorkoutEntryOnMap(workoutID) {}
+    #showWorkoutEntryOnMap(workoutID) {
+        console.log("map show line");
+        //We don't want to mix showing other workouts
+        //with adding one
+        if (this.#isUserAddingNewWorkout) return;
+
+        const workout = demoModel.getWorkoutEntryByID(workoutID);
+
+        if (!workout) return;
+        if (!workout.trail) {
+            alert("No trail was saved for this workout!");
+            return;
+        }
+
+        this.#deleteUserWorkoutTrail();
+        this.#userWorkoutTrail = workout.trail;
+        this.#leafletMap.registerLine(this.#userWorkoutTrail);
+        this.#leafletMap.fitLine(this.#userWorkoutTrail);
+    }
 
     #showWorkoutEntryNote(workoutID) {
         const workout = demoModel.getWorkoutEntryByID(workoutID);

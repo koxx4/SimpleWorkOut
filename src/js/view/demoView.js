@@ -65,8 +65,7 @@ class DemoView extends View {
         this.#workoutHTMLForm.scrollIntoView({ behavior: "smooth" });
     }
 
-    clearAndHideWorkoutForm() {
-        //TODO: clearing form ...
+    hideWorkoutForm() {
         this.#mapElement.scrollIntoView({ behavior: "smooth" });
         faderUtility.fadeOut(this.#workoutHTMLForm, 600).then(() => {
             this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
@@ -93,20 +92,8 @@ class DemoView extends View {
         ).textContent = text;
     }
 
-    getWorkoutTypeInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-type-select");
-    }
-
-    getWorkoutDistanceInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-distance-input");
-    }
-
-    getWorkoutDateInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-date-input");
-    }
-
-    getWorkoutNoteInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-note-input");
+    getWorkoutForm() {
+        return this.#workoutHTMLForm;
     }
 
     #generateWorkoutEntryMarkup(workoutEntry) {

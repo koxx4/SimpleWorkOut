@@ -11,3 +11,8 @@ export const faderUtility = new Fader(
     FADEIN_ELEMENT_CLASS_NAME,
     FADEOUT_ELEMENT_CLASS_NAME
 );
+
+export const stripHTML = function (text) {
+    let doc = new DOMParser().parseFromString(text, "text/html");
+    return doc.body.textContent || "";
+};

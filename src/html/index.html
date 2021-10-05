@@ -55,7 +55,7 @@
                     <form class="flex-form hidden">
                         <div class="input-group input-group--workout-type">
                             <label for="workout-type-select">Workout type:</label>
-                            <select class="input-select" id="workout-type-select">
+                            <select name="type" class="input-select" id="workout-type-select">
                             <option>Walking</option>
                             <option>Hiking</option>
                             <option>Cycling</option>
@@ -65,16 +65,16 @@
                         </div>
                         <div class="input-group input-group--workout-distance">
                             <label for="workout-distance-input">Workout distance:</label>
-                            <input class="input-alphanumeric" type="number" id="workout-distance-input" placeholder="Type in distance [m]">
+                            <input name="distance" class="input-alphanumeric" type="number" id="workout-distance-input" placeholder="Type in distance [m]">
                             <small>We will show you calculated distance here, based on the workout path you set on map</small>
                         </div>
                         <div class="input-group input-group--workout-date">
                             <label for="workout-date-input">Workout date:</label>
-                            <input class="input-alphanumeric" type="date" id="workout-date-input">
+                            <input name="date" class="input-alphanumeric" type="date" id="workout-date-input">
                         </div>
                         <div class="input-group input-group--workout-note">
                             <label for="workout-note-input">Workout notes</label>
-                            <textarea class="input-alphanumeric" id="workout-note-input"></textarea>
+                            <textarea name="note" class="input-alphanumeric" id="workout-note-input"></textarea>
                             <small>Save here any notes or considerations about the workout you did</small>
                         </div>
                         <input class="button--submit-workout-form button-primary" type="submit" name="submitWorkoutData" value="Save!"/>
