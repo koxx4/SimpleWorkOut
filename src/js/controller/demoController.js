@@ -119,6 +119,7 @@ class DemoController {
                 }
                 this.#userWorkoutTrail.addLatLng(event.latlng);
                 this.#updateTrailDistance();
+                this.#updateTrailDistanceUI();
             }
         });
     }
@@ -129,8 +130,11 @@ class DemoController {
             [[lat, lng]],
             {
                 color: "red",
+                opacity: 0.9,
+                weight: 6,
             }
         );
+        this.#updateTrailDistanceUI();
     }
 
     #deleteUserWorkoutTrail() {
@@ -143,8 +147,16 @@ class DemoController {
         this.#userWorkoutTrailDistance = Math.round(
             this.#leafletMap.lineDistance(this.#userWorkoutTrail)
         );
+    }
+
+    #updateTrailDistanceUI() {
         const text = `${this.#userWorkoutTrailDistance} meters calculated`;
         demoView.setSmallTextWorkoutDistance(text);
+        this.#userWorkoutTrail.bindPopup(
+            `Workout trail. <b style="background-color: #77aa7744">Calculated distance: ${
+                this.#userWorkoutTrailDistance
+            } m.</b>`
+        );
     }
 
     #handleWorkoutEntryInteraction(event) {
