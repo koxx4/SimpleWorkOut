@@ -1,4 +1,4 @@
-import { map, Icon, tileLayer, control, polyline, Control } from "leaflet";
+import { control, Icon, map, polyline, tileLayer } from "leaflet";
 import "leaflet.locatecontrol";
 import { LEAFLET_CONFIG } from "../config/configuration";
 
@@ -8,7 +8,6 @@ import { LEAFLET_CONFIG } from "../config/configuration";
  * @class
  */
 export class LeafletMap {
-    #lines = new Set();
     #initOptions;
     #mapInitialized = false;
     #leafletMap;
@@ -80,6 +79,9 @@ export class LeafletMap {
         L.control
             .locate(LEAFLET_CONFIG.LOCATE_CONTROL_CONFIG)
             .addTo(this.#leafletMap);
+
+        if (LEAFLET_CONFIG.MAP_AUTOMATIC_SIZE_REFRESH)
+            this.#applyAutomaticMapRefresh();
     }
 
     #leafletIconWorkaround() {
@@ -93,25 +95,15 @@ export class LeafletMap {
         });
     }
 
-    createAndRegisterNewLine(initialCoords, lineOptions) {
-        const newLine = polyline(initialCoords, lineOptions).addTo(
-            this.#leafletMap
+    #applyAutomaticMapRefresh() {
+        setInterval(
+            this.#leafletMap.invalidateSize.bind(this.#leafletMap),
+            LEAFLET_CONFIG.MAP_AUTOMATIC_SIZE_REFRESH_INTERVAL
         );
-        this.#lines.add(newLine);
-        return newLine;
     }
 
-    registerLine(line) {
-        line.addTo(this.#leafletMap);
-        this.#lines.add(line);
-    }
-
-    unregisterLine(line) {
-        //If line was not registered
-        if (!this.#lines.has(line)) return;
-
-        line.removeFrom(this.#leafletMap);
-        this.#lines.delete(line);
+    createNewLine(initialCoords, lineOptions) {
+        return polyline(initialCoords, lineOptions);
     }
 
     addEventHandlerOnMapClick(callback) {
@@ -137,8 +129,14 @@ export class LeafletMap {
     }
 
     fitLine(line) {
-        if (!this.#lines.has(line)) return;
-
         this.#leafletMap.fitBounds(line.getBounds());
+    }
+
+    add(leafletElement) {
+        leafletElement.addTo(this.#leafletMap);
+    }
+
+    remove(leafletElement) {
+        leafletElement.removeFrom(this.#leafletMap);
     }
 }

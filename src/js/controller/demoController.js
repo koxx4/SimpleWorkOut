@@ -5,6 +5,7 @@ import { LEAFLET_CONFIG } from "../config/configuration";
 import { WorkoutEntry } from "../data/workoutEntry";
 import demoModel from "../model/demoModel";
 import { stripHTML } from "../helpers/helpers";
+import { marker, layerGroup } from "leaflet";
 
 class DemoController {
     /**
@@ -16,23 +17,25 @@ class DemoController {
     #isUserAddingNewWorkout = false;
     #userWorkoutTrail;
     #userWorkoutTrailDistance = 0;
+    #workoutEntryLayerGroup;
 
     constructor() {
         demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+        this.#workoutEntryLayerGroup = layerGroup();
     }
 
     #createLeafletMap() {
         this.#leafletMap.initialize().then((msg) => {
             demoView.deleteMapLoadingIcon();
-            this.#leafletMap.refreshMap();
+            this.#leafletMap.add(this.#workoutEntryLayerGroup);
             this.#registerMapEventHandlers();
         });
     }
 
     #startWorkoutForm(event) {
         event.preventDefault();
+        this.#workoutEntryLayerGroup.clearLayers();
         demoView.renderWorkoutForm();
-        this.#deleteUserWorkoutTrail();
         this.#isUserAddingNewWorkout = true;
     }
 
@@ -40,7 +43,9 @@ class DemoController {
         event.preventDefault();
         demoView.hideWorkoutForm();
         this.#isUserAddingNewWorkout = false;
-        this.#deleteUserWorkoutTrail();
+        this.#userWorkoutTrailDistance = 0;
+        this.#userWorkoutTrail = null;
+        this.#workoutEntryLayerGroup.clearLayers();
         this.#clearWorkoutFormValues();
     }
 
@@ -126,21 +131,29 @@ class DemoController {
 
     #createNewUserWorkoutTrail(latlng) {
         const { lat, lng } = latlng;
-        this.#userWorkoutTrail = this.#leafletMap.createAndRegisterNewLine(
-            [[lat, lng]],
-            {
-                color: "red",
-                opacity: 0.9,
-                weight: 6,
-            }
-        );
+        this.#userWorkoutTrail = this.#leafletMap.createNewLine([[lat, lng]], {
+            color: "red",
+            opacity: 0.9,
+            weight: 6,
+        });
+        this.#workoutEntryLayerGroup.addLayer(this.#userWorkoutTrail);
+
         this.#updateTrailDistanceUI();
+        this.#workoutEntryLayerGroup.addLayer(
+            this.#createTrailMarker(latlng, "Starting point of this workout")
+        );
     }
 
-    #deleteUserWorkoutTrail() {
-        this.#leafletMap.unregisterLine(this.#userWorkoutTrail);
-        this.#userWorkoutTrail = null;
-        this.#userWorkoutTrailDistance = 0;
+    #createTrailMarker(latlng, msg) {
+        const newMarker = marker(latlng, {
+            title: "End point of the workout",
+            riseOnHover: true,
+        });
+
+        this.#workoutEntryLayerGroup.addLayer(newMarker);
+        newMarker.bindPopup(msg, { autoClose: false }).openPopup();
+
+        return newMarker;
     }
 
     #updateTrailDistance() {
@@ -179,10 +192,10 @@ class DemoController {
     #deleteWorkoutEntry(workoutID) {
         demoModel.deleteWorkoutEntryByID(workoutID);
         demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+        this.#workoutEntryLayerGroup.clearLayers();
     }
 
     #showWorkoutEntryOnMap(workoutID) {
-        console.log("map show line");
         //We don't want to mix showing other workouts
         //with adding one
         if (this.#isUserAddingNewWorkout) return;
@@ -194,11 +207,24 @@ class DemoController {
             alert("No trail was saved for this workout!");
             return;
         }
+        this.#workoutEntryLayerGroup.clearLayers();
 
-        this.#deleteUserWorkoutTrail();
-        this.#userWorkoutTrail = workout.trail;
-        this.#leafletMap.registerLine(this.#userWorkoutTrail);
-        this.#leafletMap.fitLine(this.#userWorkoutTrail);
+        const trailPoints = workout.trail.getLatLngs();
+        const startingLatlng = trailPoints[0];
+        const endingLatlng = trailPoints[trailPoints.length - 1];
+
+        this.#workoutEntryLayerGroup.addLayer(
+            this.#createTrailMarker(
+                startingLatlng,
+                `${workout.type} started here...`
+            )
+        );
+        this.#workoutEntryLayerGroup.addLayer(
+            this.#createTrailMarker(endingLatlng, `... and ended there.`)
+        );
+
+        this.#workoutEntryLayerGroup.addLayer(workout.trail);
+        this.#leafletMap.fitLine(workout.trail);
     }
 
     #showWorkoutEntryNote(workoutID) {
