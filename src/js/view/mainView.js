@@ -93,10 +93,8 @@ class MainView extends View {
     renderHomePage(fadeTransition) {
         if (fadeTransition) {
             faderUtility
-                .fadeOut(this._demoSection, 600)
-                .then(() =>
-                    faderUtility.fadeIn(this._presentationSection, 600)
-                );
+                .fadeOut(this.#demoSection, 600)
+                .then(() => faderUtility.fadeIn(this.#homeSection, 600));
         } else {
             this.#demoSection.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
             this.#homeSection.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);

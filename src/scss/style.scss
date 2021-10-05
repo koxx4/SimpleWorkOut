@@ -50,12 +50,12 @@ a:hover{
 }
 
 .element-fade-out{
-  animation: fade-out 0.6s ease-out;
+  animation: fade-out 600ms ease-out;
   animation-fill-mode: forwards;
 }
 
 .element-fade-in{
-  animation: fade-in 0.6s ease-in;
+  animation: fade-in 600ms ease-in;
   animation-fill-mode: forwards;
 }
 

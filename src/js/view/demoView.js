@@ -65,8 +65,7 @@ class DemoView extends View {
         this.#workoutHTMLForm.scrollIntoView({ behavior: "smooth" });
     }
 
-    clearAndHideWorkoutForm() {
-        //TODO: clearing form ...
+    hideWorkoutForm() {
         this.#mapElement.scrollIntoView({ behavior: "smooth" });
         faderUtility.fadeOut(this.#workoutHTMLForm, 600).then(() => {
             this.#addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
@@ -93,20 +92,8 @@ class DemoView extends View {
         ).textContent = text;
     }
 
-    getWorkoutTypeInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-type-select");
-    }
-
-    getWorkoutDistanceInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-distance-input");
-    }
-
-    getWorkoutDateInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-date-input");
-    }
-
-    getWorkoutNoteInput() {
-        return this.#workoutHTMLForm.querySelector("#workout-note-input");
+    getWorkoutForm() {
+        return this.#workoutHTMLForm;
     }
 
     #generateWorkoutEntryMarkup(workoutEntry) {
@@ -117,11 +104,12 @@ class DemoView extends View {
                 : workoutEntry.distance + " m";
 
         return `
-            <li class="workout-history-list__entry">                   
+            <li data-workout-id="${workoutEntry.id}" class="workout-history-list__entry">                   
                 <p>${workoutEntry.type} on ${workoutEntry.date}. Total of ${distance}.</p>
-                <button value="show" data-workout-id="${workoutEntry.id}" class="button--show-workout-on-map">Show on map</button>
-                <button value="delete" data-workout-id="${workoutEntry.id}" class="button--delete-workout-entry">Delete entry</button>
-                <button value="note" data-workout-id="${workoutEntry.id}" class="button--delete-workout-note">Show note</button>
+                <button value="show" class="button--show-workout-on-map">Show on map</button>
+                <button value="delete" class="button--delete-workout-entry">Delete entry</button>
+                <button value="note" class="button--delete-workout-note">Show note</button>
+                <p class="workout-history-list__entry-note ${HIDDEN_ELEMENT_CLASS_NAME}">${workoutEntry.notes}</p>
             </li>`;
     }
 
@@ -151,6 +139,21 @@ class DemoView extends View {
 
     showWorkoutHistoryArea() {
         this.#workoutHistoryArea.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
+    }
+
+    toggleWorkoutEntryNote(id) {
+        const workoutEntryHTMLElement = this.#workoutEntryList.querySelector(
+            `.workout-history-list__entry[data-workout-id="${id}"]`
+        );
+        const noteElement = workoutEntryHTMLElement.querySelector(
+            ".workout-history-list__entry-note"
+        );
+
+        if (noteElement.classList.contains(HIDDEN_ELEMENT_CLASS_NAME)) {
+            faderUtility.fadeIn(noteElement, 600);
+        } else {
+            faderUtility.fadeOut(noteElement, 600);
+        }
     }
 }
 

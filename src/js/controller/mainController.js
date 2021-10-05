@@ -1,7 +1,8 @@
 import mainView from "../view/mainView";
 import {
-    IS_FADE_ANIMATION_ACTIVE,
-    INITIAL_PAGE_POSITION, INITIAL_PAGE_POSITION_DEBUG
+    FADE_BETWEEN_PAGE_SECTIONS,
+    INITIAL_PAGE_POSITION,
+    INITIAL_PAGE_POSITION_DEBUG,
 } from "../config/configuration";
 
 class MainController {
@@ -25,13 +26,13 @@ class MainController {
     #showAppropriatePageContent() {
         switch (location.hash) {
             case "#home":
-                mainView.renderHomePage(IS_FADE_ANIMATION_ACTIVE);
+                mainView.renderHomePage(FADE_BETWEEN_PAGE_SECTIONS);
                 break;
             case "#demo":
-                mainView.renderDemoPage(IS_FADE_ANIMATION_ACTIVE);
+                mainView.renderDemoPage(FADE_BETWEEN_PAGE_SECTIONS);
                 break;
             case "#login":
-                mainView.renderLoginPage(IS_FADE_ANIMATION_ACTIVE);
+                mainView.renderLoginPage(FADE_BETWEEN_PAGE_SECTIONS);
                 break;
         }
     }
@@ -44,10 +45,9 @@ class MainController {
     }
 
     showInitialPage() {
-        if (process.env.NODE_ENV === 'development')
+        if (process.env.NODE_ENV === "development")
             location.hash = INITIAL_PAGE_POSITION_DEBUG;
-        else
-            location.hash = INITIAL_PAGE_POSITION;
+        else location.hash = INITIAL_PAGE_POSITION;
     }
 }
 export default new MainController();
