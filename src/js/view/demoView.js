@@ -12,6 +12,7 @@ class DemoView extends View {
     #workoutHTMLForm;
     #workoutEntryList;
     #workoutHistoryArea;
+    #workoutTrailHint;
 
     constructor() {
         super(document.querySelector("#demo-section"));
@@ -36,6 +37,9 @@ class DemoView extends View {
         );
         this.#workoutHistoryArea = this._rootElement.querySelector(
             "#demo__workout-area__workout-history"
+        );
+        this.#workoutTrailHint = this._rootElement.querySelector(
+            ".demo__workout-area__workout-form__trail-hint"
         );
     }
 
@@ -154,6 +158,14 @@ class DemoView extends View {
         } else {
             faderUtility.fadeOut(noteElement, 600);
         }
+    }
+
+    hideTrailDrawingHint() {
+        this.#workoutTrailHint.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
+    }
+
+    showTrailDrawingHint() {
+        this.#workoutTrailHint.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
     }
 }
 

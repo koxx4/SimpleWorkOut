@@ -34,8 +34,8 @@ class DemoController {
 
     #startWorkoutForm(event) {
         event.preventDefault();
-        this.#workoutEntryLayerGroup.clearLayers();
         demoView.renderWorkoutForm();
+        this.#workoutEntryLayerGroup.clearLayers();
         this.#isUserAddingNewWorkout = true;
     }
 
