@@ -19,26 +19,6 @@
   align-items: center;
 }
 
-.nav__button{
-  border: 0;
-  font-weight: bold;
-  box-shadow: 2px 3px 8px 2px rgba(40,40,40,0.7);
-  padding: 0.4em 2em;
-  font-family: inherit;
-  font-size: 1em;
-  border-radius: 3em;
-  min-height: 80%;
-  flex-basis: 5em;
-  background: #77aa77;
-  transition: transform 0.2s;
-}
-
-.nav__button:hover{
-  cursor: pointer;
-  background: #99bb99;
-  transform: scale(1.1);
-}
-
 .app-bar__logo{
   flex-basis: 200px;
   filter: brightness(2);

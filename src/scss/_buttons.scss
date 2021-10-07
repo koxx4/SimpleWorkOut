@@ -13,3 +13,28 @@
   cursor: pointer;
   transform: translateY(-2px);
 }
+
+.nav__button{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 3em;
+  text-align: center;
+  border: 0;
+  font-weight: bold;
+  box-shadow: 2px 3px 8px 2px rgba(40,40,40,0.7);
+  padding: 0.4em 2em;
+  font-size: 1em;
+  border-radius: 3em;
+  min-height: 80%;
+  background: #77aa77;
+  transition: transform 0.2s;
+
+}
+
+.nav__button:hover{
+  cursor: pointer;
+  background: #99bb99;
+  transform: scale(1.05);
+}
