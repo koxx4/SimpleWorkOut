@@ -26,18 +26,6 @@ class MainView extends View {
         this.#homeSection = this._rootElement.querySelector("#home-section");
     }
 
-    addEventHandlerHomeButton(eventType, callback) {
-        this.#homeButton.addEventListener(eventType, callback);
-    }
-
-    addEventHandlerDemoButton(eventType, callback) {
-        this.#demoButton.addEventListener(eventType, callback);
-    }
-
-    addEventHandlerLoginButton(eventType, callback) {
-        this.#loginButton.addEventListener(eventType, callback);
-    }
-
     addEventHandlerOnHomeSectionLoad(callback) {
         this.#homeSection.addEventListener("sectionload", callback);
     }

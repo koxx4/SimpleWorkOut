@@ -8,21 +8,6 @@ import {
 class MainController {
     constructor() {}
 
-    #homeButtonAction() {
-        if (location.hash === "#home") return;
-        location.hash = "#home";
-    }
-
-    #demoButtonAction() {
-        if (location.hash === "#demo") return;
-        location.hash = "#demo";
-    }
-
-    #loginButtonAction() {
-        if (location.hash === "#login") return;
-        location.hash = "#login";
-    }
-
     #showAppropriatePageContent() {
         switch (location.hash) {
             case "#home":
@@ -38,9 +23,6 @@ class MainController {
     }
 
     registerEventHandlers() {
-        mainView.addEventHandlerHomeButton("click", this.#homeButtonAction);
-        mainView.addEventHandlerDemoButton("click", this.#demoButtonAction);
-        mainView.addEventHandlerLoginButton("click", this.#loginButtonAction);
         window.addEventListener("hashchange", this.#showAppropriatePageContent);
     }
 
