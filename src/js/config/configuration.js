@@ -1,5 +1,3 @@
-import { Browser } from "leaflet";
-
 export const LEAFLET_CONFIG = {
     CONTAINER_ID: "map",
     MAP_CONFIG: {
