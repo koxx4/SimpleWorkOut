@@ -20,6 +20,11 @@
   @extend .text-card;
 }
 
+.warning-card{
+  @extend .text-card;
+  background-color: #bc141b88;
+}
+
 .text-card h3{
   font-size: 2.3em;
   font-weight: bold;
@@ -36,6 +41,7 @@
 
 .text-card p{
   font-size: 1.6em;
+  margin-bottom: 0.5em;
 }
 
 @media (max-width: 330px ) {
