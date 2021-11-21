@@ -11,6 +11,7 @@ class MainController {
     #showAppropriatePageContent() {
         switch (location.hash) {
             case "#home":
+                debugger;
                 mainView.switchViewToHomeSection(
                     FADE_BETWEEN_PAGE_SECTIONS,
                     250

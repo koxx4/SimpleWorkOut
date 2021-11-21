@@ -18,8 +18,9 @@ class MainView extends View {
     #lastPagePosition;
 
     constructor() {
+        debugger;
         super(document.querySelector("body"));
-        this.#lastPagePosition = location.hash;
+        this.#lastPagePosition = INITIAL_PAGE_POSITION;
         this.#homeButton = this._rootElement.querySelector("#nav__button-home");
         this.#demoButton = this._rootElement.querySelector("#nav__button-demo");
         this.#loginButton =
@@ -131,5 +132,4 @@ class MainView extends View {
         return "";
     }
 }
-
 export default new MainView();
