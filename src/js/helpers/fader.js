@@ -1,35 +1,34 @@
 export class Fader {
-    constructor(
-        hiddenClassName = "hidden",
-        fadeInClassName = "fade-in",
-        fadeOutClassName = "fade-out"
-    ) {
+    constructor(hiddenClassName = "hidden") {
         this._hiddenClassName = hiddenClassName;
-        this._fadeInClassName = fadeInClassName;
-        this._fadeOutClassName = fadeOutClassName;
     }
 
     fadeIn(element, duration) {
-        element.classList.add(this._fadeInClassName);
+        element.style.animationFillMode = "forwards";
+        element.style.animation = `fade-in ${duration}ms ease-out`;
+
         element.classList.remove(this._hiddenClassName);
 
         return new Promise((resolve) => {
             setTimeout(() => {
-                element.classList.remove(this._fadeInClassName);
+                element.style.removeProperty("animation-fill-mode");
+                element.style.removeProperty("animation");
                 resolve();
-            }, duration + 50);
+            }, duration + 10);
         });
     }
 
     fadeOut(element, duration) {
-        element.classList.add(this._fadeOutClassName);
+        element.style.animationFillMode = `forwards`;
+        element.style.animation = `fade-out ${duration}ms ease-out`;
 
         return new Promise((resolve) => {
             setTimeout(() => {
                 element.classList.add(this._hiddenClassName);
-                element.classList.remove(this._fadeOutClassName);
+                element.style.removeProperty("animation-fill-mode");
+                element.style.removeProperty("animation");
                 resolve();
-            }, duration + 50);
+            }, duration + 10);
         });
     }
 }

@@ -67,7 +67,7 @@ class MainView extends View {
     renderDemoPage(fadeTransition) {
         if (fadeTransition) {
             faderUtility
-                .fadeOut(this.#homeSection, 600)
+                .fadeOut(this.#homeSection, 250)
                 .then(() => faderUtility.fadeIn(this.#demoSection, 600));
         } else {
             this.#demoSection.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
@@ -81,7 +81,7 @@ class MainView extends View {
     renderHomePage(fadeTransition) {
         if (fadeTransition) {
             faderUtility
-                .fadeOut(this.#demoSection, 600)
+                .fadeOut(this.#demoSection, 250)
                 .then(() => faderUtility.fadeIn(this.#homeSection, 600));
         } else {
             this.#demoSection.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
