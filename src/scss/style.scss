@@ -13,9 +13,14 @@
 @use  'workout-history';
 @use  'loading';
 @use  'buttons';
+@use 'login-section';
 
 body{
   font-family: 'Roboto', sans-serif;
+}
+
+html{
+  font-size: 15px;
 }
 
 .transparent{
