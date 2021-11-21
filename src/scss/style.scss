@@ -54,16 +54,6 @@ html{
   font-size: 1.1rem;
 }
 
-.element-fade-out{
-  animation: fade-out 600ms ease-out;
-  animation-fill-mode: forwards;
-}
-
-.element-fade-in{
-  animation: fade-in 600ms ease-in;
-  animation-fill-mode: forwards;
-}
-
 @keyframes fade-out{
   0%{ opacity: 1 }
   100%{opacity: 0}
