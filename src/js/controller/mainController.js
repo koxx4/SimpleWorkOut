@@ -11,13 +11,25 @@ class MainController {
     #showAppropriatePageContent() {
         switch (location.hash) {
             case "#home":
-                mainView.renderHomePage(FADE_BETWEEN_PAGE_SECTIONS);
+                mainView.switchViewToHomeSection(
+                    FADE_BETWEEN_PAGE_SECTIONS,
+                    250
+                );
                 break;
             case "#demo":
-                mainView.renderDemoPage(FADE_BETWEEN_PAGE_SECTIONS);
+                mainView.switchViewToDemoSection(
+                    FADE_BETWEEN_PAGE_SECTIONS,
+                    250
+                );
                 break;
             case "#login":
-                mainView.renderLoginPage(FADE_BETWEEN_PAGE_SECTIONS);
+                mainView.switchViewToLoginPage(FADE_BETWEEN_PAGE_SECTIONS, 250);
+                break;
+            case "#register":
+                mainView.switchViewToRegistrationPage(
+                    FADE_BETWEEN_PAGE_SECTIONS,
+                    250
+                );
                 break;
         }
     }

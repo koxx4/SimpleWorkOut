@@ -6,7 +6,6 @@ export class Fader {
     fadeIn(element, duration) {
         element.style.animationFillMode = "forwards";
         element.style.animation = `fade-in ${duration}ms ease-out`;
-
         element.classList.remove(this._hiddenClassName);
 
         return new Promise((resolve) => {
@@ -19,7 +18,7 @@ export class Fader {
     }
 
     fadeOut(element, duration) {
-        element.style.animationFillMode = `forwards`;
+        element.style.animationFillMode = "forwards";
         element.style.animation = `fade-out ${duration}ms ease-out`;
 
         return new Promise((resolve) => {
