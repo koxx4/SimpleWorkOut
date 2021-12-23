@@ -28,3 +28,5 @@ export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
 export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";
 export const FADEIN_ELEMENT_CLASS_NAME = "element-fade-in";
 export const FADE_BETWEEN_PAGE_SECTIONS = true;
+export const REGISTRATION_ENDPOINT = "";
+export const LOGIN_ENDPOINT = "";

@@ -25,6 +25,11 @@
   background-color: #bc141b88;
 }
 
+.success-card{
+  @extend .text-card;
+  background-color: #94c973;
+}
+
 .text-card h3{
   font-size: 2.3em;
   font-weight: bold;

@@ -1,6 +1,9 @@
 import { View } from "./view";
 import { faderUtility } from "../helpers/helpers";
-import { HIDDEN_ELEMENT_CLASS_NAME, INITIAL_PAGE_POSITION } from "../config/configuration";
+import {
+    HIDDEN_ELEMENT_CLASS_NAME,
+    INITIAL_PAGE_POSITION,
+} from "../config/configuration";
 
 class MainView extends View {
     #homeButton;
@@ -15,7 +18,6 @@ class MainView extends View {
     #lastPagePosition;
 
     constructor() {
-        debugger;
         super(document.querySelector("body"));
         this.#lastPagePosition = INITIAL_PAGE_POSITION;
         this.#homeButton = this._rootElement.querySelector("#nav__button-home");

@@ -1,6 +1,8 @@
 #app-footer{
   padding: 0.5em;
   background-color: #33333355;
-  height: fit-content;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
   box-shadow: 0px -2px 3px 0px #33333355;
 }

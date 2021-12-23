@@ -14,4 +14,8 @@ export class View {
     _generateChangedHTML(data) {}
 
     _updateControlledHTML(newHTML) {}
+
+    _removeElementFromThisView(query) {
+        this._rootElement.removeChild(this._rootElement.querySelector(query));
+    }
 }
