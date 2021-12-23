@@ -2,7 +2,7 @@ import { Fader } from "./fader";
 import {
     FADEIN_ELEMENT_CLASS_NAME,
     FADEOUT_ELEMENT_CLASS_NAME,
-    HIDDEN_ELEMENT_CLASS_NAME,
+    HIDDEN_ELEMENT_CLASS_NAME
 } from "../config/configuration";
 
 export const domParser = new DOMParser();

@@ -1,9 +1,6 @@
 import { View } from "./view";
 import { faderUtility } from "../helpers/helpers";
-import {
-    HIDDEN_ELEMENT_CLASS_NAME,
-    INITIAL_PAGE_POSITION,
-} from "../config/configuration";
+import { HIDDEN_ELEMENT_CLASS_NAME, INITIAL_PAGE_POSITION } from "../config/configuration";
 
 class MainView extends View {
     #homeButton;
