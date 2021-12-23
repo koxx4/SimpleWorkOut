@@ -5,7 +5,7 @@ import { LEAFLET_CONFIG } from "../config/configuration";
 import { WorkoutEntry } from "../data/workoutEntry";
 import demoModel from "../model/demoModel";
 import { stripHTML } from "../helpers/helpers";
-import { marker, layerGroup } from "leaflet";
+import { layerGroup, marker } from "leaflet";
 
 class DemoController {
     /**

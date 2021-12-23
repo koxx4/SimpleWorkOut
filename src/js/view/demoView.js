@@ -1,7 +1,6 @@
 import { View } from "./view";
 import { HIDDEN_ELEMENT_CLASS_NAME } from "../config/configuration";
 import { faderUtility } from "../helpers/helpers";
-import { retina } from "leaflet/src/core/Browser";
 
 class DemoView extends View {
     #mapElement;
