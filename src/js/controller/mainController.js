@@ -2,7 +2,7 @@ import mainView from "../view/mainView";
 import {
     FADE_BETWEEN_PAGE_SECTIONS,
     INITIAL_PAGE_POSITION,
-    INITIAL_PAGE_POSITION_DEBUG,
+    INITIAL_PAGE_POSITION_DEBUG
 } from "../config/configuration";
 
 class MainController {
