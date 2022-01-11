@@ -20,13 +20,19 @@
 }
 
 .app-bar__logo{
-  flex-basis: 200px;
+  flex-basis: 100px;
+  height: 100px;
+  transform: scale(1.1);
   filter: brightness(2);
   transition: filter 0.25s;
 }
 
 .app-bar__logo:hover{
   filter: brightness(2.4);
+}
+
+.app-bar__nav .nav__button{
+    height: 2em;
 }
 
 @media (max-width: 570px) {
@@ -37,43 +43,61 @@
     height: fit-content;
     flex-direction: column;
     justify-content: center;
+    height: 10rem;
+    justify-content: space-evenly;
+    align-items: center;
   }
 
   .app-bar__nav{
     border-top: #bbbbbbaa;
+    padding: 1rem;
     border-width: 3px 0 0 0;
     border-style: solid;
     border-radius: 0.2em;
-    flex-basis: 6rem;
-    width: 95%;
-  }
-
-  .app-bar__logo{
-    width: 200px;
-    flex-basis: 100px;
+    flex-basis: 30%;
+    width: 90%;
+    height: fit-content;
   }
 
   .nav__button{
     min-height: 0;
-    flex-basis: 3em;
+    flex-basis: 2em;
   }
+
+  .app-bar__logo{
+    min-width: 0;
+    min-height: 0;
+    transform: scale(2);
+    flex-basis: 70%;
+  }
+
 }
 
 @media (max-width: 380px) {
   .app-bar__nav{
-    flex-basis: 15rem;
+    flex-basis: 50%;
+    min-width: 0;
+    min-height: 0;
     flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .app-bar{
+    height: 15rem;
   }
 
   .nav__button{
-     min-height: 0;
-     min-width: 0;
+    flex-basis: 1em;
   }
+
+
+  .app-bar__logo{
+    flex-basis: 20%;
+    transform: scale(3);
+  }
+
 }
 
 @media (max-width: 199px) {
-  .app-bar__logo{
-    max-width: 100px;
-    flex-basis: 100px;
-  }
 }

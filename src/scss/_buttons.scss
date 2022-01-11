@@ -30,11 +30,8 @@
 }
 
 .nav__button{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  flex-basis: 3em;
   text-align: center;
   border: 0;
   font-weight: bold;
@@ -42,10 +39,8 @@
   padding: 0.4em 2em;
   font-size: 1em;
   border-radius: 3em;
-  min-height: 80%;
   background: #77aa77;
   transition: transform 0.2s;
-
 }
 
 .nav__button:hover{
