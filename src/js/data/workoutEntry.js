@@ -1,4 +1,4 @@
-export class WorkoutEntry {
+export default class WorkoutEntry {
     type;
     distance;
     date;
