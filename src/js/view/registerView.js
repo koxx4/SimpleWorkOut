@@ -15,7 +15,7 @@ class RegisterView extends View {
     }
 
     addEventListenerSubmitRegistration(event, callback) {
-        this.#registrationForm.elements["submit-button"].addEventListener(
+        this.#registrationForm.elements["register-submit"].addEventListener(
             event,
             callback
         );

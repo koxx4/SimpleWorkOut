@@ -25,6 +25,11 @@
   background-color: #bc141b88;
 }
 
+.error-card{
+  @extend .text-card;
+  background-color: #A82A2Daa;
+}
+
 .success-card{
   @extend .text-card;
   background-color: #94c973;

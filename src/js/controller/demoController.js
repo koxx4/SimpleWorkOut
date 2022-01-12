@@ -2,7 +2,7 @@ import demoView from "../view/demoView";
 import mainView from "../view/mainView";
 import { LeafletMap } from "../helpers/leafletMap";
 import { LEAFLET_CONFIG } from "../config/configuration";
-import { WorkoutEntry } from "../data/workoutEntry";
+import WorkoutEntry from "../data/workoutEntry";
 import demoModel from "../model/demoModel";
 import { stripHTML } from "../helpers/helpers";
 import { layerGroup, marker } from "leaflet";
@@ -20,7 +20,7 @@ class DemoController {
     #workoutEntryLayerGroup;
 
     constructor() {
-        demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+        demoView.renderWorkoutEntries(demoModel.appUser.workoutEntries);
         this.#workoutEntryLayerGroup = layerGroup();
     }
 
@@ -53,7 +53,7 @@ class DemoController {
         event.preventDefault();
         const newWorkoutEntry = this.#constructWorkoutEntry();
         demoModel.addWorkoutEntry(newWorkoutEntry);
-        demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+        demoView.renderWorkoutEntries(demoModel.appUser.workoutEntries);
         this.#exitWorkoutForm(event);
     }
 
@@ -191,7 +191,7 @@ class DemoController {
 
     #deleteWorkoutEntry(workoutID) {
         demoModel.deleteWorkoutEntryByID(workoutID);
-        demoView.renderWorkoutEntries(demoModel.getWorkoutEntries());
+        demoView.renderWorkoutEntries(demoModel.appUser.workoutEntries);
         this.#workoutEntryLayerGroup.clearLayers();
     }
 

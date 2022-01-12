@@ -31,6 +31,8 @@ class MainController {
                     250
                 );
                 break;
+            default:
+                break;
         }
     }
 
