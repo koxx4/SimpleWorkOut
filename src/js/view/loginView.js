@@ -6,7 +6,7 @@ class LoginView extends View {
 
     constructor() {
         super(document.querySelector("#login-section"));
-        this.#loginForm = this._rootElement.querySelector(
+        this.#loginForm = this.rootElement.querySelector(
             ".login-section__form"
         );
         this.#loginSubmitButton = this.#loginForm.elements["login-submit"];
@@ -29,7 +29,7 @@ class LoginView extends View {
     }
 
     showRegistrationErrorInfo(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentHTML(
             "afterbegin",
             `<div class="login-section__login-error error-card m1">
                 <h3>There were some errors while logging in!</h3>
@@ -38,18 +38,18 @@ class LoginView extends View {
             </div>`
         );
 
-        this._rootElement
+        this.rootElement
             .querySelector(".login-section__login-error button")
             .addEventListener(
                 "click",
                 callbackOnConfirm
                     ? callbackOnConfirm
-                    : (e) => this.closeLoginErrorInfo()
+                    : e => this.closeLoginErrorInfo()
             );
     }
 
     closeLoginErrorInfo() {
-        this._removeElementFromThisView(".login-section__login-error");
+        this.removeElementFromThisView(".login-section__login-error");
     }
 }
 export default new LoginView();

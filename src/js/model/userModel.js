@@ -22,11 +22,10 @@ export class UserModel {
     }
 
     deleteWorkoutEntryByID(id) {
-        const entry = this.#appUser.workoutEntries.find((element) => {
+        const entry = this.#appUser.workoutEntries.find(element => {
             return element.id === id;
         });
         this.deleteWorkoutEntry(entry);
-        console.log(this);
     }
 
     deleteAllWorkoutEntries() {

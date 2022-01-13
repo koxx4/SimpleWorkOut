@@ -13,7 +13,7 @@ class DemoController {
      * @type {LeafletMap}
      * @private
      */
-    #leafletMap = new LeafletMap(LEAFLET_CONFIG);
+    #leafletMap;
     #isUserAddingNewWorkout = false;
     #userWorkoutTrail;
     #userWorkoutTrailDistance = 0;
@@ -25,7 +25,8 @@ class DemoController {
     }
 
     #createLeafletMap() {
-        this.#leafletMap.initialize().then((msg) => {
+        this.#leafletMap = new LeafletMap(LEAFLET_CONFIG);
+        this.#leafletMap.initialize().then(msg => {
             demoView.deleteMapLoadingIcon();
             this.#leafletMap.add(this.#workoutEntryLayerGroup);
             this.#registerMapEventHandlers();
@@ -104,20 +105,19 @@ class DemoController {
             this.#handleWorkoutEntryInteraction.bind(this)
         );
 
-        mainView.addEventHandlerOnDemoSectionLoad(() => {
-            if (!this.#leafletMap.isInitialized()) {
-                demoView.renderMapLoadingIcon();
-                this.#createLeafletMap();
-            }
+        demoView.rootElement.addEventListener("sectionfocus", _ => {
+            demoView.renderMapLoadingIcon();
+            this.#createLeafletMap();
         });
 
-        mainView.addEventHandlerOnDemoSectionExit(() => {
+        demoView.rootElement.addEventListener("sectionexit", _ => {
             demoView.deleteMapLoadingIcon();
+            this.#leafletMap.destroy();
         });
     }
 
     #registerMapEventHandlers() {
-        this.#leafletMap.addEventHandlerOnMapClick((event) => {
+        this.#leafletMap.addEventHandlerOnMapClick(event => {
             if (this.#isUserAddingNewWorkout) {
                 if (!this.#userWorkoutTrail) {
                     this.#createNewUserWorkoutTrail(event.latlng);

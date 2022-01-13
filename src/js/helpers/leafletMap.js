@@ -38,6 +38,11 @@ export class LeafletMap {
         });
     }
 
+    destroy() {
+        this.#leafletMap.off();
+        this.#leafletMap.remove();
+    }
+
     refreshMap() {
         this.#leafletMap.invalidateSize();
     }

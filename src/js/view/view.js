@@ -1,8 +1,8 @@
 export class View {
-    _rootElement;
+    #rootElement;
 
     constructor(rootElement) {
-        this._rootElement = rootElement;
+        this.#rootElement = rootElement;
     }
 
     render(data) {
@@ -10,12 +10,19 @@ export class View {
         this._updateControlledHTML(newHTML);
     }
 
-    //Function to override
     _generateChangedHTML(data) {}
 
     _updateControlledHTML(newHTML) {}
 
-    _removeElementFromThisView(query) {
+    removeElementFromThisView(query) {
         this._rootElement.removeChild(this._rootElement.querySelector(query));
+    }
+
+    get rootElement() {
+        return this.#rootElement;
+    }
+
+    set rootElement(value) {
+        this.#rootElement = value;
     }
 }

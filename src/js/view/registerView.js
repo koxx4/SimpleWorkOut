@@ -5,7 +5,7 @@ class RegisterView extends View {
 
     constructor() {
         super(document.querySelector("#register-section"));
-        this.#registrationForm = this._rootElement.querySelector(
+        this.#registrationForm = this.rootElement.querySelector(
             ".register-section__form"
         );
     }
@@ -26,7 +26,7 @@ class RegisterView extends View {
     }
 
     showRegistrationSuccessfulInfo(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentHTML(
             "afterbegin",
             `<div class="register-section__register-success success-card m1">
                 <h3>Registration successful!</h3>
@@ -34,18 +34,18 @@ class RegisterView extends View {
                 <button class="button button-primary">Super!</button>
             </div>`
         );
-        this._rootElement
+        this.rootElement
             .querySelector(".register-section__register-success button")
             .addEventListener(
                 "click",
                 callbackOnConfirm
                     ? callbackOnConfirm
-                    : (e) => this.closeRegistrationSuccessfulInfo()
+                    : e => this.closeRegistrationSuccessfulInfo()
             );
     }
 
     showRegistrationFailureInfo(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentHTML(
             "afterbegin",
             `<div class="register-section__register-failure warning-card m1">
                 <h3>Registration failure!</h3>
@@ -53,18 +53,18 @@ class RegisterView extends View {
                 <button class="button button-warning">Uh...</button>
             </div>`
         );
-        this._rootElement
+        this.rootElement
             .querySelector(".register-section__register-failure button")
             .addEventListener(
                 "click",
                 callbackOnConfirm
                     ? callbackOnConfirm
-                    : (e) => this.closeRegistrationFailureInfo()
+                    : e => this.closeRegistrationFailureInfo()
             );
     }
 
     showRegistrationWarning(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentHTML(
             "afterbegin",
             `<div class="register-section__register-warning warning-card m1">
                 <h3>Please read before registering!</h3>
@@ -72,26 +72,26 @@ class RegisterView extends View {
                 <button class="button button-primary">Okay, I get it!</button>
             </div>`
         );
-        this._rootElement
+        this.rootElement
             .querySelector(".register-section__register-warning button")
             .addEventListener(
                 "click",
                 callbackOnConfirm
                     ? callbackOnConfirm
-                    : (e) => this.closeRegistrationWarningInfo()
+                    : e => this.closeRegistrationWarningInfo()
             );
     }
 
     closeRegistrationSuccessfulInfo() {
-        this._removeElementFromThisView(".register-section__register-success");
+        this.removeElementFromThisView(".register-section__register-success");
     }
 
     closeRegistrationFailureInfo() {
-        this._removeElementFromThisView(".register-section__register-failure");
+        this.removeElementFromThisView(".register-section__register-failure");
     }
 
     closeRegistrationWarningInfo() {
-        this._removeElementFromThisView(".register-section__register-warning");
+        this.removeElementFromThisView(".register-section__register-warning");
     }
 }
 export default new RegisterView();
