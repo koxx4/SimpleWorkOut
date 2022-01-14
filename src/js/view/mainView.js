@@ -36,5 +36,13 @@ class MainView extends View {
     showProfileButton(fade) {
         return this.showSection(this.#myProfileButton, fade, 250);
     }
+
+    hideLoginButton(fade) {
+        return this.hideSection(this.#loginButton, fade, 250);
+    }
+
+    showLoginButton(fade) {
+        return this.showSection(this.#loginButton, fade, 250);
+    }
 }
 export default new MainView();

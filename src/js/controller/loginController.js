@@ -2,7 +2,7 @@ import loginView from "../view/loginView";
 import { USER_DATA_ENDPOINT } from "../config/configuration";
 import userModel from "../model/userModel";
 import AppUser from "../data/appUser";
-import { dbWorkoutToJS } from "../helpers/helpers";
+import { dbWorkoutToJS, fetchWithUserCredentials } from "../helpers/helpers";
 import mainView from "../view/mainView";
 
 class LoginController {
@@ -11,9 +11,11 @@ class LoginController {
     registerEventHandlers() {
         loginView.addEventListenerLoginSubmitButton("click", event => {
             event.preventDefault();
+            if (userModel.isLoggedIn) return;
             this.#loadUserProfileData(loginView.getLoginFormData())
                 .then(() => this.#redirectToUserProfilePage())
                 .then(() => mainView.showProfileButton(true))
+                .then(() => mainView.hideLoginButton(true))
                 .catch(reason => this.#handleLoginError(reason.message));
         });
     }
@@ -22,18 +24,15 @@ class LoginController {
         const username = loginFormData.get("username");
         const password = loginFormData.get("password");
 
-        const httpBasicHeaderValue =
-            "Basic " +
-            Buffer.from(`${username}:${password}`).toString("base64");
-
-        const reqHeaders = new Headers();
-        reqHeaders.set("Authorization", httpBasicHeaderValue);
-
-        return fetch(`${USER_DATA_ENDPOINT}/${username}/data`, {
-            headers: reqHeaders,
-            method: "GET",
-            mode: "cors",
-        })
+        return fetchWithUserCredentials(
+            `${USER_DATA_ENDPOINT}/${username}/data`,
+            username,
+            password,
+            {
+                method: "GET",
+                mode: "cors",
+            }
+        )
             .then(response => {
                 if (!response.ok) throw new Error(response.statusText);
                 return response.json();

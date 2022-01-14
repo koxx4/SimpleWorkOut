@@ -39,6 +39,14 @@ export const dbWorkoutToJS = function (dbWorkoutJson) {
 
 export const getUserStats = function (user) {
     const workoutCount = user.workoutEntries.length;
+
+    if (workoutCount === 0)
+        return {
+            workoutCount: 0,
+            workoutTotalDistance: 0,
+            mostActiveMonth: 0,
+        };
+
     const workoutTotalDistance = user.workoutEntries.reduce(
         (previousValue, currentValue) => {
             previousValue += currentValue.distance;
@@ -62,4 +70,22 @@ export const getUserStats = function (user) {
         workoutTotalDistance: workoutTotalDistance,
         mostActiveMonth: mostActiveMonthIndex + 1,
     };
+};
+
+export const fetchWithUserCredentials = function (
+    endpoint,
+    username,
+    password,
+    callOptions
+) {
+    const httpBasicHeaderValue =
+        "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
+
+    if (callOptions.headers === undefined) {
+        const reqHeaders = new Headers();
+        reqHeaders.set("Authorization", httpBasicHeaderValue);
+        callOptions.headers = reqHeaders;
+    } else callOptions.headers.set("Authorization", httpBasicHeaderValue);
+
+    return fetch(endpoint, callOptions);
 };
