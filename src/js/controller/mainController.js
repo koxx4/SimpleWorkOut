@@ -10,6 +10,7 @@ import loginView from "../view/loginView";
 import registerView from "../view/registerView";
 import profileView from "../view/profileView";
 import homeView from "../view/homeView";
+import userModel from "../model/userModel";
 
 class MainController {
     #sectionFocusGainEvent;
@@ -51,6 +52,7 @@ class MainController {
                 );
                 break;
             case "#profile-overview":
+                if (!userModel.isLoggedIn) break;
                 await this.#switchFromActiveSectionTo(
                     profileView.rootElement,
                     FADE_BETWEEN_PAGE_SECTIONS,

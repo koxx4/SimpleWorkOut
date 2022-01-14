@@ -15,7 +15,7 @@ export class View {
     _updateControlledHTML(newHTML) {}
 
     removeElementFromThisView(query) {
-        this._rootElement.removeChild(this._rootElement.querySelector(query));
+        this.#rootElement.removeChild(this.#rootElement.querySelector(query));
     }
 
     get rootElement() {

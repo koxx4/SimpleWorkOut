@@ -3,16 +3,18 @@ import { USER_DATA_ENDPOINT } from "../config/configuration";
 import userModel from "../model/userModel";
 import AppUser from "../data/appUser";
 import { dbWorkoutToJS } from "../helpers/helpers";
+import mainView from "../view/mainView";
 
 class LoginController {
     constructor() {}
 
     registerEventHandlers() {
-        loginView.addEventListenerLoginSubmitButton("click", (event) => {
+        loginView.addEventListenerLoginSubmitButton("click", event => {
             event.preventDefault();
             this.#loadUserProfileData(loginView.getLoginFormData())
                 .then(() => this.#redirectToUserProfilePage())
-                .catch((reason) => this.#handleLoginError(reason.message));
+                .then(() => mainView.showProfileButton(true))
+                .catch(reason => this.#handleLoginError(reason.message));
         });
     }
 
@@ -32,18 +34,18 @@ class LoginController {
             method: "GET",
             mode: "cors",
         })
-            .then((response) => {
+            .then(response => {
                 if (!response.ok) throw new Error(response.statusText);
                 return response.json();
             })
-            .then((userData) => {
+            .then(userData => {
                 this.processFetchedUserData(userData, password);
             });
     }
 
     processFetchedUserData(userData, password) {
         const jsWorkouts = userData.workouts
-            ? userData.workouts.map((value) => dbWorkoutToJS(value))
+            ? userData.workouts.map(value => dbWorkoutToJS(value))
             : [];
 
         userModel.appUser = new AppUser(
@@ -52,6 +54,7 @@ class LoginController {
             jsWorkouts
         );
         userModel.appUser.email = userData.email;
+        userModel.isLoggedIn = true;
     }
 
     #redirectToUserProfilePage() {

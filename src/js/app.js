@@ -7,10 +7,12 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 import loginController from "./controller/loginController";
 import registerController from "./controller/registerController";
+import profileController from "./controller/profileController";
 
 demoController.registerEventHandlers();
 loginController.registerEventHandlers();
 registerController.registerEventHandlers();
+profileController.registerEventHandlers();
 mainController.registerEventHandlers();
 
 mainController.showInitialPage();

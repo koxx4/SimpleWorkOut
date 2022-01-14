@@ -28,5 +28,13 @@ class MainView extends View {
         if (fadeActive) return faderUtility.fadeOut(section, duration);
         else section.classList.add(HIDDEN_ELEMENT_CLASS_NAME);
     }
+
+    hideProfileButton(fade) {
+        return this.hideSection(this.#myProfileButton, fade, 250);
+    }
+
+    showProfileButton(fade) {
+        return this.showSection(this.#myProfileButton, fade, 250);
+    }
 }
 export default new MainView();

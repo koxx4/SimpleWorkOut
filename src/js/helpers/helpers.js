@@ -5,6 +5,7 @@ import {
     HIDDEN_ELEMENT_CLASS_NAME,
 } from "../config/configuration";
 import WorkoutEntry from "../data/workoutEntry";
+import userModel from "../model/userModel";
 
 export const domParser = new DOMParser();
 export const faderUtility = new Fader(
@@ -20,7 +21,7 @@ export const stripHTML = function (text) {
 
 export const dbWorkoutToJS = function (dbWorkoutJson) {
     const trail = dbWorkoutJson.trail
-        ? dbWorkoutJson.trail.trailPoints.map((value) => [
+        ? dbWorkoutJson.trail.trailPoints.map(value => [
               value.latitude,
               value.longitude,
           ])
@@ -34,4 +35,31 @@ export const dbWorkoutToJS = function (dbWorkoutJson) {
         trail,
         dbWorkoutJson.id
     );
+};
+
+export const getUserStats = function (user) {
+    const workoutCount = user.workoutEntries.length;
+    const workoutTotalDistance = user.workoutEntries.reduce(
+        (previousValue, currentValue) => {
+            previousValue += currentValue.distance;
+            return previousValue;
+        },
+        0
+    );
+
+    const months = new Array(12);
+    user.workoutEntries.forEach(value => {
+        months[value.date?.getMonth()]++;
+    });
+    let mostActiveMonthIndex = 0;
+    months.forEach((currentMonthValue, currentIndex) => {
+        if (currentMonthValue > months[mostActiveMonthIndex])
+            mostActiveMonthIndex = currentIndex;
+    });
+
+    return {
+        workoutCount: workoutCount,
+        workoutTotalDistance: workoutTotalDistance,
+        mostActiveMonth: mostActiveMonthIndex + 1,
+    };
 };
