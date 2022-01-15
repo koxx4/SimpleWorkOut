@@ -169,7 +169,10 @@ class ProfileController {
     }
 
     #filloutUserInfo() {
-        profileView.profileDescription.textContent = `Hello, ${userModel.appUser.username}. You should add some workouts!`;
+        profileView.profileDescription.insertAdjacentHTML(
+            "afterbegin",
+            `Hello, <b>${userModel.appUser.username}</b>. You should add some workouts!`
+        );
     }
 
     #filloutUserStats() {
