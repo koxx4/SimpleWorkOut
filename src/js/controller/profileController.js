@@ -55,8 +55,7 @@ class ProfileController {
                 alert("Account successfully deleted!");
                 this.#logoutUser();
             })
-            .catch(reason => alert(reason.message));
-        console.log("calling delete user data");
+            .catch(reason => profileView.showErrorMessage(reason.message));
     }
 
     #changePassword() {
@@ -81,11 +80,15 @@ class ProfileController {
                     return;
                 }
 
-                userModel.appUser.password = profileView.newPassValue;
-                this.#savePasswordChange();
-                profileView.closePasswordUpdateForm();
-                this.#isPasswordAreaShown = false;
-                profileView.showSuccessMessage("Success!");
+                this.#savePasswordChange()
+                    .then(_ => {
+                        profileView.closePasswordUpdateForm();
+                        profileView.showSuccessMessage("Success!");
+                        this.#isPasswordAreaShown = false;
+                    })
+                    .catch(reason =>
+                        profileView.showErrorMessage("Error", reason.message)
+                    );
             },
             e => {
                 e.preventDefault();
@@ -109,12 +112,16 @@ class ProfileController {
                     return;
                 }
 
-                userModel.appUser.username = profileView.newNicknameValue;
-                this.#saveNicknameChange();
-                this.#filloutUserInfo();
-                profileView.closeNicknameUpdateForm();
-                this.#isNicknameAreaShown = false;
-                profileView.showSuccessMessage("Success!");
+                this.#saveNicknameChange()
+                    .then(_ => {
+                        this.#filloutUserInfo();
+                        profileView.closeNicknameUpdateForm();
+                        profileView.showSuccessMessage("Success!");
+                        this.#isNicknameAreaShown = false;
+                    })
+                    .catch(reason =>
+                        profileView.showErrorMessage("Error", reason.message)
+                    );
             },
             e => {
                 e.preventDefault();
@@ -125,9 +132,41 @@ class ProfileController {
         this.#isNicknameAreaShown = true;
     }
 
-    #savePasswordChange() {}
+    #savePasswordChange() {
+        const payload = new FormData();
+        payload.set("password", profileView.newPassValue);
 
-    #saveNicknameChange() {}
+        return fetchWithUserCredentials(
+            `${USER_DATA_ENDPOINT}/${userModel.appUser.username}/password`,
+            userModel.appUser.username,
+            userModel.appUser.password,
+            { method: "post", mode: "cors", body: payload }
+        ).then(response => {
+            if (!response.ok)
+                throw new Error(
+                    "There were some problems while saving your new password"
+                );
+            userModel.appUser.password = profileView.newPassValue;
+        });
+    }
+
+    #saveNicknameChange() {
+        const payload = new FormData();
+        payload.set("newNickname", profileView.newNicknameValue);
+
+        return fetchWithUserCredentials(
+            `${USER_DATA_ENDPOINT}/${userModel.appUser.username}/nickname`,
+            userModel.appUser.username,
+            userModel.appUser.password,
+            { method: "post", mode: "cors", body: payload }
+        ).then(response => {
+            if (!response.ok)
+                throw new Error(
+                    "There were some problems while saving your new nickname"
+                );
+            userModel.appUser.username = profileView.newNicknameValue;
+        });
+    }
 
     #filloutUserInfo() {
         profileView.profileDescription.textContent = `Hello, ${userModel.appUser.username}. You should add some workouts!`;
