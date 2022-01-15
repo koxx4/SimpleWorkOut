@@ -1,4 +1,5 @@
 import { View } from "./view";
+import { createAlertCard } from "../helpers/helpers";
 
 class ProfileView extends View {
     #workoutsButton;
@@ -105,6 +106,24 @@ class ProfileView extends View {
 
     closeNicknameUpdateForm() {
         this.removeElementFromThisView(".change-nickname-card");
+    }
+
+    showErrorMessage(title, msg) {
+        this.rootElement
+            .querySelector(".profile-text-card")
+            .insertAdjacentElement(
+                "afterend",
+                createAlertCard(title, msg, "error")
+            );
+    }
+
+    showSuccessMessage(title, msg) {
+        this.rootElement
+            .querySelector(".profile-text-card")
+            .insertAdjacentElement(
+                "afterend",
+                createAlertCard(title, msg, "success")
+            );
     }
 
     get oldPassValue() {

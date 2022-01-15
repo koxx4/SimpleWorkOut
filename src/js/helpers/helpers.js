@@ -89,3 +89,29 @@ export const fetchWithUserCredentials = function (
 
     return fetch(endpoint, callOptions);
 };
+
+export const createAlertCard = function (
+    title,
+    msg,
+    type = "text",
+    callbackOnConfirm = null,
+    idClass = ""
+) {
+    const card = document.createElement("div");
+    card.classList.add(`${type}-card`);
+    card.classList.add("m1");
+    if (idClass) card.classList.add(idClass);
+
+    card.insertAdjacentHTML(
+        "afterbegin",
+        `  <h3>${title ? title : ""}</h3>
+                <p>${msg ? msg : ""}</p>
+                <button class="button button-primary">Okay</button>`
+    );
+
+    card.querySelector("button").addEventListener(
+        "click",
+        callbackOnConfirm ? callbackOnConfirm : e => card.remove()
+    );
+    return card;
+};

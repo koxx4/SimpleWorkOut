@@ -62,7 +62,7 @@ class LoginController {
 
     #handleLoginError(msg) {
         loginView.clearLoginForm();
-        loginView.showRegistrationErrorInfo(msg);
+        loginView.showLoginErrorInfo(msg);
     }
 }
 export default new LoginController();

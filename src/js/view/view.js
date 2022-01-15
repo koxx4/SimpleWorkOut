@@ -18,6 +18,12 @@ export class View {
         this.#rootElement.removeChild(this.#rootElement.querySelector(query));
     }
 
+    removeAllElementsFromThisView(query) {
+        this.#rootElement
+            .querySelectorAll(query)
+            .forEach(value => value.remove());
+    }
+
     get rootElement() {
         return this.#rootElement;
     }

@@ -66,12 +66,16 @@ class ProfileController {
                 e.preventDefault();
 
                 if (profileView.oldPassValue !== userModel.appUser.password) {
-                    alert("Current password value isn't correct");
+                    profileView.showErrorMessage(
+                        "Error",
+                        "Current password value isn't correct"
+                    );
                     return;
                 } else if (
                     profileView.newPassValue === profileView.oldPassValue
                 ) {
-                    alert(
+                    profileView.showErrorMessage(
+                        "Error",
                         "New password cannot be the same as the previous one"
                     );
                     return;
@@ -81,6 +85,7 @@ class ProfileController {
                 this.#savePasswordChange();
                 profileView.closePasswordUpdateForm();
                 this.#isPasswordAreaShown = false;
+                profileView.showSuccessMessage("Success!");
             },
             e => {
                 e.preventDefault();
@@ -109,6 +114,7 @@ class ProfileController {
                 this.#filloutUserInfo();
                 profileView.closeNicknameUpdateForm();
                 this.#isNicknameAreaShown = false;
+                profileView.showSuccessMessage("Success!");
             },
             e => {
                 e.preventDefault();
