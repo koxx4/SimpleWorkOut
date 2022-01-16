@@ -1,13 +1,13 @@
 import demoView from "../view/demoView";
-import mainView from "../view/mainView";
 import { LeafletMap } from "../helpers/leafletMap";
 import { LEAFLET_CONFIG } from "../config/configuration";
 import WorkoutEntry from "../data/workoutEntry";
 import demoModel from "../model/demoModel";
 import { stripHTML } from "../helpers/helpers";
 import { layerGroup, marker } from "leaflet";
+import Controller from "./controller";
 
-class DemoController {
+class DemoController extends Controller {
     /**
      *
      * @type {LeafletMap}
@@ -20,14 +20,15 @@ class DemoController {
     #workoutEntryLayerGroup;
 
     constructor() {
-        demoView.renderWorkoutEntries(demoModel.appUser.workoutEntries);
+        super("#demo", demoView);
+        this.view.renderWorkoutEntries(demoModel.appUser.workoutEntries);
         this.#workoutEntryLayerGroup = layerGroup();
     }
 
     #createLeafletMap() {
         this.#leafletMap = new LeafletMap(LEAFLET_CONFIG);
         this.#leafletMap.initialize().then(msg => {
-            demoView.deleteMapLoadingIcon();
+            this.view.deleteMapLoadingIcon();
             this.#leafletMap.add(this.#workoutEntryLayerGroup);
             this.#registerMapEventHandlers();
         });
@@ -35,14 +36,14 @@ class DemoController {
 
     #startWorkoutForm(event) {
         event.preventDefault();
-        demoView.renderWorkoutForm();
+        this.view.renderWorkoutForm();
         this.#workoutEntryLayerGroup.clearLayers();
         this.#isUserAddingNewWorkout = true;
     }
 
     #exitWorkoutForm(event) {
         event.preventDefault();
-        demoView.hideWorkoutForm();
+        this.view.hideWorkoutForm();
         this.#isUserAddingNewWorkout = false;
         this.#userWorkoutTrailDistance = 0;
         this.#userWorkoutTrail = null;
@@ -54,16 +55,16 @@ class DemoController {
         event.preventDefault();
         const newWorkoutEntry = this.#constructWorkoutEntry();
         demoModel.addWorkoutEntry(newWorkoutEntry);
-        demoView.renderWorkoutEntries(demoModel.appUser.workoutEntries);
+        this.view.renderWorkoutEntries(demoModel.appUser.workoutEntries);
         this.#exitWorkoutForm(event);
     }
 
     #clearWorkoutFormValues() {
-        demoView.getWorkoutForm().reset();
+        this.view.getWorkoutForm().reset();
     }
 
     #constructWorkoutEntry() {
-        const workoutForm = demoView.getWorkoutForm();
+        const workoutForm = this.view.getWorkoutForm();
         let workoutType = workoutForm.type.value;
         let workoutDistance = workoutForm.distance.value;
         let workoutDate = workoutForm.date.value;
@@ -85,33 +86,33 @@ class DemoController {
         );
     }
 
-    registerEventHandlers() {
-        demoView.addEventHandlerAddWorkoutButton(
+    initialize() {
+        this.view.addEventHandlerAddWorkoutButton(
             "click",
             this.#startWorkoutForm.bind(this)
         );
 
-        demoView.addEventHandlerCancelWorkoutFormButton(
+        this.view.addEventHandlerCancelWorkoutFormButton(
             "click",
             this.#exitWorkoutForm.bind(this)
         );
 
-        demoView.addEventHandlerSubmitWorkoutForm(
+        this.view.addEventHandlerSubmitWorkoutForm(
             this.#submitWorkout.bind(this)
         );
 
-        demoView.addEventHandlerWorkoutList(
+        this.view.addEventHandlerWorkoutList(
             "click",
             this.#handleWorkoutEntryInteraction.bind(this)
         );
 
-        demoView.rootElement.addEventListener("sectionfocus", _ => {
-            demoView.renderMapLoadingIcon();
+        this.view.rootElement.addEventListener("sectionfocus", _ => {
+            this.view.renderMapLoadingIcon();
             this.#createLeafletMap();
         });
 
-        demoView.rootElement.addEventListener("sectionexit", _ => {
-            demoView.deleteMapLoadingIcon();
+        this.view.rootElement.addEventListener("sectionexit", _ => {
+            this.view.deleteMapLoadingIcon();
             this.#leafletMap.destroy();
         });
     }
@@ -164,7 +165,7 @@ class DemoController {
 
     #updateTrailDistanceUI() {
         const text = `${this.#userWorkoutTrailDistance} meters calculated`;
-        demoView.setSmallTextWorkoutDistance(text);
+        this.view.setSmallTextWorkoutDistance(text);
         this.#userWorkoutTrail.bindPopup(
             `Workout trail. <b style="background-color: #77aa7744">Calculated distance: ${
                 this.#userWorkoutTrailDistance
@@ -191,7 +192,7 @@ class DemoController {
 
     #deleteWorkoutEntry(workoutID) {
         demoModel.deleteWorkoutEntryByID(workoutID);
-        demoView.renderWorkoutEntries(demoModel.appUser.workoutEntries);
+        this.view.renderWorkoutEntries(demoModel.appUser.workoutEntries);
         this.#workoutEntryLayerGroup.clearLayers();
     }
 
@@ -229,7 +230,7 @@ class DemoController {
 
     #showWorkoutEntryNote(workoutID) {
         const workout = demoModel.getWorkoutEntryByID(workoutID);
-        if (workout) demoView.toggleWorkoutEntryNote(workoutID);
+        if (workout) this.view.toggleWorkoutEntryNote(workoutID);
     }
 }
 export default new DemoController();
