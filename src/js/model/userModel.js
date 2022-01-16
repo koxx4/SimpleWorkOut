@@ -2,6 +2,7 @@ import AppUser from "../data/appUser";
 
 export class UserModel {
     #appUser;
+    #isLoggedIn;
 
     constructor(appUser) {
         this.#appUser = appUser;
@@ -22,11 +23,10 @@ export class UserModel {
     }
 
     deleteWorkoutEntryByID(id) {
-        const entry = this.#appUser.workoutEntries.find((element) => {
+        const entry = this.#appUser.workoutEntries.find(element => {
             return element.id === id;
         });
         this.deleteWorkoutEntry(entry);
-        console.log(this);
     }
 
     deleteAllWorkoutEntries() {
@@ -43,6 +43,14 @@ export class UserModel {
 
     get appUser() {
         return this.#appUser;
+    }
+
+    get isLoggedIn() {
+        return this.#isLoggedIn;
+    }
+
+    set isLoggedIn(value) {
+        this.#isLoggedIn = value;
     }
 }
 export default new UserModel(new AppUser("unknown", "", []));

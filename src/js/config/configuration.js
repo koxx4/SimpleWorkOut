@@ -22,12 +22,12 @@ export const LEAFLET_CONFIG = {
     MAP_AUTOMATIC_SIZE_REFRESH_INTERVAL: 5000,
 };
 
-export const INITIAL_PAGE_POSITION = "#home";
-export const INITIAL_PAGE_POSITION_DEBUG = "#home";
+export const INITIAL_SECTION_ELEMENT = "#home-section";
+export const INITIAL_SECTION_ELEMENT_DEBUG = "#profile-overview-section";
 export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
 export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";
 export const FADEIN_ELEMENT_CLASS_NAME = "element-fade-in";
 export const FADE_BETWEEN_PAGE_SECTIONS = true;
-export const API_HOST = "";
+export const API_HOST = "http://localhost:8080";
 export const REGISTRATION_ENDPOINT = `${API_HOST}/register/user`;
 export const USER_DATA_ENDPOINT = `${API_HOST}/user/actions`;

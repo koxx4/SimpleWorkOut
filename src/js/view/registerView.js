@@ -1,16 +1,17 @@
 import { View } from "./view";
+import { createAlertCard } from "../helpers/helpers";
 
 class RegisterView extends View {
     #registrationForm;
 
     constructor() {
         super(document.querySelector("#register-section"));
-        this.#registrationForm = this._rootElement.querySelector(
+        this.#registrationForm = this.rootElement.querySelector(
             ".register-section__form"
         );
     }
 
-    getRegistrationForm() {
+    get registrationForm() {
         return this.#registrationForm;
     }
 
@@ -26,72 +27,54 @@ class RegisterView extends View {
     }
 
     showRegistrationSuccessfulInfo(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentElement(
             "afterbegin",
-            `<div class="register-section__register-success success-card m1">
-                <h3>Registration successful!</h3>
-                <p>${msg ? msg : ""}</p>
-                <button class="button button-primary">Super!</button>
-            </div>`
+            createAlertCard(
+                "Registration successful!",
+                msg,
+                "success",
+                null,
+                "registration-success"
+            )
         );
-        this._rootElement
-            .querySelector(".register-section__register-success button")
-            .addEventListener(
-                "click",
-                callbackOnConfirm
-                    ? callbackOnConfirm
-                    : (e) => this.closeRegistrationSuccessfulInfo()
-            );
     }
 
     showRegistrationFailureInfo(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentElement(
             "afterbegin",
-            `<div class="register-section__register-failure warning-card m1">
-                <h3>Registration failure!</h3>
-                <p>${msg ? msg : ""}</p>
-                <button class="button button-warning">Uh...</button>
-            </div>`
+            createAlertCard(
+                "Registration failure!",
+                msg,
+                "error",
+                null,
+                "registration-failure"
+            )
         );
-        this._rootElement
-            .querySelector(".register-section__register-failure button")
-            .addEventListener(
-                "click",
-                callbackOnConfirm
-                    ? callbackOnConfirm
-                    : (e) => this.closeRegistrationFailureInfo()
-            );
     }
 
     showRegistrationWarning(msg, callbackOnConfirm) {
-        this._rootElement.insertAdjacentHTML(
+        this.rootElement.insertAdjacentElement(
             "afterbegin",
-            `<div class="register-section__register-warning warning-card m1">
-                <h3>Please read before registering!</h3>
-                <p>${msg ? msg : ""}</p>
-                <button class="button button-primary">Okay, I get it!</button>
-            </div>`
+            createAlertCard(
+                "Please read before registering!",
+                msg,
+                "warning",
+                null,
+                "registration-warning"
+            )
         );
-        this._rootElement
-            .querySelector(".register-section__register-warning button")
-            .addEventListener(
-                "click",
-                callbackOnConfirm
-                    ? callbackOnConfirm
-                    : (e) => this.closeRegistrationWarningInfo()
-            );
     }
 
     closeRegistrationSuccessfulInfo() {
-        this._removeElementFromThisView(".register-section__register-success");
+        this.removeAllElementsFromThisView(".registration-success");
     }
 
     closeRegistrationFailureInfo() {
-        this._removeElementFromThisView(".register-section__register-failure");
+        this.removeAllElementsFromThisView(".registration-failure");
     }
 
     closeRegistrationWarningInfo() {
-        this._removeElementFromThisView(".register-section__register-warning");
+        this.removeAllElementsFromThisView(".registration-warning");
     }
 }
 export default new RegisterView();

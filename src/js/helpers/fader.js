@@ -8,12 +8,12 @@ export class Fader {
         element.style.animation = `fade-in ${duration}ms ease-out`;
         element.classList.remove(this._hiddenClassName);
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             setTimeout(() => {
                 element.style.removeProperty("animation-fill-mode");
                 element.style.removeProperty("animation");
                 resolve();
-            }, duration + 10);
+            }, duration + 25);
         });
     }
 
@@ -21,13 +21,13 @@ export class Fader {
         element.style.animationFillMode = "forwards";
         element.style.animation = `fade-out ${duration}ms ease-out`;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             setTimeout(() => {
                 element.classList.add(this._hiddenClassName);
                 element.style.removeProperty("animation-fill-mode");
                 element.style.removeProperty("animation");
                 resolve();
-            }, duration + 10);
+            }, duration + 25);
         });
     }
 }

@@ -1,32 +1,60 @@
 import mainView from "../view/mainView";
 import {
     FADE_BETWEEN_PAGE_SECTIONS,
-    INITIAL_PAGE_POSITION,
-    INITIAL_PAGE_POSITION_DEBUG,
+    INITIAL_SECTION_ELEMENT,
+    INITIAL_SECTION_ELEMENT_DEBUG,
 } from "../config/configuration";
+import navigationModel from "../model/navigationModel";
+import demoView from "../view/demoView";
+import loginView from "../view/loginView";
+import registerView from "../view/registerView";
+import profileView from "../view/profileView";
+import homeView from "../view/homeView";
+import userModel from "../model/userModel";
 
 class MainController {
-    constructor() {}
+    #sectionFocusGainEvent;
+    #sectionFocusLoseEvent;
 
-    #showAppropriatePageContent() {
+    constructor() {
+        this.#sectionFocusGainEvent = new Event("sectionfocus");
+        this.#sectionFocusLoseEvent = new Event("sectionexit");
+    }
+
+    async #showAppropriatePageContent() {
         switch (location.hash) {
             case "#home":
-                mainView.switchViewToHomeSection(
+                await this.#switchFromActiveSectionTo(
+                    homeView.rootElement,
                     FADE_BETWEEN_PAGE_SECTIONS,
                     250
                 );
                 break;
             case "#demo":
-                mainView.switchViewToDemoSection(
+                await this.#switchFromActiveSectionTo(
+                    demoView.rootElement,
                     FADE_BETWEEN_PAGE_SECTIONS,
                     250
                 );
                 break;
             case "#login":
-                mainView.switchViewToLoginPage(FADE_BETWEEN_PAGE_SECTIONS, 250);
+                await this.#switchFromActiveSectionTo(
+                    loginView.rootElement,
+                    FADE_BETWEEN_PAGE_SECTIONS,
+                    250
+                );
                 break;
             case "#register":
-                mainView.switchViewToRegistrationPage(
+                await this.#switchFromActiveSectionTo(
+                    registerView.rootElement,
+                    FADE_BETWEEN_PAGE_SECTIONS,
+                    250
+                );
+                break;
+            case "#profile-overview":
+                if (!userModel.isLoggedIn) break;
+                await this.#switchFromActiveSectionTo(
+                    profileView.rootElement,
                     FADE_BETWEEN_PAGE_SECTIONS,
                     250
                 );
@@ -37,13 +65,39 @@ class MainController {
     }
 
     registerEventHandlers() {
-        window.addEventListener("hashchange", this.#showAppropriatePageContent);
+        window.addEventListener(
+            "hashchange",
+            this.#showAppropriatePageContent.bind(this)
+        );
     }
 
     showInitialPage() {
         if (process.env.NODE_ENV === "development")
-            location.hash = INITIAL_PAGE_POSITION_DEBUG;
-        else location.hash = INITIAL_PAGE_POSITION;
+            this.#switchFromActiveSectionTo(
+                document.querySelector(INITIAL_SECTION_ELEMENT_DEBUG)
+            );
+        else
+            this.#switchFromActiveSectionTo(
+                document.querySelector(INITIAL_SECTION_ELEMENT)
+            );
+    }
+
+    async #switchFromActiveSectionTo(section, fade = false, fadeDuration = 0) {
+        if (navigationModel.activeSection === section) return;
+
+        navigationModel.activeSection.dispatchEvent(
+            this.#sectionFocusLoseEvent
+        );
+        await mainView.hideSection(
+            navigationModel.activeSection,
+            fade,
+            fadeDuration
+        );
+
+        section.dispatchEvent(this.#sectionFocusGainEvent);
+        await mainView.showSection(section, fade, fadeDuration);
+
+        navigationModel.activeSection = section;
     }
 }
 export default new MainController();

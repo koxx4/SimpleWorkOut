@@ -14,9 +14,14 @@
 @use  'loading';
 @use  'buttons';
 @use 'login-section';
+@use 'profile';
 
 body{
   font-family: 'Roboto', sans-serif;
+}
+
+b{
+  font-weight: bold;
 }
 
 html{

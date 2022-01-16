@@ -2,17 +2,21 @@ import loginView from "../view/loginView";
 import { USER_DATA_ENDPOINT } from "../config/configuration";
 import userModel from "../model/userModel";
 import AppUser from "../data/appUser";
-import { dbWorkoutToJS } from "../helpers/helpers";
+import { dbWorkoutToJS, fetchWithUserCredentials } from "../helpers/helpers";
+import mainView from "../view/mainView";
 
 class LoginController {
     constructor() {}
 
     registerEventHandlers() {
-        loginView.addEventListenerLoginSubmitButton("click", (event) => {
+        loginView.addEventListenerLoginSubmitButton("click", event => {
             event.preventDefault();
+            if (userModel.isLoggedIn) return;
             this.#loadUserProfileData(loginView.getLoginFormData())
                 .then(() => this.#redirectToUserProfilePage())
-                .catch((reason) => this.#handleLoginError(reason.message));
+                .then(() => mainView.showProfileButton(true))
+                .then(() => mainView.hideLoginButton(true))
+                .catch(reason => this.#handleLoginError(reason.message));
         });
     }
 
@@ -20,30 +24,27 @@ class LoginController {
         const username = loginFormData.get("username");
         const password = loginFormData.get("password");
 
-        const httpBasicHeaderValue =
-            "Basic " +
-            Buffer.from(`${username}:${password}`).toString("base64");
-
-        const reqHeaders = new Headers();
-        reqHeaders.set("Authorization", httpBasicHeaderValue);
-
-        return fetch(`${USER_DATA_ENDPOINT}/${username}/data`, {
-            headers: reqHeaders,
-            method: "GET",
-            mode: "cors",
-        })
-            .then((response) => {
+        return fetchWithUserCredentials(
+            `${USER_DATA_ENDPOINT}/${username}/data`,
+            username,
+            password,
+            {
+                method: "GET",
+                mode: "cors",
+            }
+        )
+            .then(response => {
                 if (!response.ok) throw new Error(response.statusText);
                 return response.json();
             })
-            .then((userData) => {
+            .then(userData => {
                 this.processFetchedUserData(userData, password);
             });
     }
 
     processFetchedUserData(userData, password) {
         const jsWorkouts = userData.workouts
-            ? userData.workouts.map((value) => dbWorkoutToJS(value))
+            ? userData.workouts.map(value => dbWorkoutToJS(value))
             : [];
 
         userModel.appUser = new AppUser(
@@ -52,6 +53,7 @@ class LoginController {
             jsWorkouts
         );
         userModel.appUser.email = userData.email;
+        userModel.isLoggedIn = true;
     }
 
     #redirectToUserProfilePage() {
@@ -60,7 +62,7 @@ class LoginController {
 
     #handleLoginError(msg) {
         loginView.clearLoginForm();
-        loginView.showRegistrationErrorInfo(msg);
+        loginView.showLoginErrorInfo(msg);
     }
 }
 export default new LoginController();

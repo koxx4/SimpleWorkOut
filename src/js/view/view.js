@@ -1,8 +1,8 @@
 export class View {
-    _rootElement;
+    #rootElement;
 
     constructor(rootElement) {
-        this._rootElement = rootElement;
+        this.#rootElement = rootElement;
     }
 
     render(data) {
@@ -10,12 +10,25 @@ export class View {
         this._updateControlledHTML(newHTML);
     }
 
-    //Function to override
     _generateChangedHTML(data) {}
 
     _updateControlledHTML(newHTML) {}
 
-    _removeElementFromThisView(query) {
-        this._rootElement.removeChild(this._rootElement.querySelector(query));
+    removeElementFromThisView(query) {
+        this.#rootElement.removeChild(this.#rootElement.querySelector(query));
+    }
+
+    removeAllElementsFromThisView(query) {
+        this.#rootElement
+            .querySelectorAll(query)
+            .forEach(value => value.remove());
+    }
+
+    get rootElement() {
+        return this.#rootElement;
+    }
+
+    set rootElement(value) {
+        this.#rootElement = value;
     }
 }

@@ -11,12 +11,12 @@ class RegisterController {
     }
 
     registerEventHandlers() {
-        this.#view.addEventListenerSubmitRegistration("click", (event) => {
+        this.#view.addEventListenerSubmitRegistration("click", event => {
             event.preventDefault();
             this.#registerUserUsingFormData();
         });
 
-        this.#view.getRegistrationForm().addEventListener("mouseenter", () => {
+        this.#view.registrationForm.addEventListener("mouseenter", () => {
             if (this.#isSecurityWarningShown) return;
 
             this.#view.showRegistrationWarning(
@@ -30,7 +30,7 @@ class RegisterController {
     }
 
     #registerUserUsingFormData() {
-        const inputs = this.#view.getRegistrationForm().elements;
+        const inputs = this.#view.registrationForm.elements;
 
         const usrBody = new FormData();
         usrBody.append("username", inputs["username"].value);
@@ -41,7 +41,7 @@ class RegisterController {
             method: "POST",
             body: usrBody,
             mode: "cors",
-        }).then((response) => {
+        }).then(response => {
             if (response.ok) {
                 this.#view.showRegistrationSuccessfulInfo(
                     `Hello, ${usrBody.get(

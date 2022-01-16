@@ -24,6 +24,11 @@
   background: #2074b688;
 }
 
+.button-critical{
+  @extend  .button-primary;
+  background: #A82A2Daa;
+}
+
 .warning-button:hover{
   cursor: pointer;
   transform: translateY(-2px);

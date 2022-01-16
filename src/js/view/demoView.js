@@ -15,29 +15,29 @@ class DemoView extends View {
 
     constructor() {
         super(document.querySelector("#demo-section"));
-        this.#mapElement = this._rootElement.querySelector("#map");
-        this.#workoutSection = this._rootElement.querySelector(
+        this.#mapElement = this.rootElement.querySelector("#map");
+        this.#workoutSection = this.rootElement.querySelector(
             "#demo__workout-area"
         );
-        this.#addWorkoutButton = this._rootElement.querySelector(
+        this.#addWorkoutButton = this.rootElement.querySelector(
             ".button--add-workout"
         );
-        this.#submitWorkoutFormButton = this._rootElement.querySelector(
+        this.#submitWorkoutFormButton = this.rootElement.querySelector(
             ".button--submit-workout-form"
         );
-        this.#workoutHTMLForm = this._rootElement.querySelector(
+        this.#workoutHTMLForm = this.rootElement.querySelector(
             "#demo__workout-area__workout-form form"
         );
-        this.#cancelWorkoutFormButton = this._rootElement.querySelector(
+        this.#cancelWorkoutFormButton = this.rootElement.querySelector(
             "#demo__workout-area__workout-form .button--cancel-workout-form"
         );
-        this.#workoutEntryList = this._rootElement.querySelector(
+        this.#workoutEntryList = this.rootElement.querySelector(
             ".workout-history-list"
         );
-        this.#workoutHistoryArea = this._rootElement.querySelector(
+        this.#workoutHistoryArea = this.rootElement.querySelector(
             "#demo__workout-area__workout-history"
         );
-        this.#workoutTrailHint = this._rootElement.querySelector(
+        this.#workoutTrailHint = this.rootElement.querySelector(
             ".demo__workout-area__workout-form__trail-hint"
         );
     }
@@ -122,7 +122,7 @@ class DemoView extends View {
             this.hideWorkoutHistoryArea();
         } else {
             const workoutEntryMarkups = [];
-            workoutEntries.forEach((entry) => {
+            workoutEntries.forEach(entry => {
                 workoutEntryMarkups.push(
                     this.#generateWorkoutEntryMarkup(entry)
                 );
