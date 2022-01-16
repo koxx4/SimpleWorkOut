@@ -63,7 +63,11 @@ class Router {
     }
 
     async #switchFromActiveSectionTo(section, fade = false, fadeDuration = 0) {
-        if (navigationModel.activeSection === section) return;
+        if (
+            navigationModel.activeSection === section &&
+            !navigationModel.activeSection.classList.contains("hidden")
+        )
+            return;
 
         navigationModel.activeSection.dispatchEvent(
             this.#sectionFocusLoseEvent

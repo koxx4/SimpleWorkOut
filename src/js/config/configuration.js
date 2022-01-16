@@ -23,7 +23,7 @@ export const LEAFLET_CONFIG = {
 };
 
 export const INITIAL_SECTION_ELEMENT = "#home-section";
-export const INITIAL_SECTION_ELEMENT_DEBUG = "#profile-overview-section";
+export const INITIAL_SECTION_ELEMENT_DEBUG = "#home-section";
 export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
 export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";
 export const FADEIN_ELEMENT_CLASS_NAME = "element-fade-in";
