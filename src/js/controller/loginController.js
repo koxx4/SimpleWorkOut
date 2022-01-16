@@ -1,18 +1,21 @@
-import loginView from "../view/loginView";
 import { USER_DATA_ENDPOINT } from "../config/configuration";
 import userModel from "../model/userModel";
 import AppUser from "../data/appUser";
 import { dbWorkoutToJS, fetchWithUserCredentials } from "../helpers/helpers";
 import mainView from "../view/mainView";
+import Controller from "./controller";
+import loginView from "../view/loginView";
 
-class LoginController {
-    constructor() {}
+class LoginController extends Controller {
+    constructor() {
+        super("#login", loginView);
+    }
 
     registerEventHandlers() {
-        loginView.addEventListenerLoginSubmitButton("click", event => {
+        this.view.addEventListenerLoginSubmitButton("click", event => {
             event.preventDefault();
             if (userModel.isLoggedIn) return;
-            this.#loadUserProfileData(loginView.getLoginFormData())
+            this.#loadUserProfileData(this.view.getLoginFormData())
                 .then(() => this.#redirectToUserProfilePage())
                 .then(() => mainView.showProfileButton(true))
                 .then(() => mainView.hideLoginButton(true))
@@ -61,8 +64,8 @@ class LoginController {
     }
 
     #handleLoginError(msg) {
-        loginView.clearLoginForm();
-        loginView.showLoginErrorInfo(msg);
+        this.view.clearLoginForm();
+        this.view.showLoginErrorInfo(msg);
     }
 }
 export default new LoginController();

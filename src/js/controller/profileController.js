@@ -1,39 +1,42 @@
-import profileView from "../view/profileView";
 import userModel from "../model/userModel";
 import mainView from "../view/mainView";
 import { fetchWithUserCredentials, getUserStats } from "../helpers/helpers";
 import { USER_DATA_ENDPOINT } from "../config/configuration";
+import Controller from "./controller";
+import profileView from "../view/profileView";
 
-class ProfileController {
+class ProfileController extends Controller {
     #isInfoFilled = false;
     #isPasswordAreaShown = false;
     #isNicknameAreaShown = false;
 
-    constructor() {}
+    constructor() {
+        super("#profile-overview", profileView);
+    }
 
     registerEventHandlers() {
-        profileView.rootElement.addEventListener("sectionfocus", e => {
+        this.view.rootElement.addEventListener("sectionfocus", e => {
             if (this.#isInfoFilled) return;
             this.#filloutUserInfo();
             this.#filloutUserStats();
             this.#isInfoFilled = true;
         });
-        profileView.logoutButton.addEventListener("click", e =>
+        this.view.logoutButton.addEventListener("click", e =>
             this.#logoutUser()
         );
-        profileView.deleteAccountButton.addEventListener("click", e =>
+        this.view.deleteAccountButton.addEventListener("click", e =>
             this.#deleteAccount()
         );
-        profileView.changePasswordButton.addEventListener("click", e =>
+        this.view.changePasswordButton.addEventListener("click", e =>
             this.#changePassword()
         );
-        profileView.changeNicknameButton.addEventListener("click", e =>
+        this.view.changeNicknameButton.addEventListener("click", e =>
             this.#changeNickname()
         );
     }
 
     #logoutUser() {
-        profileView.clearUserInfoAndStats();
+        this.view.clearUserInfoAndStats();
         this.#isInfoFilled = false;
         userModel.appUser = null;
         userModel.isLoggedIn = false;
@@ -55,25 +58,23 @@ class ProfileController {
                 alert("Account successfully deleted!");
                 this.#logoutUser();
             })
-            .catch(reason => profileView.showErrorMessage(reason.message));
+            .catch(reason => this.view.showErrorMessage(reason.message));
     }
 
     #changePassword() {
         if (this.#isPasswordAreaShown || this.#isNicknameAreaShown) return;
-        profileView.showPasswordUpdateForm(
+        this.view.showPasswordUpdateForm(
             e => {
                 e.preventDefault();
 
-                if (profileView.oldPassValue !== userModel.appUser.password) {
-                    profileView.showErrorMessage(
+                if (this.view.oldPassValue !== userModel.appUser.password) {
+                    this.view.showErrorMessage(
                         "Error",
                         "Current password value isn't correct"
                     );
                     return;
-                } else if (
-                    profileView.newPassValue === profileView.oldPassValue
-                ) {
-                    profileView.showErrorMessage(
+                } else if (this.view.newPassValue === this.view.oldPassValue) {
+                    this.view.showErrorMessage(
                         "Error",
                         "New password cannot be the same as the previous one"
                     );
@@ -82,17 +83,17 @@ class ProfileController {
 
                 this.#savePasswordChange()
                     .then(_ => {
-                        profileView.closePasswordUpdateForm();
-                        profileView.showSuccessMessage("Success!");
+                        this.view.closePasswordUpdateForm();
+                        this.view.showSuccessMessage("Success!");
                         this.#isPasswordAreaShown = false;
                     })
                     .catch(reason =>
-                        profileView.showErrorMessage("Error", reason.message)
+                        this.view.showErrorMessage("Error", reason.message)
                     );
             },
             e => {
                 e.preventDefault();
-                profileView.closePasswordUpdateForm();
+                this.view.closePasswordUpdateForm();
                 this.#isPasswordAreaShown = false;
             }
         );
@@ -101,31 +102,29 @@ class ProfileController {
 
     #changeNickname() {
         if (this.#isNicknameAreaShown || this.#isPasswordAreaShown) return;
-        profileView.showNicknameUpdateForm(
+        this.view.showNicknameUpdateForm(
             e => {
                 e.preventDefault();
 
-                if (
-                    profileView.newNicknameValue === userModel.appUser.username
-                ) {
-                    profileView.closeNicknameUpdateForm();
+                if (this.view.newNicknameValue === userModel.appUser.username) {
+                    this.view.closeNicknameUpdateForm();
                     return;
                 }
 
                 this.#saveNicknameChange()
                     .then(_ => {
                         this.#filloutUserInfo();
-                        profileView.closeNicknameUpdateForm();
-                        profileView.showSuccessMessage("Success!");
+                        this.view.closeNicknameUpdateForm();
+                        this.view.showSuccessMessage("Success!");
                         this.#isNicknameAreaShown = false;
                     })
                     .catch(reason =>
-                        profileView.showErrorMessage("Error", reason.message)
+                        this.view.showErrorMessage("Error", reason.message)
                     );
             },
             e => {
                 e.preventDefault();
-                profileView.closeNicknameUpdateForm();
+                this.view.closeNicknameUpdateForm();
                 this.#isNicknameAreaShown = false;
             }
         );
@@ -134,7 +133,7 @@ class ProfileController {
 
     #savePasswordChange() {
         const payload = new FormData();
-        payload.set("password", profileView.newPassValue);
+        payload.set("password", this.view.newPassValue);
 
         return fetchWithUserCredentials(
             `${USER_DATA_ENDPOINT}/${userModel.appUser.username}/password`,
@@ -146,13 +145,13 @@ class ProfileController {
                 throw new Error(
                     "There were some problems while saving your new password"
                 );
-            userModel.appUser.password = profileView.newPassValue;
+            userModel.appUser.password = this.view.newPassValue;
         });
     }
 
     #saveNicknameChange() {
         const payload = new FormData();
-        payload.set("newNickname", profileView.newNicknameValue);
+        payload.set("newNickname", this.view.newNicknameValue);
 
         return fetchWithUserCredentials(
             `${USER_DATA_ENDPOINT}/${userModel.appUser.username}/nickname`,
@@ -164,12 +163,12 @@ class ProfileController {
                 throw new Error(
                     "There were some problems while saving your new nickname"
                 );
-            userModel.appUser.username = profileView.newNicknameValue;
+            userModel.appUser.username = this.view.newNicknameValue;
         });
     }
 
     #filloutUserInfo() {
-        profileView.profileDescription.insertAdjacentHTML(
+        this.view.profileDescription.insertAdjacentHTML(
             "afterbegin",
             `Hello, <b>${userModel.appUser.username}</b>. You should add some workouts!`
         );
@@ -179,7 +178,7 @@ class ProfileController {
         const userStats = getUserStats(userModel.appUser);
 
         if (userStats.workoutCount === 0) {
-            profileView.profileStats.insertAdjacentHTML(
+            this.view.profileStats.insertAdjacentHTML(
                 "afterbegin",
                 `<h2>Your stats:</h2>
                       <ul><li>You don't have any workouts saved yet.</li></ul>`
@@ -187,7 +186,7 @@ class ProfileController {
             return;
         }
 
-        profileView.profileStats.insertAdjacentHTML(
+        this.view.profileStats.insertAdjacentHTML(
             "afterbegin",
             `<h2>Your stats:</h2>
                 <ul>
