@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"/>
         <link rel="stylesheet" href="../scss/style.scss"/>
-        <script defer src="../js/app.js" type="module"></script>
+        <script defer src="../js/app.ts" type="module"></script>
         <title>Simple WorkOut</title>
     </head>
 
@@ -14,7 +14,7 @@
             <img class="app-bar__logo" src="../../img/logo.png" alt="Simple WorkOut"/>
             <nav class="app-bar__nav">
                 <a id="nav__button-home" class="nav__button" href="#home">Home page</a>
-                <a id="nav__button-demo" class="nav__button" href="#demo">Try demo</a>
+                <a id="nav__button-demo" class="nav__button" href="#workouts">Try demo</a>
                 <a id="nav__button-login" class="nav__button" href="#login">Login</a>
                 <a id="nav__button-profile" class="nav__button hidden" href="#profile-overview">My Profile</a>
             </nav>
@@ -48,13 +48,13 @@
                 </div>
             </div>
         </section>
-        <section id="demo-section" class="hidden">
+        <section id="workouts-section" class="hidden">
             <div id="map"></div>
-            <div id="demo__workout-area">
-                <div id="demo__workout-area__workout-form">
+            <div id="workouts__workout-area">
+                <div id="workouts__workout-area__workout-form">
                     <button class="button--add-workout button-primary">Add workout!</button>
                     <form class="flex-form hidden">
-                        <div class="demo__workout-area__workout-form__trail-hint text-card">Now you can click on map in order to draw your workout path, try it!</div>
+                        <div class="workouts__workout-area__workout-form__trail-hint text-card">Now you can click on map in order to draw your workout path, try it!</div>
                         <div class="input-group input-group--workout-type">
                             <label for="workout-type-select">Workout type:</label>
                             <select name="type" class="input-select" id="workout-type-select">
@@ -83,7 +83,7 @@
                         <button class="button--cancel-workout-form button-primary m1">Cancel</button>
                     </form>
                 </div>
-                <div id="demo__workout-area__workout-history" class="">
+                <div id="workouts__workout-area__workout-history" class="">
                     <ul class="workout-history-list">
                     </ul>
                 </div>

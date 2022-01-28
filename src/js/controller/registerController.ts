@@ -3,34 +3,34 @@ import { REGISTRATION_ENDPOINT } from "../config/configuration";
 import Controller from "./controller";
 
 class RegisterController extends Controller {
-    #isSecurityWarningShown;
+    private _isSecurityWarningShown: boolean;
 
     constructor() {
         super("#register", registerView);
-        this.#isSecurityWarningShown = false;
+        this._isSecurityWarningShown = false;
     }
 
     initialize() {
-        this.view.addEventListenerSubmitRegistration("click", event => {
+        registerView.addEventListenerSubmitRegistration("click", event => {
             event.preventDefault();
-            this.#registerUserUsingFormData();
+            this.registerUserUsingFormData();
         });
 
-        this.view.registrationForm.addEventListener("mouseenter", () => {
-            if (this.#isSecurityWarningShown) return;
+        registerView.registrationForm.addEventListener("mouseenter", () => {
+            if (this._isSecurityWarningShown) return;
 
-            this.view.showRegistrationWarning(
+            registerView.showRegistrationWarning(
                 `For now, this service is still under active development, and it still may
         have serious security bugs. Because of that, it is strongly recommended
         that you don't provide real info about your workout paths
         or use a password that you can already be using in other accounts!`
             );
-            this.#isSecurityWarningShown = true;
+            this._isSecurityWarningShown = true;
         });
     }
 
-    #registerUserUsingFormData() {
-        const inputs = this.view.registrationForm.elements;
+    private registerUserUsingFormData() {
+        const inputs = registerView.registrationForm.elements;
 
         const usrBody = new FormData();
         usrBody.append("username", inputs["username"].value);
@@ -43,14 +43,14 @@ class RegisterController extends Controller {
             mode: "cors",
         }).then(response => {
             if (response.ok) {
-                this.view.showRegistrationSuccessfulInfo(
+                registerView.showRegistrationSuccessfulInfo(
                     `Hello, ${usrBody.get(
                         "username"
                     )}. You're now registered and you can login at any time`
                 );
-                this.view.clearRegistrationForm();
+                registerView.clearRegistrationForm();
             } else
-                this.view.showRegistrationFailureInfo(
+                registerView.showRegistrationFailureInfo(
                     "Something went wrong while registering you chef... maybe try again later?"
                 );
         });

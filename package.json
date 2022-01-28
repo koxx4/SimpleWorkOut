@@ -4,6 +4,7 @@
   "description": "Simple web app that allows user to log their outdoor workouts",
   "default": "src/html/index.html",
   "scripts": {
+    "check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1",
     "scss:compile": "sass --color --stop-on-error --no-error-css src/scss/style.scss css/style.css",
     "scss:start-server": "sass --watch --color --no-error-css src/scss/style.scss css/style.css",
@@ -37,11 +38,14 @@
     "leaflet": "^1.7.1",
     "leaflet.locatecontrol": "^0.74.0",
     "regenerator-runtime": "^0.13.9",
-    "sass": "^1.38.2"
+    "sass": "^1.38.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@parcel/transformer-image": "^2.0.0-rc.0",
     "@parcel/transformer-sass": "^2.0.0-rc.0",
+    "@types/leaflet": "^1.7.1",
+    "@types/uuid": "^8.3.4",
     "npm-run-all": "^4.1.5",
     "parcel": "^2.0.0-rc.0",
     "prettier": "^2.3.2"

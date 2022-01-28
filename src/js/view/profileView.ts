@@ -2,44 +2,44 @@ import { View } from "./view";
 import { createAlertCard } from "../helpers/helpers";
 
 class ProfileView extends View {
-    #workoutsButton;
-    #changePasswordButton;
-    #changeNicknameButton;
-    #deleteAccountButton;
-    #logoutButton;
-    #profileDescription;
-    #profileStats;
-    #updatePasswordArea;
-    #updateNicknameArea;
+    private _workoutsButton;
+    private _changePasswordButton;
+    private _changeNicknameButton;
+    private _deleteAccountButton;
+    private _logoutButton;
+    private _profileDescription;
+    private _profileStats;
+    private _updatePasswordArea;
+    private _updateNicknameArea;
 
     constructor() {
         super(document.querySelector("#profile-overview-section"));
-        this.#workoutsButton = this.rootElement.querySelector(
+        this._workoutsButton = this.rootElement.querySelector(
             ".profile-overview__actions__workouts-button"
         );
-        this.#changePasswordButton = this.rootElement.querySelector(
+        this._changePasswordButton = this.rootElement.querySelector(
             ".profile-overview__actions__change-pass-button"
         );
-        this.#changeNicknameButton = this.rootElement.querySelector(
+        this._changeNicknameButton = this.rootElement.querySelector(
             ".profile-overview__actions__change-nick-button"
         );
-        this.#deleteAccountButton = this.rootElement.querySelector(
+        this._deleteAccountButton = this.rootElement.querySelector(
             ".profile-overview__actions__delete-account-button"
         );
-        this.#profileDescription = this.rootElement.querySelector(
+        this._profileDescription = this.rootElement.querySelector(
             ".profile-overview__content__info"
         );
-        this.#profileStats = this.rootElement.querySelector(
+        this._profileStats = this.rootElement.querySelector(
             ".profile-overview__stats"
         );
-        this.#logoutButton = this.rootElement.querySelector(
+        this._logoutButton = this.rootElement.querySelector(
             ".profile-overview__actions__logout-button"
         );
     }
 
     clearUserInfoAndStats() {
-        this.#profileStats.innerHTML = "";
-        this.#profileDescription.innerHTML = "";
+        this._profileStats.innerHTML = "";
+        this._profileDescription.innerHTML = "";
     }
 
     showPasswordUpdateForm(confirmCallback, cancelCallback) {
@@ -61,13 +61,13 @@ class ProfileView extends View {
     </form>
 </div>`
         );
-        this.#updatePasswordArea = this.rootElement.querySelector(
+        this._updatePasswordArea = this.rootElement.querySelector(
             ".change-password-card"
         );
-        this.#updatePasswordArea
+        this._updatePasswordArea
             .querySelector(".password-confirm")
             .addEventListener("click", confirmCallback);
-        this.#updatePasswordArea
+        this._updatePasswordArea
             .querySelector(".password-cancel")
             .addEventListener("click", cancelCallback);
     }
@@ -93,13 +93,13 @@ class ProfileView extends View {
 </div>
 `
         );
-        this.#updateNicknameArea = this.rootElement.querySelector(
+        this._updateNicknameArea = this.rootElement.querySelector(
             ".change-nickname-card"
         );
-        this.#updateNicknameArea
+        this._updateNicknameArea
             .querySelector(".nickname-confirm")
             .addEventListener("click", confirmCallback);
-        this.#updateNicknameArea
+        this._updateNicknameArea
             .querySelector(".nickname-cancel")
             .addEventListener("click", cancelCallback);
     }
@@ -108,7 +108,7 @@ class ProfileView extends View {
         this.removeElementFromThisView(".change-nickname-card");
     }
 
-    showErrorMessage(title, msg) {
+    showErrorMessage(title: string, msg?: string) {
         this.rootElement
             .querySelector(".profile-text-card")
             .insertAdjacentElement(
@@ -117,7 +117,7 @@ class ProfileView extends View {
             );
     }
 
-    showSuccessMessage(title, msg) {
+    showSuccessMessage(title: string, msg?: string) {
         this.rootElement
             .querySelector(".profile-text-card")
             .insertAdjacentElement(
@@ -139,39 +139,39 @@ class ProfileView extends View {
     }
 
     get workoutsButton() {
-        return this.#workoutsButton;
+        return this._workoutsButton;
     }
 
     get changePasswordButton() {
-        return this.#changePasswordButton;
+        return this._changePasswordButton;
     }
 
     get changeNicknameButton() {
-        return this.#changeNicknameButton;
+        return this._changeNicknameButton;
     }
 
     get deleteAccountButton() {
-        return this.#deleteAccountButton;
+        return this._deleteAccountButton;
     }
 
     get profileDescription() {
-        return this.#profileDescription;
+        return this._profileDescription;
     }
 
     get profileStats() {
-        return this.#profileStats;
+        return this._profileStats;
     }
 
     get logoutButton() {
-        return this.#logoutButton;
+        return this._logoutButton;
     }
 
     get updatePasswordForm() {
-        return this.#updatePasswordArea?.querySelector(".change-password-form");
+        return this._updatePasswordArea?.querySelector(".change-password-form");
     }
 
     get updateNicknameForm() {
-        return this.#updateNicknameArea?.querySelector(".change-nickname-form");
+        return this._updateNicknameArea?.querySelector(".change-nickname-form");
     }
 }
 

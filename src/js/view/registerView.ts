@@ -2,31 +2,30 @@ import { View } from "./view";
 import { createAlertCard } from "../helpers/helpers";
 
 class RegisterView extends View {
-    #registrationForm;
+    readonly registrationForm: HTMLFormElement;
 
     constructor() {
         super(document.querySelector("#register-section"));
-        this.#registrationForm = this.rootElement.querySelector(
+        this.registrationForm = this.rootElement.querySelector(
             ".register-section__form"
         );
     }
 
-    get registrationForm() {
-        return this.#registrationForm;
-    }
-
     addEventListenerSubmitRegistration(event, callback) {
-        this.#registrationForm.elements["register-submit"].addEventListener(
+        this.registrationForm.elements["register-submit"].addEventListener(
             event,
             callback
         );
     }
 
     clearRegistrationForm() {
-        this.#registrationForm.reset();
+        this.registrationForm.reset();
     }
 
-    showRegistrationSuccessfulInfo(msg, callbackOnConfirm) {
+    showRegistrationSuccessfulInfo(
+        msg: string,
+        callbackOnConfirm?: (e: MouseEvent) => any
+    ) {
         this.rootElement.insertAdjacentElement(
             "afterbegin",
             createAlertCard(
@@ -39,7 +38,10 @@ class RegisterView extends View {
         );
     }
 
-    showRegistrationFailureInfo(msg, callbackOnConfirm) {
+    showRegistrationFailureInfo(
+        msg: string,
+        callbackOnConfirm?: (e: MouseEvent) => any
+    ) {
         this.rootElement.insertAdjacentElement(
             "afterbegin",
             createAlertCard(
@@ -52,7 +54,10 @@ class RegisterView extends View {
         );
     }
 
-    showRegistrationWarning(msg, callbackOnConfirm) {
+    showRegistrationWarning(
+        msg: string,
+        callbackOnConfirm?: (e: MouseEvent) => any
+    ) {
         this.rootElement.insertAdjacentElement(
             "afterbegin",
             createAlertCard(

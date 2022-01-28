@@ -1,5 +1,7 @@
 export class Fader {
-    constructor(hiddenClassName = "hidden") {
+    private readonly _hiddenClassName;
+
+    constructor(hiddenClassName: string = "hidden") {
         this._hiddenClassName = hiddenClassName;
     }
 
@@ -8,7 +10,7 @@ export class Fader {
         element.style.animation = `fade-in ${duration}ms ease-out`;
         element.classList.remove(this._hiddenClassName);
 
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             setTimeout(() => {
                 element.style.removeProperty("animation-fill-mode");
                 element.style.removeProperty("animation");
@@ -21,7 +23,7 @@ export class Fader {
         element.style.animationFillMode = "forwards";
         element.style.animation = `fade-out ${duration}ms ease-out`;
 
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             setTimeout(() => {
                 element.classList.add(this._hiddenClassName);
                 element.style.removeProperty("animation-fill-mode");
