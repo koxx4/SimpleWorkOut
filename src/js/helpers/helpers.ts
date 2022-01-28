@@ -1,26 +1,26 @@
 import { Fader } from "./fader";
 import {
-    FADEIN_ELEMENT_CLASS_NAME,
-    FADEOUT_ELEMENT_CLASS_NAME,
+    DatabaseWorkout,
     HIDDEN_ELEMENT_CLASS_NAME,
+    SimpleLatLngArray,
+    UserStats,
 } from "../config/configuration";
 import WorkoutEntry from "../data/workoutEntry";
-import userModel from "../model/userModel";
+import AppUser from "../data/appUser";
+import UserModel from "../model/userModel";
 
-export const domParser = new DOMParser();
-export const faderUtility = new Fader(
-    HIDDEN_ELEMENT_CLASS_NAME,
-    FADEIN_ELEMENT_CLASS_NAME,
-    FADEOUT_ELEMENT_CLASS_NAME
-);
+export const faderUtility = new Fader(HIDDEN_ELEMENT_CLASS_NAME);
 
-export const stripHTML = function (text) {
+export const stripHTML = function (text: string) {
     let doc = new DOMParser().parseFromString(text, "text/html");
     return doc.body.textContent || "";
 };
 
-export const dbWorkoutToJS = function (dbWorkoutJson) {
-    const trail = dbWorkoutJson.trail
+export const dbWorkoutToJS = function (
+    dbWorkoutJson: DatabaseWorkout,
+    localID: number
+) {
+    const coordsArray: SimpleLatLngArray = dbWorkoutJson.trail
         ? dbWorkoutJson.trail.trailPoints.map(value => [
               value.latitude,
               value.longitude,
@@ -28,16 +28,16 @@ export const dbWorkoutToJS = function (dbWorkoutJson) {
         : [];
 
     return new WorkoutEntry(
-        dbWorkoutJson.workoutType,
+        dbWorkoutJson.workoutType.toLowerCase(),
         dbWorkoutJson.distance,
         new Date(dbWorkoutJson.date),
         dbWorkoutJson.note,
-        trail,
-        dbWorkoutJson.id
+        coordsArray,
+        UserModel.generateWorkoutLocalID()
     );
 };
 
-export const getUserStats = function (user) {
+export const getUserStats = function (user: AppUser): UserStats {
     const workoutCount = user.workoutEntries.length;
 
     if (workoutCount === 0)
@@ -55,7 +55,7 @@ export const getUserStats = function (user) {
         0
     );
 
-    const months = new Array(12);
+    const months = new Array<number>(12).fill(0);
     user.workoutEntries.forEach(value => {
         months[value.date?.getMonth()]++;
     });
@@ -73,29 +73,27 @@ export const getUserStats = function (user) {
 };
 
 export const fetchWithUserCredentials = function (
-    endpoint,
-    username,
-    password,
-    callOptions
+    endpoint: RequestInfo,
+    username: string,
+    password: string,
+    callOptions: RequestInit
 ) {
     const httpBasicHeaderValue =
         "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
 
-    if (callOptions.headers === undefined) {
-        const reqHeaders = new Headers();
-        reqHeaders.set("Authorization", httpBasicHeaderValue);
-        callOptions.headers = reqHeaders;
-    } else callOptions.headers.set("Authorization", httpBasicHeaderValue);
+    const reqHeaders = new Headers(callOptions.headers);
+    reqHeaders.set("Authorization", httpBasicHeaderValue);
+    callOptions.headers = reqHeaders;
 
     return fetch(endpoint, callOptions);
 };
 
 export const createAlertCard = function (
-    title,
-    msg,
+    title: string,
+    msg: string,
     type = "text",
-    callbackOnConfirm = null,
-    idClass = ""
+    callbackOnConfirm?: any,
+    idClass?: string
 ) {
     const card = document.createElement("div");
     card.classList.add(`${type}-card`);
@@ -111,7 +109,16 @@ export const createAlertCard = function (
 
     card.querySelector("button").addEventListener(
         "click",
-        callbackOnConfirm ? callbackOnConfirm : e => card.remove()
+        callbackOnConfirm ? callbackOnConfirm : ev => card.remove()
     );
     return card;
+};
+
+export const metersToKilometersFormatted = function (
+    meters: number,
+    fractionDigits: number
+): string {
+    return meters >= 1000
+        ? (meters / 1000).toFixed(fractionDigits) + " km"
+        : meters + " m";
 };

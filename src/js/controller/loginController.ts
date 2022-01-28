@@ -1,31 +1,34 @@
 import { USER_DATA_ENDPOINT } from "../config/configuration";
-import userModel from "../model/userModel";
 import AppUser from "../data/appUser";
 import { dbWorkoutToJS, fetchWithUserCredentials } from "../helpers/helpers";
 import mainView from "../view/mainView";
 import Controller from "./controller";
 import loginView from "../view/loginView";
+import realUserModel from "../model/realUserModel";
 
 class LoginController extends Controller {
     constructor() {
         super("#login", loginView);
     }
 
-    registerEventHandlers() {
-        this.view.addEventListenerLoginSubmitButton("click", event => {
+    initialize() {
+        loginView.addEventListenerLoginSubmitButton("click", event => {
             event.preventDefault();
-            if (userModel.isLoggedIn) return;
-            this.#loadUserProfileData(this.view.getLoginFormData())
-                .then(() => this.#redirectToUserProfilePage())
+            if (realUserModel.isUserLoggedIn) return;
+            this.loadUserProfileData(loginView.getLoginFormData())
+                .then(() => this.redirectToUserProfilePage())
                 .then(() => mainView.showProfileButton(true))
-                .then(() => mainView.hideLoginButton(true))
-                .catch(reason => this.#handleLoginError(reason.message));
+                .then(() => {
+                    mainView.hideLoginButton(false);
+                    return mainView.hideDemoButton(false);
+                })
+                .catch(reason => this.handleLoginError(reason.message));
         });
     }
 
-    #loadUserProfileData(loginFormData) {
-        const username = loginFormData.get("username");
-        const password = loginFormData.get("password");
+    private loadUserProfileData(loginFormData: FormData) {
+        const username = loginFormData.get("username").toString();
+        const password = loginFormData.get("password").toString();
 
         return fetchWithUserCredentials(
             `${USER_DATA_ENDPOINT}/${username}/data`,
@@ -47,25 +50,27 @@ class LoginController extends Controller {
 
     processFetchedUserData(userData, password) {
         const jsWorkouts = userData.workouts
-            ? userData.workouts.map(value => dbWorkoutToJS(value))
+            ? userData.workouts.map((value, index) =>
+                  dbWorkoutToJS(value, index)
+              )
             : [];
 
-        userModel.appUser = new AppUser(
+        realUserModel.appUser = new AppUser(
             userData.nickname,
             password,
             jsWorkouts
         );
-        userModel.appUser.email = userData.email;
-        userModel.isLoggedIn = true;
+        realUserModel.appUser.email = userData.email;
+        realUserModel.isUserLoggedIn = true;
     }
 
-    #redirectToUserProfilePage() {
+    private redirectToUserProfilePage() {
         location.hash = "#profile-overview";
     }
 
-    #handleLoginError(msg) {
-        this.view.clearLoginForm();
-        this.view.showLoginErrorInfo(msg);
+    private handleLoginError(msg: string) {
+        loginView.clearLoginForm();
+        loginView.showLoginErrorInfo(msg);
     }
 }
 export default new LoginController();

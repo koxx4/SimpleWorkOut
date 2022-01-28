@@ -1,4 +1,4 @@
-#demo__workout-area{
+#workouts__workout-area{
   background-color: #00000044;
   display: flex;
   flex-direction: row;
@@ -7,7 +7,7 @@
   align-items: center;
 }
 
-#demo__workout-area__workout-form{
+#workouts__workout-area__workout-form{
   border: 2px solid #00000033;
   border-radius: 1em;
   padding: 0.5em;
@@ -16,12 +16,12 @@
   align-items: center;
 }
 
-#demo__workout-area__workout-form form{
+#workouts__workout-area__workout-form form{
   width: 100%;
 }
 
 
-#demo__workout-area__workout-history{
+#workouts__workout-area__workout-history{
   margin-left: 0.5em;
   padding: 1em;
   background-color: #77aa77;
@@ -36,26 +36,26 @@
 }
 
 /*Chromium scrollbar specific properties*/
-#demo__workout-area__workout-history::-webkit-scrollbar-track{
+#workouts__workout-area__workout-history::-webkit-scrollbar-track{
   background-color: darkseagreen;
 }
 /*Chromium scrollbar specific properties*/
-#demo__workout-area__workout-history::-webkit-scrollbar{
+#workouts__workout-area__workout-history::-webkit-scrollbar{
   width: 0.5em;
 }
 /*Chromium scrollbar specific properties*/
-#demo__workout-area__workout-history::-webkit-scrollbar-thumb {
+#workouts__workout-area__workout-history::-webkit-scrollbar-thumb {
   background: darkolivegreen;
 }
 
 @media (max-width: 570px) {
-  #demo__workout-area{
+  #workouts__workout-area{
     flex-direction: column;
   }
-  #demo__workout-area__workout-form{
+  #workouts__workout-area__workout-form{
     margin-bottom: 0.8em;
   }
-  #demo__workout-area__workout-history{
+  #workouts__workout-area__workout-history{
     margin-left: 0;
   }
 }

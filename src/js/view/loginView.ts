@@ -2,34 +2,33 @@ import { View } from "./view";
 import { createAlertCard } from "../helpers/helpers";
 
 class LoginView extends View {
-    #loginForm;
-    #loginSubmitButton;
+    private _loginForm;
+    private _loginSubmitButton;
 
     constructor() {
         super(document.querySelector("#login-section"));
-        this.#loginForm = this.rootElement.querySelector(
+        this._loginForm = this.rootElement.querySelector(
             ".login-section__form"
         );
-        this.#loginSubmitButton = this.#loginForm.elements["login-submit"];
+        this._loginSubmitButton = this._loginForm.elements["login-submit"];
     }
 
     addEventListenerLoginSubmitButton(event, callback) {
-        this.#loginSubmitButton.addEventListener(event, callback);
+        this._loginSubmitButton.addEventListener(event, callback);
     }
 
     clearLoginForm() {
-        this.#loginForm.reset();
+        this._loginForm.reset();
     }
 
-    /**
-     *
-     * @returns {FormData}
-     */
-    getLoginFormData() {
-        return new FormData(this.#loginForm);
+    getLoginFormData(): FormData {
+        return new FormData(this._loginForm);
     }
 
-    showLoginErrorInfo(msg, callbackOnConfirm) {
+    showLoginErrorInfo(
+        msg: string,
+        callbackOnConfirm?: (e: MouseEvent) => any
+    ) {
         this.rootElement.insertAdjacentElement(
             "afterbegin",
             createAlertCard(

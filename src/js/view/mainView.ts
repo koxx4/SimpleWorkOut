@@ -3,18 +3,18 @@ import { faderUtility } from "../helpers/helpers";
 import { HIDDEN_ELEMENT_CLASS_NAME } from "../config/configuration";
 
 class MainView extends View {
-    #homeButton;
-    #demoButton;
-    #loginButton;
-    #myProfileButton;
+    private _homeButton;
+    private _demoButton;
+    private _loginButton;
+    private _myProfileButton;
 
     constructor() {
         super(document.querySelector("body"));
-        this.#homeButton = this.rootElement.querySelector("#nav__button-home");
-        this.#demoButton = this.rootElement.querySelector("#nav__button-demo");
-        this.#loginButton =
+        this._homeButton = this.rootElement.querySelector("#nav__button-home");
+        this._demoButton = this.rootElement.querySelector("#nav__button-demo");
+        this._loginButton =
             this.rootElement.querySelector("#nav__button-login");
-        this.#myProfileButton = this.rootElement.querySelector(
+        this._myProfileButton = this.rootElement.querySelector(
             "#nav__button-profile"
         );
     }
@@ -30,19 +30,27 @@ class MainView extends View {
     }
 
     hideProfileButton(fade) {
-        return this.hideSection(this.#myProfileButton, fade, 250);
+        return this.hideSection(this._myProfileButton, fade, 250);
     }
 
     showProfileButton(fade) {
-        return this.showSection(this.#myProfileButton, fade, 250);
+        return this.showSection(this._myProfileButton, fade, 250);
     }
 
     hideLoginButton(fade) {
-        return this.hideSection(this.#loginButton, fade, 250);
+        return this.hideSection(this._loginButton, fade, 250);
     }
 
     showLoginButton(fade) {
-        return this.showSection(this.#loginButton, fade, 250);
+        return this.showSection(this._loginButton, fade, 250);
+    }
+
+    showDemoButton(fade) {
+        return this.showSection(this._demoButton, fade, 250);
+    }
+
+    hideDemoButton(fade) {
+        return this.hideSection(this._demoButton, fade, 250);
     }
 }
 export default new MainView();
