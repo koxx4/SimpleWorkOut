@@ -1,6 +1,8 @@
-import { control, Icon, map, tileLayer, marker, Map } from "leaflet";
+import { Icon, map, tileLayer, marker, Map, control, Control } from "leaflet";
 import { LEAFLET_CONFIG, LeafletConfiguration } from "../config/configuration";
-
+import "leaflet.locatecontrol";
+import scale = control.scale;
+import locate = control.locate;
 /**
  * LeafletMap is a wrapper of leaflet's library map object.
  * It simplifies creation of map and interaction with it.
@@ -75,11 +77,10 @@ export class LeafletMap {
             this._initOptions.MAIN_TILE_PROVIDER,
             this._initOptions.LAYER_CONFIGURATION
         ).addTo(this._leafletMap);
-        control.scale().addTo(this._leafletMap);
-
-        control
-            .locate(this._initOptions.LOCATE_CONTROL_CONFIG)
-            .addTo(this._leafletMap);
+        this._leafletMap.addControl(scale());
+        this._leafletMap.addControl(
+            locate(this._initOptions.LOCATE_CONTROL_CONFIG)
+        );
 
         if (LEAFLET_CONFIG.MAP_AUTOMATIC_SIZE_REFRESH)
             this.applyAutomaticMapRefresh();
