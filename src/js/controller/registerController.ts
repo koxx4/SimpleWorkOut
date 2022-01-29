@@ -37,10 +37,17 @@ class RegisterController extends Controller {
         usrBody.append("email", inputs["email"].value);
         usrBody.append("password", inputs["password"].value);
 
+        const abortController = new AbortController();
+        const timeout = setTimeout(() => {
+            abortController.abort();
+            registerView.showRegistrationFailureInfo("Timed out");
+        }, 5000);
+
         fetch(REGISTRATION_ENDPOINT, {
             method: "POST",
             body: usrBody,
             mode: "cors",
+            signal: abortController.signal,
         }).then(response => {
             if (response.ok) {
                 registerView.showRegistrationSuccessfulInfo(
