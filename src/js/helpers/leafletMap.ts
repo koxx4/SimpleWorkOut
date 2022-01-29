@@ -1,6 +1,4 @@
 import { control, Icon, map, tileLayer, marker, Map } from "leaflet";
-import L = require("leaflet");
-import "leaflet.locatecontrol";
 import { LEAFLET_CONFIG, LeafletConfiguration } from "../config/configuration";
 
 /**
@@ -79,7 +77,7 @@ export class LeafletMap {
         ).addTo(this._leafletMap);
         control.scale().addTo(this._leafletMap);
 
-        L.control // @ts-ignore
+        control
             .locate(this._initOptions.LOCATE_CONTROL_CONFIG)
             .addTo(this._leafletMap);
 

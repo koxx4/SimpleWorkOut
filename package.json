@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/koxx4/SimpleWorkOut#readme",
   "dependencies": {
+    "@types/leaflet.locatecontrol": "^0.74.0",
     "core-js": "^3.16.4",
     "font-awesome": "^4.7.0",
     "leaflet": "^1.7.1",

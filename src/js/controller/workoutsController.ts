@@ -1,5 +1,4 @@
 import { workoutsView } from "../view/workoutsView";
-import { LeafletMap } from "../helpers/leafletMap";
 import {
     LEAFLET_CONFIG,
     PATH_NODES_OPTIONS,
@@ -13,6 +12,7 @@ import Controller from "./controller";
 import WorkoutMapTrail from "../data/workoutMapTrail";
 import UserModel from "../model/userModel";
 import realUserModel from "../model/realUserModel";
+import { LeafletMap } from "../helpers/leafletMap";
 
 class WorkoutsController extends Controller {
     private _leafletMap: LeafletMap;
