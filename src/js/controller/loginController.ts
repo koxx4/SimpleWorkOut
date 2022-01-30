@@ -30,6 +30,7 @@ class LoginController extends Controller {
         const username = loginFormData.get("username").toString();
         const password = loginFormData.get("password").toString();
 
+        loginView.showLoadingSpinner();
         return fetchWithUserCredentials(
             `${USER_DATA_ENDPOINT}/${username}/data`,
             username,
@@ -40,6 +41,7 @@ class LoginController extends Controller {
             }
         )
             .then(response => {
+                loginView.hideLoadingSpinner();
                 if (!response.ok) throw new Error(response.statusText);
                 return response.json();
             })

@@ -44,7 +44,7 @@ export const LEAFLET_CONFIG: LeafletConfiguration = {
         showPopup: false,
     },
     MAP_AUTOMATIC_SIZE_REFRESH: true,
-    MAP_AUTOMATIC_SIZE_REFRESH_INTERVAL: 5000,
+    MAP_AUTOMATIC_SIZE_REFRESH_INTERVAL: 2000,
 };
 
 export const INITIAL_SECTION = "#home";
@@ -76,7 +76,7 @@ export type SimpleLatLngArray = Array<[number, number]>;
 
 export interface DatabaseWorkout {
     workoutType: WorkoutType;
-    date: Date;
+    date: string;
     note: string;
     distance: number;
     trail: {

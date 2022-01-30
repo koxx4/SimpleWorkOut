@@ -68,14 +68,14 @@ class WorkoutsController extends Controller {
         const workoutForm = workoutsView.getWorkoutForm();
         let workoutType = workoutForm.type.value;
         let workoutDistance = workoutForm.distance.value;
-        let workoutDate = workoutForm.date.value;
+        let workoutDate = new Date(workoutForm.date.value);
         let workoutNote = workoutForm.note.value;
 
         workoutDistance =
             workoutDistance > 0
                 ? workoutDistance
                 : Math.round(this._userWorkoutTrail.distance);
-        workoutDate = workoutDate ? workoutDate : "some beautiful day";
+        workoutDate = workoutDate ? workoutDate : new Date();
         workoutNote = stripHTML(workoutNote);
 
         return new WorkoutEntry(
@@ -117,6 +117,7 @@ class WorkoutsController extends Controller {
         workoutsView.rootElement.addEventListener("sectionexit", _ => {
             workoutsView.clearAllWorkoutEntries();
             workoutsView.deleteMapLoadingIcon();
+            this._userWorkoutTrail = null;
             this._leafletMap.destroy();
         });
     }

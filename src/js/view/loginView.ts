@@ -1,9 +1,13 @@
 import { View } from "./view";
-import { createAlertCard } from "../helpers/helpers";
+import {
+    createAlertCard,
+    createLoadingSpinnerElement,
+} from "../helpers/helpers";
 
 class LoginView extends View {
-    private _loginForm;
-    private _loginSubmitButton;
+    private _loginForm: HTMLFormElement;
+    private _loginSubmitButton: HTMLElement;
+    private _loadingSpinner: HTMLElement;
 
     constructor() {
         super(document.querySelector("#login-section"));
@@ -42,6 +46,21 @@ class LoginView extends View {
 
     closeAnyLoginErrorInfo() {
         this.removeAllElementsFromThisView(".error-card");
+    }
+
+    showLoadingSpinner() {
+        if (this._loadingSpinner) return;
+        this._loadingSpinner = createLoadingSpinnerElement();
+        this._loginForm.insertAdjacentElement(
+            "afterbegin",
+            this._loadingSpinner
+        );
+    }
+
+    hideLoadingSpinner() {
+        if (!this._loadingSpinner) return;
+        this._loadingSpinner.remove();
+        this._loadingSpinner = null;
     }
 }
 export default new LoginView();

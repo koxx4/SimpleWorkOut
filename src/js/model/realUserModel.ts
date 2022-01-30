@@ -1,6 +1,11 @@
 import AppUser from "../data/appUser";
 import UserModel from "./userModel";
 import WorkoutEntry from "../data/workoutEntry";
+import { DatabaseWorkout, USER_DATA_ENDPOINT } from "../config/configuration";
+import {
+    fetchWithUserCredentials,
+    JSWorkoutToDatabase,
+} from "../helpers/helpers";
 
 class RealUserModel extends UserModel {
     isUserLoggedIn;
@@ -15,6 +20,7 @@ class RealUserModel extends UserModel {
 
     addWorkoutEntry(workoutEntry: WorkoutEntry) {
         this.appUser.workoutEntries.push(workoutEntry);
+        this.saveWorkoutToDatabse(JSWorkoutToDatabase(workoutEntry));
     }
 
     deleteWorkoutEntry(workoutEntry: WorkoutEntry) {
@@ -39,6 +45,28 @@ class RealUserModel extends UserModel {
 
     generateWorkoutLocalID(): number {
         return 0;
+    }
+
+    private async saveWorkoutToDatabse(workoutToSave: DatabaseWorkout) {
+        return fetchWithUserCredentials(
+            `${USER_DATA_ENDPOINT}/${this.appUser.username}/workout`,
+            this.appUser.username,
+            this.appUser.password,
+            {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(workoutToSave),
+            }
+        ).then(response => {
+            if (!response.ok)
+                throw new Error(
+                    "Couldn't persist newly added workout! " +
+                        response.statusText
+                );
+        });
     }
 }
 export default new RealUserModel();

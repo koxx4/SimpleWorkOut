@@ -13,7 +13,7 @@ export default class WorkoutEntry {
         distance: number,
         date: Date,
         notes: string,
-        trailCoordinates: Array<[number, number]>,
+        trailCoordinates: SimpleLatLngArray,
         localID: string
     ) {
         this.type = type;

@@ -1,4 +1,13 @@
-import { Icon, map, tileLayer, marker, Map, control, Control } from "leaflet";
+import {
+    Icon,
+    map,
+    tileLayer,
+    marker,
+    Map,
+    control,
+    Control,
+    LatLng,
+} from "leaflet";
 import { LEAFLET_CONFIG, LeafletConfiguration } from "../config/configuration";
 import "leaflet.locatecontrol";
 import scale = control.scale;
@@ -125,7 +134,7 @@ export class LeafletMap {
         leafletElement.removeFrom(this._leafletMap);
     }
 
-    static createBasicMarker(latlng, title = "Title", msg = "Message") {
+    static createBasicMarker(latlng: LatLng, title = "Title", msg = "Message") {
         const newMarker = marker(latlng, {
             title: title,
             riseOnHover: true,

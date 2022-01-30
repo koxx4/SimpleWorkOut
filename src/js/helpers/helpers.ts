@@ -37,6 +37,21 @@ export const dbWorkoutToJS = function (
     );
 };
 
+export const JSWorkoutToDatabase = function (
+    workout: WorkoutEntry
+): DatabaseWorkout {
+    const convertedPoints = workout.trailCoordinates.map(value => {
+        return { latitude: value[0], longitude: value[1] };
+    });
+    return {
+        workoutType: workout.type.toUpperCase(),
+        date: workout.date.toISOString(),
+        note: workout.notes,
+        distance: workout.distance,
+        trail: { trailPoints: convertedPoints },
+    };
+};
+
 export const getUserStats = function (user: AppUser): UserStats {
     const workoutCount = user.workoutEntries.length;
 
@@ -112,6 +127,12 @@ export const createAlertCard = function (
         callbackOnConfirm ? callbackOnConfirm : ev => card.remove()
     );
     return card;
+};
+
+export const createLoadingSpinnerElement = function (): HTMLElement {
+    const loadingSpinner = document.createElement("div");
+    loadingSpinner.classList.add("loading-spinner", "centered", "m1");
+    return loadingSpinner;
 };
 
 export const metersToKilometersFormatted = function (

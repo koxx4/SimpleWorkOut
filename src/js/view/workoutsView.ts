@@ -12,7 +12,7 @@ export class WorkoutsView extends View {
     private _addWorkoutButton;
     private _cancelWorkoutFormButton;
     private _submitWorkoutFormButton;
-    private _workoutHTMLForm;
+    private _workoutHTMLForm: HTMLFormElement;
     private _workoutEntryList;
     private _workoutHistoryArea;
     private _workoutTrailHint;
