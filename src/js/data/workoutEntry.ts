@@ -14,7 +14,8 @@ export default class WorkoutEntry {
         date: Date,
         notes: string,
         trailCoordinates: SimpleLatLngArray,
-        localID: string
+        localID: string,
+        dbID?: number
     ) {
         this.type = type;
         this.distance = distance;

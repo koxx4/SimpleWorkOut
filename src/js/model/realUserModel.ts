@@ -19,8 +19,12 @@ class RealUserModel extends UserModel {
     }
 
     addWorkoutEntry(workoutEntry: WorkoutEntry) {
-        this.appUser.workoutEntries.push(workoutEntry);
-        this.saveWorkoutToDatabse(JSWorkoutToDatabase(workoutEntry));
+        return new Promise<boolean>((resolve, reject) => {
+            this.appUser.workoutEntries.push(workoutEntry);
+            this.saveWorkoutToDatabse(JSWorkoutToDatabase(workoutEntry))
+                .then(() => resolve(true))
+                .catch(() => reject(false));
+        });
     }
 
     deleteWorkoutEntry(workoutEntry: WorkoutEntry) {

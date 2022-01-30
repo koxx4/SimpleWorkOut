@@ -75,6 +75,7 @@ export type WorkoutType = "walking" | "cycling" | "running" | "hiking" | string;
 export type SimpleLatLngArray = Array<[number, number]>;
 
 export interface DatabaseWorkout {
+    id?: number;
     workoutType: WorkoutType;
     date: string;
     note: string;

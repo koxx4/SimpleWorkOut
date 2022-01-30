@@ -11,7 +11,7 @@ export default abstract class UserModel {
 
     abstract getWorkoutEntriesSize(): number;
 
-    abstract addWorkoutEntry(workoutEntry: WorkoutEntry): void;
+    abstract addWorkoutEntry(workoutEntry: WorkoutEntry): Promise<boolean>;
 
     abstract deleteWorkoutEntry(workoutEntry: WorkoutEntry): void;
 

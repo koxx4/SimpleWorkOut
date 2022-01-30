@@ -55,8 +55,15 @@ class WorkoutsController extends Controller {
     private submitWorkout(event) {
         event.preventDefault();
         const newWorkoutEntry = this.constructWorkoutEntryFromForm();
-        this._model.addWorkoutEntry(newWorkoutEntry);
         workoutsView.renderWorkoutEntry(newWorkoutEntry);
+        workoutsView.addLoadingSpinnerToWorkoutEntry(newWorkoutEntry.localID);
+        this._model
+            .addWorkoutEntry(newWorkoutEntry)
+            .then(value =>
+                workoutsView.removeLoadingSpinnerFromWorkoutEntry(
+                    newWorkoutEntry.localID
+                )
+            );
         this.exitWorkoutForm(event);
     }
 

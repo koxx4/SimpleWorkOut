@@ -3,7 +3,11 @@ import {
     HIDDEN_ELEMENT_CLASS_NAME,
     WORKOUT_ENTRY_DATE_FORMAT,
 } from "../config/configuration";
-import { faderUtility, metersToKilometersFormatted } from "../helpers/helpers";
+import {
+    createLoadingSpinnerElement,
+    faderUtility,
+    metersToKilometersFormatted,
+} from "../helpers/helpers";
 import WorkoutEntry from "../data/workoutEntry";
 
 export class WorkoutsView extends View {
@@ -13,7 +17,7 @@ export class WorkoutsView extends View {
     private _cancelWorkoutFormButton;
     private _submitWorkoutFormButton;
     private _workoutHTMLForm: HTMLFormElement;
-    private _workoutEntryList;
+    private _workoutEntryList: HTMLElement;
     private _workoutHistoryArea;
     private _workoutTrailHint;
 
@@ -163,9 +167,9 @@ export class WorkoutsView extends View {
         this._workoutHistoryArea.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
     }
 
-    toggleWorkoutEntryNote(id) {
+    toggleWorkoutEntryNote(localID) {
         const workoutEntryHTMLElement = this._workoutEntryList.querySelector(
-            `.workout-history-list__entry[data-workout-id="${id}"]`
+            `.workout-history-list__entry[data-workout-id="${localID}"]`
         );
         const noteElement = workoutEntryHTMLElement.querySelector(
             ".workout-history-list__entry-note"
@@ -176,6 +180,26 @@ export class WorkoutsView extends View {
         } else {
             faderUtility.fadeOut(noteElement, 600);
         }
+    }
+
+    addLoadingSpinnerToWorkoutEntry(localID: string) {
+        const entry = this._workoutEntryList.querySelector(
+            `.workout-history-list__entry[data-workout-id="${localID}"]`
+        );
+        if (!entry) return;
+
+        entry.insertAdjacentElement(
+            "afterbegin",
+            createLoadingSpinnerElement()
+        );
+    }
+
+    removeLoadingSpinnerFromWorkoutEntry(localID: string) {
+        const entry = this._workoutEntryList
+            .querySelector(
+                `.workout-history-list__entry[data-workout-id="${localID}"] .loading-spinner`
+            )
+            ?.remove();
     }
 
     hideTrailDrawingHint() {

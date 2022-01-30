@@ -17,23 +17,24 @@ export const stripHTML = function (text: string) {
 };
 
 export const dbWorkoutToJS = function (
-    dbWorkoutJson: DatabaseWorkout,
+    databseWorkout: DatabaseWorkout,
     localID: number
 ) {
-    const coordsArray: SimpleLatLngArray = dbWorkoutJson.trail
-        ? dbWorkoutJson.trail.trailPoints.map(value => [
+    const coordsArray: SimpleLatLngArray = databseWorkout.trail
+        ? databseWorkout.trail.trailPoints.map(value => [
               value.latitude,
               value.longitude,
           ])
         : [];
 
     return new WorkoutEntry(
-        dbWorkoutJson.workoutType.toLowerCase(),
-        dbWorkoutJson.distance,
-        new Date(dbWorkoutJson.date),
-        dbWorkoutJson.note,
+        databseWorkout.workoutType.toLowerCase(),
+        databseWorkout.distance,
+        new Date(databseWorkout.date),
+        databseWorkout.note,
         coordsArray,
-        UserModel.generateWorkoutLocalID()
+        UserModel.generateWorkoutLocalID(),
+        databseWorkout.id
     );
 };
 

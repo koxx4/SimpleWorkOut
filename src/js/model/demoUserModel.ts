@@ -11,8 +11,11 @@ class DemoUserModel extends UserModel {
         return this.appUser.workoutEntries.length;
     }
 
-    addWorkoutEntry(workoutEntry: WorkoutEntry) {
-        this.appUser.workoutEntries.push(workoutEntry);
+    async addWorkoutEntry(workoutEntry: WorkoutEntry) {
+        return new Promise<boolean>((resolve, reject) => {
+            this.appUser.workoutEntries.push(workoutEntry);
+            resolve(true);
+        });
     }
 
     deleteWorkoutEntry(workoutEntry: WorkoutEntry) {
