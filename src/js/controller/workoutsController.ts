@@ -177,7 +177,8 @@ class WorkoutsController extends Controller {
     }
 
     private deleteWorkoutEntry(workoutID) {
-        demoModel.deleteWorkoutEntryByID(workoutID);
+        this._model.deleteWorkoutEntryByID(workoutID);
+        workoutsView.clearAllWorkoutEntries();
         workoutsView.renderWorkoutEntries(this._model.getAllWorkoutEntries());
         this._workoutEntryLayerGroup.clearLayers();
     }
