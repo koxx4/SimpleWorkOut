@@ -85,9 +85,8 @@ class WorkoutsController extends Controller {
         let trailPoints = [];
         let workoutDistance = 0;
         if (this._userWorkoutTrail) {
-            workoutDistance = workoutForm["distance"]
-                ? workoutForm["distance"].value
-                : Math.round(this._userWorkoutTrail.distance);
+            if (workoutForm["distance"] || workoutForm["distance"] === 0)
+                workoutDistance = Math.round(this._userWorkoutTrail.distance);
             trailPoints = this._userWorkoutTrail.listOfCoordinates;
         }
 
