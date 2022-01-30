@@ -42,7 +42,7 @@ class RegisterController extends Controller {
             abortController.abort();
             registerView.showRegistrationFailureInfo("Timed out");
         }, 5000);
-
+        registerView.showLoadingSpinner();
         fetch(REGISTRATION_ENDPOINT, {
             method: "POST",
             body: usrBody,
@@ -50,6 +50,7 @@ class RegisterController extends Controller {
             signal: abortController.signal,
         }).then(response => {
             if (response.ok) {
+                clearTimeout(timeout);
                 registerView.showRegistrationSuccessfulInfo(
                     `Hello, ${usrBody.get(
                         "username"
@@ -60,6 +61,7 @@ class RegisterController extends Controller {
                 registerView.showRegistrationFailureInfo(
                     "Something went wrong while registering you chef... maybe try again later?"
                 );
+            registerView.hideLoadingSpinner();
         });
     }
 }

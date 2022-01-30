@@ -17,24 +17,40 @@ export const stripHTML = function (text: string) {
 };
 
 export const dbWorkoutToJS = function (
-    dbWorkoutJson: DatabaseWorkout,
+    databseWorkout: DatabaseWorkout,
     localID: number
 ) {
-    const coordsArray: SimpleLatLngArray = dbWorkoutJson.trail
-        ? dbWorkoutJson.trail.trailPoints.map(value => [
+    const coordsArray: SimpleLatLngArray = databseWorkout.trail
+        ? databseWorkout.trail.trailPoints.map(value => [
               value.latitude,
               value.longitude,
           ])
         : [];
 
     return new WorkoutEntry(
-        dbWorkoutJson.workoutType.toLowerCase(),
-        dbWorkoutJson.distance,
-        new Date(dbWorkoutJson.date),
-        dbWorkoutJson.note,
+        databseWorkout.workoutType.toLowerCase(),
+        databseWorkout.distance,
+        new Date(databseWorkout.date),
+        databseWorkout.note,
         coordsArray,
-        UserModel.generateWorkoutLocalID()
+        UserModel.generateWorkoutLocalID(),
+        databseWorkout.id
     );
+};
+
+export const JSWorkoutToDatabase = function (
+    workout: WorkoutEntry
+): DatabaseWorkout {
+    const convertedPoints = workout.trailCoordinates.map(value => {
+        return { latitude: value[0], longitude: value[1] };
+    });
+    return {
+        workoutType: workout.type.toUpperCase(),
+        date: workout.date.toISOString(),
+        note: workout.notes,
+        distance: workout.distance,
+        trail: { trailPoints: convertedPoints },
+    };
 };
 
 export const getUserStats = function (user: AppUser): UserStats {
@@ -112,6 +128,12 @@ export const createAlertCard = function (
         callbackOnConfirm ? callbackOnConfirm : ev => card.remove()
     );
     return card;
+};
+
+export const createLoadingSpinnerElement = function (): HTMLElement {
+    const loadingSpinner = document.createElement("div");
+    loadingSpinner.classList.add("loading-spinner", "centered", "m1");
+    return loadingSpinner;
 };
 
 export const metersToKilometersFormatted = function (

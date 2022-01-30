@@ -55,8 +55,18 @@ class WorkoutsController extends Controller {
     private submitWorkout(event) {
         event.preventDefault();
         const newWorkoutEntry = this.constructWorkoutEntryFromForm();
-        this._model.addWorkoutEntry(newWorkoutEntry);
         workoutsView.renderWorkoutEntry(newWorkoutEntry);
+        workoutsView.addLoadingSpinnerToWorkoutEntry(newWorkoutEntry.localID);
+        this._model.addWorkoutEntry(newWorkoutEntry).then(
+            value =>
+                workoutsView.removeLoadingSpinnerFromWorkoutEntry(
+                    newWorkoutEntry.localID
+                ),
+            reason =>
+                workoutsView.removeLoadingSpinnerFromWorkoutEntry(
+                    newWorkoutEntry.localID
+                )
+        );
         this.exitWorkoutForm(event);
     }
 
@@ -65,25 +75,28 @@ class WorkoutsController extends Controller {
     }
 
     private constructWorkoutEntryFromForm() {
-        const workoutForm = workoutsView.getWorkoutForm();
-        let workoutType = workoutForm.type.value;
-        let workoutDistance = workoutForm.distance.value;
-        let workoutDate = workoutForm.date.value;
-        let workoutNote = workoutForm.note.value;
+        const workoutForm = workoutsView.getWorkoutForm().elements;
+        const workoutType = workoutForm["type"].value;
+        const workoutNote = stripHTML(workoutForm["note"].value);
+        const workoutDate = workoutForm["date"].value
+            ? new Date(workoutForm["date"].value)
+            : new Date();
 
-        workoutDistance =
-            workoutDistance > 0
-                ? workoutDistance
+        let trailPoints = [];
+        let workoutDistance = 0;
+        if (this._userWorkoutTrail) {
+            workoutDistance = workoutForm["distance"]
+                ? workoutForm["distance"].value
                 : Math.round(this._userWorkoutTrail.distance);
-        workoutDate = workoutDate ? workoutDate : "some beautiful day";
-        workoutNote = stripHTML(workoutNote);
+            trailPoints = this._userWorkoutTrail.listOfCoordinates;
+        }
 
         return new WorkoutEntry(
             workoutType,
             workoutDistance,
             workoutDate,
             workoutNote,
-            this._userWorkoutTrail.listOfCoordinates,
+            trailPoints,
             UserModel.generateWorkoutLocalID()
         );
     }
@@ -117,6 +130,7 @@ class WorkoutsController extends Controller {
         workoutsView.rootElement.addEventListener("sectionexit", _ => {
             workoutsView.clearAllWorkoutEntries();
             workoutsView.deleteMapLoadingIcon();
+            this._userWorkoutTrail = null;
             this._leafletMap.destroy();
         });
     }
@@ -175,10 +189,20 @@ class WorkoutsController extends Controller {
         }
     }
 
-    private deleteWorkoutEntry(workoutID) {
-        demoModel.deleteWorkoutEntryByID(workoutID);
-        workoutsView.renderWorkoutEntries(this._model.getAllWorkoutEntries());
-        this._workoutEntryLayerGroup.clearLayers();
+    private deleteWorkoutEntry(workoutID: string) {
+        workoutsView.addLoadingSpinnerToWorkoutEntry(workoutID);
+        this._model.deleteWorkoutEntryByLocalID(workoutID).then(
+            () => {
+                workoutsView.removeLoadingSpinnerFromWorkoutEntry(workoutID);
+                workoutsView.clearAllWorkoutEntries();
+                workoutsView.renderWorkoutEntries(
+                    this._model.getAllWorkoutEntries()
+                );
+                this._workoutEntryLayerGroup.clearLayers();
+                this._userWorkoutTrail = null;
+            },
+            () => workoutsView.removeLoadingSpinnerFromWorkoutEntry(workoutID)
+        );
     }
 
     private showWorkoutEntryOnMap(workoutID) {

@@ -1,8 +1,12 @@
 import { View } from "./view";
-import { createAlertCard } from "../helpers/helpers";
+import {
+    createAlertCard,
+    createLoadingSpinnerElement,
+} from "../helpers/helpers";
 
 class RegisterView extends View {
     readonly registrationForm: HTMLFormElement;
+    private _loadingSpinner: HTMLElement;
 
     constructor() {
         super(document.querySelector("#register-section"));
@@ -80,6 +84,21 @@ class RegisterView extends View {
 
     closeRegistrationWarningInfo() {
         this.removeAllElementsFromThisView(".registration-warning");
+    }
+
+    showLoadingSpinner() {
+        if (this._loadingSpinner) return;
+        this._loadingSpinner = createLoadingSpinnerElement();
+        this.registrationForm.insertAdjacentElement(
+            "afterbegin",
+            this._loadingSpinner
+        );
+    }
+
+    hideLoadingSpinner() {
+        if (!this._loadingSpinner) return;
+        this._loadingSpinner.remove();
+        this._loadingSpinner = null;
     }
 }
 export default new RegisterView();

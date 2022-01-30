@@ -7,14 +7,16 @@ export default class WorkoutEntry {
     notes: string;
     trailCoordinates: SimpleLatLngArray;
     readonly localID: string;
+    readonly dbID: number;
 
     constructor(
         type: WorkoutType,
         distance: number,
         date: Date,
         notes: string,
-        trailCoordinates: Array<[number, number]>,
-        localID: string
+        trailCoordinates: SimpleLatLngArray,
+        localID: string,
+        dbID?: number
     ) {
         this.type = type;
         this.distance = distance;
@@ -22,5 +24,6 @@ export default class WorkoutEntry {
         this.notes = notes;
         this.trailCoordinates = trailCoordinates;
         this.localID = localID;
+        this.dbID = dbID;
     }
 }

@@ -7,6 +7,8 @@ import loginView from "../view/loginView";
 import realUserModel from "../model/realUserModel";
 
 class LoginController extends Controller {
+    private _isLoginRequestSent;
+
     constructor() {
         super("#login", loginView);
     }
@@ -14,7 +16,8 @@ class LoginController extends Controller {
     initialize() {
         loginView.addEventListenerLoginSubmitButton("click", event => {
             event.preventDefault();
-            if (realUserModel.isUserLoggedIn) return;
+            if (realUserModel.isUserLoggedIn || this._isLoginRequestSent)
+                return;
             this.loadUserProfileData(loginView.getLoginFormData())
                 .then(() => this.redirectToUserProfilePage())
                 .then(() => mainView.showProfileButton(true))
@@ -30,6 +33,8 @@ class LoginController extends Controller {
         const username = loginFormData.get("username").toString();
         const password = loginFormData.get("password").toString();
 
+        loginView.showLoadingSpinner();
+        this._isLoginRequestSent = true;
         return fetchWithUserCredentials(
             `${USER_DATA_ENDPOINT}/${username}/data`,
             username,
@@ -40,6 +45,8 @@ class LoginController extends Controller {
             }
         )
             .then(response => {
+                loginView.hideLoadingSpinner();
+                this._isLoginRequestSent = false;
                 if (!response.ok) throw new Error(response.statusText);
                 return response.json();
             })
@@ -71,6 +78,7 @@ class LoginController extends Controller {
     private handleLoginError(msg: string) {
         loginView.clearLoginForm();
         loginView.showLoginErrorInfo(msg);
+        loginView.hideLoadingSpinner();
     }
 }
 export default new LoginController();
