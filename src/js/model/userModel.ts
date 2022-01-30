@@ -13,11 +13,11 @@ export default abstract class UserModel {
 
     abstract addWorkoutEntry(workoutEntry: WorkoutEntry): Promise<boolean>;
 
-    abstract deleteWorkoutEntry(workoutEntry: WorkoutEntry): void;
+    abstract deleteWorkoutEntry(workoutEntry: WorkoutEntry): Promise<boolean>;
 
-    abstract deleteWorkoutEntryByID(id: string): void;
+    abstract deleteWorkoutEntryByLocalID(localId: string): Promise<boolean>;
 
-    abstract deleteAllWorkoutEntries(): void;
+    abstract deleteAllWorkoutEntries(): Promise<boolean>;
 
     abstract getWorkoutEntryByID(id: string): WorkoutEntry | undefined;
 

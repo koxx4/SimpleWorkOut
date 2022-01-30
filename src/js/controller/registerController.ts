@@ -51,7 +51,6 @@ class RegisterController extends Controller {
         }).then(response => {
             if (response.ok) {
                 clearTimeout(timeout);
-                registerView.hideLoadingSpinner();
                 registerView.showRegistrationSuccessfulInfo(
                     `Hello, ${usrBody.get(
                         "username"
@@ -62,6 +61,7 @@ class RegisterController extends Controller {
                 registerView.showRegistrationFailureInfo(
                     "Something went wrong while registering you chef... maybe try again later?"
                 );
+            registerView.hideLoadingSpinner();
         });
     }
 }

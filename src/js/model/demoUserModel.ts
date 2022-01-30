@@ -12,26 +12,32 @@ class DemoUserModel extends UserModel {
     }
 
     async addWorkoutEntry(workoutEntry: WorkoutEntry) {
-        return new Promise<boolean>((resolve, reject) => {
+        return new Promise<boolean>(resolve => {
             this.appUser.workoutEntries.push(workoutEntry);
-            resolve(true);
+            return resolve(true);
         });
     }
 
     deleteWorkoutEntry(workoutEntry: WorkoutEntry) {
         const workoutIndex = this.appUser.workoutEntries.indexOf(workoutEntry);
+        if (workoutIndex < 0) return Promise.reject(false);
         this.appUser.workoutEntries.splice(workoutIndex, 1);
+        return Promise.resolve(true);
     }
 
-    deleteWorkoutEntryByID(id: string) {
+    deleteWorkoutEntryByLocalID(localId: string) {
         const entry = this.appUser.workoutEntries.find(element => {
-            return element.localID === id;
+            return element.localID === localId;
         });
-        this.deleteWorkoutEntry(entry);
+        if (!entry) return Promise.reject(false);
+        return this.deleteWorkoutEntry(entry);
     }
 
     deleteAllWorkoutEntries() {
-        this.appUser.workoutEntries.splice(0);
+        return new Promise<boolean>(() => {
+            this.appUser.workoutEntries.splice(0);
+            return Promise.resolve(true);
+        });
     }
 
     getWorkoutEntryByID(id: string): WorkoutEntry | undefined {
