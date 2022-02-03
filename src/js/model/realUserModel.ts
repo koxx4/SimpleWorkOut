@@ -22,8 +22,11 @@ class RealUserModel extends UserModel {
         return new Promise<boolean>((resolve, reject) => {
             this.appUser.workoutEntries.push(workoutEntry);
             this.saveWorkoutToDatabase(JSWorkoutToDatabase(workoutEntry))
-                .then(() => resolve(true))
-                .catch(() => reject(false));
+                .then(persistedWorkout => {
+                    workoutEntry.dbID = persistedWorkout.id;
+                    return Promise.resolve(true);
+                })
+                .catch(() => Promise.reject(false));
         });
     }
 
@@ -68,7 +71,9 @@ class RealUserModel extends UserModel {
         return 0;
     }
 
-    private async saveWorkoutToDatabase(workoutToSave: DatabaseWorkout) {
+    private async saveWorkoutToDatabase(
+        workoutToSave: DatabaseWorkout
+    ): Promise<DatabaseWorkout> {
         return fetchWithUserCredentials(
             `${USER_DATA_ENDPOINT}/${this.appUser.username}/workout`,
             this.appUser.username,
@@ -87,6 +92,7 @@ class RealUserModel extends UserModel {
                     "Couldn't persist newly added workout! " +
                         response.statusText
                 );
+            return response.json();
         });
     }
 
