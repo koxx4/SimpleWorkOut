@@ -7,7 +7,7 @@ export default class WorkoutEntry {
     notes: string;
     trailCoordinates: SimpleLatLngArray;
     readonly localID: string;
-    readonly dbID: number;
+    dbID: number;
 
     constructor(
         type: WorkoutType,
