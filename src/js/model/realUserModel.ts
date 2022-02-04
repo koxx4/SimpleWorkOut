@@ -18,49 +18,47 @@ class RealUserModel extends UserModel {
         return this.appUser.workoutEntries.length;
     }
 
-    addWorkoutEntry(workoutEntry: WorkoutEntry) {
-        return new Promise<boolean>((resolve, reject) => {
-            this.appUser.workoutEntries.push(workoutEntry);
-            this.saveWorkoutToDatabase(JSWorkoutToDatabase(workoutEntry))
-                .then(persistedWorkout => {
-                    workoutEntry.dbID = persistedWorkout.id;
-                    return Promise.resolve(true);
-                })
-                .catch(() => Promise.reject(false));
-        });
-    }
-
     deleteWorkoutEntry(workoutEntry: WorkoutEntry) {
         const workoutIndex = this.appUser.workoutEntries.indexOf(workoutEntry);
-        if (workoutIndex < 0) return Promise.reject(false);
+        if (workoutIndex < 0) return Promise.reject();
 
         return this.deleteWorkoutFromDatabase(workoutEntry.dbID).then(
             () => {
                 this.appUser.workoutEntries.splice(workoutIndex, 1);
-                return Promise.resolve(true);
+                return Promise.resolve();
             },
-            reason => Promise.reject(false)
+            reason => Promise.reject()
         );
     }
 
-    deleteWorkoutEntryByLocalID(localId: string): Promise<boolean> {
-        console.log("a");
+    deleteWorkoutEntryByLocalID(localId: string): Promise<void> {
         const entry = this.appUser.workoutEntries.find(element => {
             return element.localID === localId;
         });
-        console.log("b");
-        if (!entry) return Promise.reject(false);
+        if (!entry) return Promise.reject();
         return this.deleteWorkoutEntry(entry);
     }
 
     deleteAllWorkoutEntries() {
-        return new Promise<boolean>(() => {
+        return new Promise<void>(() => {
             this.appUser.workoutEntries.forEach(async value => {
                 await this.deleteWorkoutFromDatabase(value.dbID);
             });
             this.appUser.workoutEntries.splice(0);
-            return Promise.resolve(true);
+            return Promise.resolve();
         });
+    }
+
+    addWorkoutEntry(workoutEntry: WorkoutEntry) {
+        return this.saveWorkoutToDatabase(JSWorkoutToDatabase(workoutEntry))
+            .then(persistedWorkout => {
+                workoutEntry.dbID = persistedWorkout.id;
+                this.appUser.workoutEntries.push(workoutEntry);
+                return Promise.resolve();
+            })
+            .catch(notPersistedWorkout => {
+                return Promise.reject();
+            });
     }
 
     getWorkoutEntryByID(id: string): WorkoutEntry | undefined {
@@ -87,11 +85,7 @@ class RealUserModel extends UserModel {
                 body: JSON.stringify(workoutToSave),
             }
         ).then(response => {
-            if (!response.ok)
-                throw new Error(
-                    "Couldn't persist newly added workout! " +
-                        response.statusText
-                );
+            if (!response.ok) return Promise.reject();
             return response.json();
         });
     }

@@ -9,6 +9,8 @@ import {
     metersToKilometersFormatted,
 } from "../helpers/helpers";
 import WorkoutEntry from "../data/workoutEntry";
+import { DomUtil } from "leaflet";
+import remove = DomUtil.remove;
 
 export class WorkoutsView extends View {
     private _mapElement;
@@ -167,10 +169,8 @@ export class WorkoutsView extends View {
         this._workoutHistoryArea.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
     }
 
-    toggleWorkoutEntryNote(localID) {
-        const workoutEntryHTMLElement = this._workoutEntryList.querySelector(
-            `.workout-history-list__entry[data-workout-id="${localID}"]`
-        );
+    toggleWorkoutEntryNote(localId) {
+        const workoutEntryHTMLElement = this.getWorkoutEntry(localId);
         const noteElement = workoutEntryHTMLElement.querySelector(
             ".workout-history-list__entry-note"
         );
@@ -182,16 +182,58 @@ export class WorkoutsView extends View {
         }
     }
 
-    addLoadingSpinnerToWorkoutEntry(localID: string) {
-        const entry = this._workoutEntryList.querySelector(
-            `.workout-history-list__entry[data-workout-id="${localID}"]`
-        );
+    addLoadingSpinnerToWorkoutEntry(localId: string) {
+        const entry = this.getWorkoutEntry(localId);
         if (!entry) return;
 
         entry.insertAdjacentElement(
             "afterbegin",
             createLoadingSpinnerElement()
         );
+    }
+
+    showWorkoutSubmitRetryButton(localId: string) {
+        const buttonAlreadyExists =
+            this.getWorkoutEntry(localId).querySelector(
+                `button[value="submit-retry"]`
+            ) !== null;
+
+        if (buttonAlreadyExists) return;
+
+        this.getWorkoutEntry(localId)
+            .querySelector("button")
+            .insertAdjacentHTML(
+                "beforebegin",
+                `<button value="submit-retry" class="button--delete-workout-note">Retry saving</button>`
+            );
+    }
+
+    hideWorkoutSubmitRetryButton(localId: string) {
+        this.getWorkoutEntry(localId)
+            .querySelector(`button[value="submit-retry"]`)
+            ?.remove();
+    }
+
+    private getWorkoutEntry(localId: string): HTMLElement | null {
+        return this._workoutEntryList.querySelector(
+            `.workout-history-list__entry[data-workout-id="${localId}"]`
+        );
+    }
+
+    addStatusToWorkoutEntry(localId: string, status: string, color = "green") {
+        const entry = this.getWorkoutEntry(localId);
+        if (!entry) return;
+
+        entry.insertAdjacentHTML(
+            "afterbegin",
+            `<p class="m1 workout-status" style="color: ${color}"><i>${status}</i></p>`
+        );
+    }
+
+    removeStatusFromWorkoutEntry(localId: string) {
+        const entry = this.getWorkoutEntry(localId)
+            .querySelector(".workout-status")
+            ?.remove();
     }
 
     removeLoadingSpinnerFromWorkoutEntry(localID: string) {

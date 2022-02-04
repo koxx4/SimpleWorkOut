@@ -19,11 +19,13 @@ class WorkoutsController extends Controller {
     private _isUserEditingWorkout: boolean = false;
     private _userWorkoutTrail: WorkoutMapTrail;
     private readonly _workoutEntryLayerGroup: LayerGroup;
+    private readonly _unsavedWorkouts: Map<string, WorkoutEntry>;
     private _model: UserModel;
 
     constructor() {
         super("#workouts", workoutsView);
         this._workoutEntryLayerGroup = layerGroup();
+        this._unsavedWorkouts = new Map<string, WorkoutEntry>();
     }
 
     private createLeafletMap() {
@@ -56,18 +58,52 @@ class WorkoutsController extends Controller {
         event.preventDefault();
         const newWorkoutEntry = this.constructWorkoutEntryFromForm();
         workoutsView.renderWorkoutEntry(newWorkoutEntry);
+        this.handleSavingWorkoutData(newWorkoutEntry);
+        this.exitWorkoutForm(event);
+    }
+
+    private handleSavingWorkoutData(newWorkoutEntry: WorkoutEntry) {
         workoutsView.addLoadingSpinnerToWorkoutEntry(newWorkoutEntry.localID);
         this._model.addWorkoutEntry(newWorkoutEntry).then(
-            value =>
+            value => {
+                if (this._unsavedWorkouts.has(newWorkoutEntry.localID))
+                    this._unsavedWorkouts.delete(newWorkoutEntry.localID);
+
+                workoutsView.hideWorkoutSubmitRetryButton(
+                    newWorkoutEntry.localID
+                );
                 workoutsView.removeLoadingSpinnerFromWorkoutEntry(
                     newWorkoutEntry.localID
-                ),
-            reason =>
+                );
+                workoutsView.removeStatusFromWorkoutEntry(
+                    newWorkoutEntry.localID
+                );
+                workoutsView.addStatusToWorkoutEntry(
+                    newWorkoutEntry.localID,
+                    "Saved to server"
+                );
+            },
+            reason => {
                 workoutsView.removeLoadingSpinnerFromWorkoutEntry(
                     newWorkoutEntry.localID
-                )
+                );
+                workoutsView.removeStatusFromWorkoutEntry(
+                    newWorkoutEntry.localID
+                );
+                workoutsView.addStatusToWorkoutEntry(
+                    newWorkoutEntry.localID,
+                    "Couldn't save to server",
+                    "red"
+                );
+                workoutsView.showWorkoutSubmitRetryButton(
+                    newWorkoutEntry.localID
+                );
+                this._unsavedWorkouts.set(
+                    newWorkoutEntry.localID,
+                    newWorkoutEntry
+                );
+            }
         );
-        this.exitWorkoutForm(event);
     }
 
     private clearWorkoutFormValues() {
@@ -175,24 +211,47 @@ class WorkoutsController extends Controller {
         const targetButtonValue = event.target.value;
         const targetWorkoutEntryID =
             event.target.parentElement.dataset.workoutId;
+        const targetWorkoutEntry = this._unsavedWorkouts.has(
+            targetWorkoutEntryID
+        )
+            ? this._unsavedWorkouts.get(targetWorkoutEntryID)
+            : this._model.getWorkoutEntryByID(targetWorkoutEntryID);
+        if (!targetWorkoutEntry) return;
+
         switch (targetButtonValue) {
             case "show":
-                this.showWorkoutEntryOnMap(targetWorkoutEntryID);
+                this.showWorkoutEntryOnMap(targetWorkoutEntry);
                 break;
             case "delete":
-                this.deleteWorkoutEntry(targetWorkoutEntryID);
+                this.deleteWorkoutEntry(targetWorkoutEntry);
                 break;
             case "note":
-                this.showWorkoutEntryNote(targetWorkoutEntryID);
+                this.showWorkoutEntryNote(targetWorkoutEntry);
+                break;
+            case "submit-retry":
+                this.handleSavingWorkoutData(targetWorkoutEntry);
                 break;
         }
     }
 
-    private deleteWorkoutEntry(workoutID: string) {
-        workoutsView.addLoadingSpinnerToWorkoutEntry(workoutID);
-        this._model.deleteWorkoutEntryByLocalID(workoutID).then(
+    private deleteWorkoutEntry(workout: WorkoutEntry) {
+        if (this._unsavedWorkouts.delete(workout.localID)) {
+            workoutsView.clearAllWorkoutEntries();
+            workoutsView.renderWorkoutEntries(
+                this._model.getAllWorkoutEntries()
+            );
+            this._workoutEntryLayerGroup.clearLayers();
+            this._userWorkoutTrail = null;
+            return;
+        }
+
+        workoutsView.addLoadingSpinnerToWorkoutEntry(workout.localID);
+
+        this._model.deleteWorkoutEntryByLocalID(workout.localID).then(
             () => {
-                workoutsView.removeLoadingSpinnerFromWorkoutEntry(workoutID);
+                workoutsView.removeLoadingSpinnerFromWorkoutEntry(
+                    workout.localID
+                );
                 workoutsView.clearAllWorkoutEntries();
                 workoutsView.renderWorkoutEntries(
                     this._model.getAllWorkoutEntries()
@@ -200,16 +259,16 @@ class WorkoutsController extends Controller {
                 this._workoutEntryLayerGroup.clearLayers();
                 this._userWorkoutTrail = null;
             },
-            () => workoutsView.removeLoadingSpinnerFromWorkoutEntry(workoutID)
+            () =>
+                workoutsView.removeLoadingSpinnerFromWorkoutEntry(
+                    workout.localID
+                )
         );
     }
 
-    private showWorkoutEntryOnMap(workoutID) {
+    private showWorkoutEntryOnMap(workout: WorkoutEntry) {
         if (this._isUserEditingWorkout) return;
 
-        const workout = this._model.getWorkoutEntryByID(workoutID);
-
-        if (!workout) return;
         if (!workout.trailCoordinates || workout.trailCoordinates.length < 1) {
             alert("No trail was saved for this workout!");
             return;
@@ -244,9 +303,8 @@ class WorkoutsController extends Controller {
         this.updateTrailDistanceUI();
     }
 
-    private showWorkoutEntryNote(workoutID: string) {
-        const workout = this._model.getWorkoutEntryByID(workoutID);
-        if (workout) workoutsView.toggleWorkoutEntryNote(workoutID);
+    private showWorkoutEntryNote(workout: WorkoutEntry) {
+        workoutsView.toggleWorkoutEntryNote(workout.localID);
     }
 }
 export default new WorkoutsController();
