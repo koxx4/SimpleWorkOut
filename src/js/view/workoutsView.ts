@@ -85,6 +85,10 @@ export class WorkoutsView extends View {
         });
     }
 
+    scrollToMap() {
+        this._mapElement.scrollIntoView({ behavior: "smooth" });
+    }
+
     renderMapLoadingIcon() {
         this._mapElement.insertAdjacentHTML(
             "afterbegin",

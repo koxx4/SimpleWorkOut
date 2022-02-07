@@ -200,6 +200,33 @@ export const createLoadingSpinnerElement = function (): HTMLElement {
     return loadingSpinner;
 };
 
+export const showModal = function (
+    title: string,
+    msg: string,
+    type: "info" | "error" = "info",
+    onClose?: Function
+): HTMLElement {
+    document.body.insertAdjacentHTML(
+        "afterbegin",
+        `
+        <div class="modal">
+            <div class="modal-text-card-${type}">
+                <div class="close-modal">&times;</div>
+                <h3>${title}</h3>
+                <p>${msg}</p>
+            </div>
+        </div>
+    `
+    );
+    const modalElement = document.body.firstElementChild;
+    modalElement.querySelector(".close-modal").addEventListener("click", e => {
+        if (onClose) onClose();
+        modalElement.remove();
+    });
+
+    return <HTMLElement>modalElement;
+};
+
 export const metersToKilometersFormatted = function (
     meters: number,
     fractionDigits: number

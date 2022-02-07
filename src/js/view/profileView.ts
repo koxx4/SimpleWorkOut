@@ -1,5 +1,5 @@
 import { View } from "./view";
-import { createAlertCard } from "../helpers/helpers";
+import { createAlertCard, showModal } from "../helpers/helpers";
 
 class ProfileView extends View {
     private _workoutsButton;
@@ -42,6 +42,10 @@ class ProfileView extends View {
         this._profileDescription.innerHTML = "";
     }
 
+    clearUserInfo() {
+        this._profileDescription.innerHTML = "";
+    }
+
     showPasswordUpdateForm(confirmCallback, cancelCallback) {
         this.rootElement.insertAdjacentHTML(
             "beforeend",
@@ -64,6 +68,7 @@ class ProfileView extends View {
         this._updatePasswordArea = this.rootElement.querySelector(
             ".change-password-card"
         );
+        this._updatePasswordArea.scrollIntoView({ behavior: "smooth" });
         this._updatePasswordArea
             .querySelector(".password-confirm")
             .addEventListener("click", confirmCallback);
@@ -96,6 +101,7 @@ class ProfileView extends View {
         this._updateNicknameArea = this.rootElement.querySelector(
             ".change-nickname-card"
         );
+        this._updateNicknameArea.scrollIntoView({ behavior: "smooth" });
         this._updateNicknameArea
             .querySelector(".nickname-confirm")
             .addEventListener("click", confirmCallback);
@@ -109,12 +115,7 @@ class ProfileView extends View {
     }
 
     showErrorMessage(title: string, msg?: string) {
-        this.rootElement
-            .querySelector(".profile-text-card")
-            .insertAdjacentElement(
-                "afterend",
-                createAlertCard(title, msg, "error")
-            );
+        showModal(title, msg ? msg : title, "error");
     }
 
     showSuccessMessage(title: string, msg?: string) {
