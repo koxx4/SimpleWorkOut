@@ -1,4 +1,8 @@
-import { fetchUserToken, fetchAndConvertAppUserData } from "../helpers/helpers";
+import {
+    fetchUserToken,
+    fetchAndConvertAppUserData,
+    showModal,
+} from "../helpers/helpers";
 import mainView from "../view/mainView";
 import Controller from "./controller";
 import loginView from "../view/loginView";
@@ -83,9 +87,12 @@ export class LoginController extends Controller {
 
         if (!token) throw new Error("Could not auto-login");
 
+        const modal = showModal("Auto-login", "Trying to restore session...");
+
         try {
             realUserModel.appUser = await fetchAndConvertAppUserData(token);
         } catch (error) {
+            modal.remove();
             if (error instanceof TokenNotValidError) realUserModel.token = "";
             throw error;
         }
@@ -94,6 +101,7 @@ export class LoginController extends Controller {
         mainView.hideDemoButton(false);
         mainView.showProfileButton(false);
         location.hash = "#profile-overview";
+        modal.remove();
     }
 }
 export default new LoginController();

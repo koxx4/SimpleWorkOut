@@ -318,6 +318,7 @@ class WorkoutsController extends Controller {
         this._userWorkoutTrail.addTo(this._workoutEntryLayerGroup);
         this._userWorkoutTrail.isEditable = false;
         this._leafletMap.fitLine(this._userWorkoutTrail.path);
+        workoutsView.scrollToMap();
         this.updateTrailDistanceUI();
     }
 
