@@ -4,7 +4,7 @@ import WorkoutEntry from "../data/workoutEntry";
 
 class DemoUserModel extends UserModel {
     constructor() {
-        super(new AppUser("demo-user", "", []));
+        super(new AppUser("demo-user", []));
     }
 
     getWorkoutEntriesSize(): number {
@@ -34,9 +34,9 @@ class DemoUserModel extends UserModel {
     }
 
     deleteAllWorkoutEntries() {
-        return new Promise<void>(() => {
+        return new Promise<void>(resolve => {
             this.appUser.workoutEntries.splice(0);
-            return Promise.resolve();
+            return resolve();
         });
     }
 

@@ -1,10 +1,13 @@
-import userModel from "../model/userModel";
 import mainView from "../view/mainView";
-import { fetchWithUserCredentials, getUserStats } from "../helpers/helpers";
-import { USER_DATA_ENDPOINT } from "../config/configuration";
+import { fetchWithUserToken, getUserStats } from "../helpers/helpers";
+import {
+    TokenNotValidError,
+    USER_DATA_ENDPOINT,
+} from "../config/configuration";
 import Controller from "./controller";
 import profileView from "../view/profileView";
 import realUserModel from "../model/realUserModel";
+import { LoginController } from "./loginController";
 
 class ProfileController extends Controller {
     private _isInfoFilled = false;
@@ -17,10 +20,10 @@ class ProfileController extends Controller {
 
     initialize() {
         profileView.rootElement.addEventListener("sectionfocus", e => {
-            if (this._isInfoFilled) return;
+            if (!realUserModel.isUserLoggedIn) location.hash = "#home";
+            profileView.clearUserInfoAndStats();
             this.filloutUserInfo();
             this.filloutUserStats();
-            this._isInfoFilled = true;
         });
         profileView.logoutButton.addEventListener("click", e =>
             this.logoutUser()
@@ -44,6 +47,7 @@ class ProfileController extends Controller {
         this._isInfoFilled = false;
         realUserModel.appUser = null;
         realUserModel.isUserLoggedIn = false;
+        realUserModel.token = "";
         mainView.hideProfileButton(true);
         mainView.showLoginButton(true);
         mainView.showDemoButton(true);
@@ -51,19 +55,22 @@ class ProfileController extends Controller {
     }
 
     private deleteAccount() {
-        fetchWithUserCredentials(
-            `${USER_DATA_ENDPOINT}/${realUserModel.appUser.username}/data`,
-            realUserModel.appUser.username,
-            realUserModel.appUser.password,
-            { method: "delete", mode: "cors" }
-        )
+        fetchWithUserToken(`${USER_DATA_ENDPOINT}/data`, realUserModel.token, {
+            method: "delete",
+            mode: "cors",
+        })
             .then(result => {
                 if (!result.ok)
                     throw new Error("Couldn't delete this account now");
+
                 alert("Account successfully deleted!");
                 this.logoutUser();
             })
-            .catch(reason => profileView.showErrorMessage(reason.message));
+            .catch(reason => {
+                if (reason instanceof TokenNotValidError)
+                    this.tokenErrorRoutine();
+                profileView.showErrorMessage(reason.message);
+            });
     }
 
     private changePassword() {
@@ -72,17 +79,7 @@ class ProfileController extends Controller {
             e => {
                 e.preventDefault();
 
-                if (
-                    profileView.oldPassValue !== realUserModel.appUser.password
-                ) {
-                    profileView.showErrorMessage(
-                        "Error",
-                        "Current password value isn't correct"
-                    );
-                    return;
-                } else if (
-                    profileView.newPassValue === profileView.oldPassValue
-                ) {
+                if (profileView.newPassValue === profileView.oldPassValue) {
                     profileView.showErrorMessage(
                         "Error",
                         "New password cannot be the same as the previous one"
@@ -90,15 +87,11 @@ class ProfileController extends Controller {
                     return;
                 }
 
-                this.savePasswordChange()
-                    .then(_ => {
-                        profileView.closePasswordUpdateForm();
-                        profileView.showSuccessMessage("Success!");
-                        this._isPasswordAreaShown = false;
-                    })
-                    .catch(reason =>
-                        profileView.showErrorMessage("Error", reason.message)
-                    );
+                this.savePasswordChange().then(_ => {
+                    profileView.closePasswordUpdateForm();
+                    profileView.showSuccessMessage("Success!");
+                    this._isPasswordAreaShown = false;
+                });
             },
             e => {
                 e.preventDefault();
@@ -123,16 +116,12 @@ class ProfileController extends Controller {
                     return;
                 }
 
-                this.saveNicknameChange()
-                    .then(_ => {
-                        this.filloutUserInfo();
-                        profileView.closeNicknameUpdateForm();
-                        profileView.showSuccessMessage("Success!");
-                        this._isNicknameAreaShown = false;
-                    })
-                    .catch(reason =>
-                        profileView.showErrorMessage("Error", reason.message)
-                    );
+                this.saveNicknameChange().then(_ => {
+                    this.filloutUserInfo();
+                    profileView.closeNicknameUpdateForm();
+                    profileView.showSuccessMessage("Success!");
+                    this._isNicknameAreaShown = false;
+                });
             },
             e => {
                 e.preventDefault();
@@ -145,38 +134,56 @@ class ProfileController extends Controller {
 
     private savePasswordChange() {
         const payload = new FormData();
-        payload.set("password", profileView.newPassValue);
+        payload.set("oldPassword", profileView.oldPassValue);
+        payload.set("newPassword", profileView.newPassValue);
 
-        return fetchWithUserCredentials(
-            `${USER_DATA_ENDPOINT}/${realUserModel.appUser.username}/password`,
-            realUserModel.appUser.username,
-            realUserModel.appUser.password,
+        return fetchWithUserToken(
+            `${USER_DATA_ENDPOINT}/password`,
+            realUserModel.token,
             { method: "post", mode: "cors", body: payload }
-        ).then(response => {
-            if (!response.ok)
-                throw new Error(
-                    "There were some problems while saving your new password"
-                );
-            realUserModel.appUser.password = profileView.newPassValue;
-        });
+        )
+            .then(response => {
+                if (response.status === 400)
+                    throw new Error("You provided wrong old password");
+                if (!response.ok)
+                    throw new Error(
+                        "There were some problems while saving your new password"
+                    );
+            })
+            .catch(reason => {
+                if (reason instanceof TokenNotValidError) {
+                    this.tokenErrorRoutine();
+                    return Promise.reject(reason);
+                }
+                profileView.showErrorMessage(reason.message);
+                return Promise.reject(reason);
+            });
     }
 
     private saveNicknameChange() {
         const payload = new FormData();
         payload.set("newNickname", profileView.newNicknameValue);
 
-        return fetchWithUserCredentials(
-            `${USER_DATA_ENDPOINT}/${realUserModel.appUser.username}/nickname`,
-            realUserModel.appUser.username,
-            realUserModel.appUser.password,
+        return fetchWithUserToken(
+            `${USER_DATA_ENDPOINT}/nickname`,
+            realUserModel.token,
             { method: "post", mode: "cors", body: payload }
-        ).then(response => {
-            if (!response.ok)
-                throw new Error(
-                    "There were some problems while saving your new nickname"
-                );
-            realUserModel.appUser.username = profileView.newNicknameValue;
-        });
+        )
+            .then(response => {
+                if (!response.ok)
+                    throw new Error(
+                        "There were some problems while saving your new nickname"
+                    );
+                realUserModel.appUser.username = profileView.newNicknameValue;
+            })
+            .catch(reason => {
+                if (reason instanceof TokenNotValidError) {
+                    this.tokenErrorRoutine();
+                    return Promise.reject(reason);
+                }
+                profileView.showErrorMessage(reason.message);
+                return Promise.reject(reason);
+            });
     }
 
     private filloutUserInfo() {
@@ -214,6 +221,12 @@ class ProfileController extends Controller {
                     })}</li> 
               </ul>`
         );
+    }
+
+    private tokenErrorRoutine() {
+        profileView.clearUserInfoAndStats();
+        this._isInfoFilled = false;
+        LoginController.relogin();
     }
 }
 export default new ProfileController();

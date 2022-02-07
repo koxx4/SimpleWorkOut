@@ -1,11 +1,12 @@
 import mainView from "../view/mainView";
 import {
+    AUTO_LOGIN_IN_DEV,
     FADE_BETWEEN_PAGE_SECTIONS,
-    INITIAL_SECTION,
-    INITIAL_SECTION_DEBUG,
+    INITIAL_SECTION_DEV,
 } from "../config/configuration";
 import navigationModel from "../model/navigationModel";
 import Controller from "./controller";
+import { LoginController } from "./loginController";
 
 class Router {
     private readonly _sectionFocusGainEvent: Event;
@@ -46,8 +47,14 @@ class Router {
 
     async showInitialPage() {
         if (process.env.NODE_ENV === "development")
-            location.hash = INITIAL_SECTION_DEBUG;
-        else location.hash = INITIAL_SECTION;
+            location.hash = INITIAL_SECTION_DEV;
+        else location.hash = "#home";
+
+        if (
+            (process.env.NODE_ENV === "development" && AUTO_LOGIN_IN_DEV) ||
+            process.env.NODE_ENV !== "development"
+        )
+            LoginController.tryToAutoLogin().catch(() => {});
     }
 
     private async switchFromActiveSectionTo(
