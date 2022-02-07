@@ -24,13 +24,14 @@ export class LoginController extends Controller {
             const password = loginData.get("password").toString();
 
             this._isLoginRequestSent = true;
+            loginView.showLoadingSpinner();
             fetchUserToken(username, password)
                 .then(token => {
                     if (token.length <= 0)
                         return Promise.reject("Server problem");
 
                     realUserModel.token = token;
-                    loginView.showLoadingSpinner();
+
                     return fetchAndConvertAppUserData(token);
                 })
                 .then(appUser => {

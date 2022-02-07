@@ -2,9 +2,15 @@
   font-family: 'Roboto', sans-serif;
   background-color: #2F5233;
   height: 5rem;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
+}
+
+#nav__hamburger{
+  display: none;
 }
 
 .app-bar__nav{
@@ -17,14 +23,26 @@
   flex-basis: 70%;
   justify-content: space-around;
   align-items: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.app-bar__nav__menu{
+  flex-basis: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .app-bar__logo{
-  flex-basis: 100px;
-  height: 100px;
-  transform: scale(1.1);
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  min-width: 0;
   filter: brightness(2);
   transition: filter 0.25s;
+  padding: 10px 10px;
+  overflow: hidden;
 }
 
 .app-bar__logo:hover{
@@ -35,17 +53,19 @@
     height: 2em;
     max-width: 3em;
     min-width: 0;
+    min-height: 0;
+    margin: 0 1em;
 }
 
 @media (max-width: 603px) {
 
   .app-bar{
-    height: -moz-fit-content;
-    height: -webkit-fit-content;
+    width: 100%;
     flex-direction: column;
-    height: 10rem;
+    height: fit-content;
     justify-content: space-evenly;
     align-items: center;
+    transition: 0.5s;
   }
 
   .app-bar__nav{
@@ -54,50 +74,34 @@
     border-width: 3px 0 0 0;
     border-style: solid;
     border-radius: 0.2em;
-    flex-basis: 30%;
+    flex-basis: 40%;
     width: 90%;
     height: fit-content;
   }
-
-  .nav__button{
-    min-height: 0;
-  }
-
-  .app-bar__logo{
-    min-width: 0;
-    min-height: 0;
-    transform: scale(2);
-    flex-basis: 70%;
-  }
-
 }
 
 @media (max-width: 475px) {
+
+  #nav__hamburger{
+    display: block;
+  }
+
   .app-bar__nav{
-    flex-basis: 80%;
-    min-width: 0;
-    min-height: 0;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
   }
 
-  .app-bar{
-    height: 15rem;
+  .app-bar__nav__menu{
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s ease-in-out;
+    flex-basis: 0;
+    overflow: hidden;
   }
 
-  .nav__button{
-    flex-basis: 1.5em;
-    padding: 2em;
+  .app-bar__nav .nav__button{
+    margin: 0.5em;
   }
 
-
-  .app-bar__logo{
-    flex-basis: 20%;
-    transform: scale(3);
-  }
-
-}
-
-@media (max-width: 199px) {
 }
