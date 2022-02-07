@@ -1,17 +1,26 @@
 import AppUser from "../data/appUser";
 import UserModel from "./userModel";
 import WorkoutEntry from "../data/workoutEntry";
-import { DatabaseWorkout, USER_DATA_ENDPOINT } from "../config/configuration";
 import {
-    fetchWithUserCredentials,
-    JSWorkoutToDatabase,
-} from "../helpers/helpers";
+    DatabaseWorkout,
+    TokenNotValidError,
+    USER_DATA_ENDPOINT,
+} from "../config/configuration";
+import { fetchWithUserToken, JSWorkoutToDatabase } from "../helpers/helpers";
 
 class RealUserModel extends UserModel {
     isUserLoggedIn;
 
     constructor() {
-        super(new AppUser("unknown", "", []));
+        super(new AppUser("unknown", []));
+    }
+
+    public set token(value: string) {
+        localStorage.setItem("token", value);
+    }
+
+    public get token(): string | null {
+        return localStorage.getItem("token");
     }
 
     getWorkoutEntriesSize(): number {
@@ -22,13 +31,10 @@ class RealUserModel extends UserModel {
         const workoutIndex = this.appUser.workoutEntries.indexOf(workoutEntry);
         if (workoutIndex < 0) return Promise.reject();
 
-        return this.deleteWorkoutFromDatabase(workoutEntry.dbID).then(
-            () => {
-                this.appUser.workoutEntries.splice(workoutIndex, 1);
-                return Promise.resolve();
-            },
-            reason => Promise.reject()
-        );
+        return this.deleteWorkoutFromDatabase(workoutEntry.dbID).then(() => {
+            this.appUser.workoutEntries.splice(workoutIndex, 1);
+            return Promise.resolve();
+        });
     }
 
     deleteWorkoutEntryByLocalID(localId: string): Promise<void> {
@@ -40,25 +46,23 @@ class RealUserModel extends UserModel {
     }
 
     deleteAllWorkoutEntries() {
-        return new Promise<void>(() => {
+        return new Promise<void>(resolve => {
             this.appUser.workoutEntries.forEach(async value => {
                 await this.deleteWorkoutFromDatabase(value.dbID);
             });
             this.appUser.workoutEntries.splice(0);
-            return Promise.resolve();
+            return resolve();
         });
     }
 
     addWorkoutEntry(workoutEntry: WorkoutEntry) {
-        return this.saveWorkoutToDatabase(JSWorkoutToDatabase(workoutEntry))
-            .then(persistedWorkout => {
-                workoutEntry.dbID = persistedWorkout.id;
-                this.appUser.workoutEntries.push(workoutEntry);
-                return Promise.resolve();
-            })
-            .catch(notPersistedWorkout => {
-                return Promise.reject();
-            });
+        return this.saveWorkoutToDatabase(
+            JSWorkoutToDatabase(workoutEntry)
+        ).then(persistedWorkout => {
+            workoutEntry.dbID = persistedWorkout.id;
+            this.appUser.workoutEntries.push(workoutEntry);
+            return Promise.resolve();
+        });
     }
 
     getWorkoutEntryByID(id: string): WorkoutEntry | undefined {
@@ -69,43 +73,31 @@ class RealUserModel extends UserModel {
         return 0;
     }
 
-    private async saveWorkoutToDatabase(
+    private saveWorkoutToDatabase(
         workoutToSave: DatabaseWorkout
     ): Promise<DatabaseWorkout> {
-        return fetchWithUserCredentials(
-            `${USER_DATA_ENDPOINT}/${this.appUser.username}/workout`,
-            this.appUser.username,
-            this.appUser.password,
-            {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(workoutToSave),
-            }
-        ).then(response => {
-            if (!response.ok) return Promise.reject();
+        return fetchWithUserToken(`${USER_DATA_ENDPOINT}/workout`, this.token, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(workoutToSave),
+        }).then(response => {
+            if (!response.ok) throw new Error("Problem with saving workout");
+
             return response.json();
         });
     }
 
-    private async deleteWorkoutFromDatabase(workoutDbIdToDelete: number) {
+    private deleteWorkoutFromDatabase(workoutDbIdToDelete: number) {
         const payload = new FormData();
         payload.set("id", workoutDbIdToDelete.toString());
-        return fetchWithUserCredentials(
-            `${USER_DATA_ENDPOINT}/${this.appUser.username}/workout`,
-            this.appUser.username,
-            this.appUser.password,
-            {
-                method: "DELETE",
-                body: payload,
-            }
-        ).then(response => {
-            if (!response.ok)
-                return Promise.reject(
-                    "Couldn't delete workout! " + response.statusText
-                );
+        return fetchWithUserToken(`${USER_DATA_ENDPOINT}/workout`, this.token, {
+            method: "DELETE",
+            body: payload,
+        }).then(response => {
+            if (!response.ok) throw new Error("Problem with saving workout");
             return Promise.resolve();
         });
     }

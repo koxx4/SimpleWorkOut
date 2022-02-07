@@ -3,11 +3,17 @@ import {
     DatabaseWorkout,
     HIDDEN_ELEMENT_CLASS_NAME,
     SimpleLatLngArray,
+    TokenNotValidError,
+    USER_DATA_ENDPOINT,
+    USER_LOGIN_ENDPOINT,
     UserStats,
 } from "../config/configuration";
 import WorkoutEntry from "../data/workoutEntry";
 import AppUser from "../data/appUser";
 import UserModel from "../model/userModel";
+import * as Process from "process";
+import realUserModel from "../model/realUserModel";
+import loginView from "../view/loginView";
 
 export const faderUtility = new Fader(HIDDEN_ELEMENT_CLASS_NAME);
 
@@ -102,6 +108,64 @@ export const fetchWithUserCredentials = function (
     callOptions.headers = reqHeaders;
 
     return fetch(endpoint, callOptions);
+};
+
+export const fetchWithUserToken = function (
+    endpoint: RequestInfo,
+    token: string,
+    callOptions: RequestInit
+): Promise<Response | any> {
+    const httpBasicHeaderValue = `Bearer ${token}`;
+
+    const reqHeaders = new Headers(callOptions.headers);
+    reqHeaders.set("Authorization", httpBasicHeaderValue);
+
+    callOptions.headers = reqHeaders;
+
+    return fetch(endpoint, callOptions).then(response => {
+        if (response.status === 401 || response.status === 403)
+            throw new TokenNotValidError("Token is not longer valid");
+
+        return response;
+    });
+};
+
+export const fetchUserToken = async function (
+    username: string,
+    password: string
+): Promise<string> {
+    const payload = new FormData();
+    payload.set("password", password);
+
+    const response = await fetch(`${USER_LOGIN_ENDPOINT}/${username}`, {
+        method: "POST",
+        body: payload,
+    });
+
+    if (!response.ok) return Promise.reject("Couldn't login");
+
+    return await response.text();
+};
+
+export const dbUserDataToAppUser = function (userData): AppUser {
+    const jsWorkouts = userData.workouts
+        ? userData.workouts.map((value, index) => dbWorkoutToJS(value, index))
+        : [];
+
+    return new AppUser(userData.nickname, jsWorkouts, userData.email);
+};
+
+export const fetchAndConvertAppUserData = async function (token: string) {
+    const response = await fetchWithUserToken(
+        `${USER_DATA_ENDPOINT}/data`,
+        token,
+        {
+            method: "GET",
+        }
+    );
+    if (!response.ok) throw new Error(response.statusText);
+    const userData = await response.json();
+    return dbUserDataToAppUser(userData);
 };
 
 export const createAlertCard = function (

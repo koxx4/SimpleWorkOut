@@ -3,6 +3,7 @@ import {
     LEAFLET_CONFIG,
     PATH_NODES_OPTIONS,
     PATH_OPTIONS,
+    TokenNotValidError,
 } from "../config/configuration";
 import WorkoutEntry from "../data/workoutEntry";
 import demoModel from "../model/demoUserModel";
@@ -13,6 +14,7 @@ import WorkoutMapTrail from "../data/workoutMapTrail";
 import UserModel from "../model/userModel";
 import realUserModel from "../model/realUserModel";
 import { LeafletMap } from "../helpers/leafletMap";
+import { LoginController } from "./loginController";
 
 class WorkoutsController extends Controller {
     private _leafletMap: LeafletMap;
@@ -84,6 +86,11 @@ class WorkoutsController extends Controller {
                 );
             },
             reason => {
+                if (reason instanceof TokenNotValidError) {
+                    this.tokenErrorRoutine();
+                    return Promise.reject(reason);
+                }
+
                 workoutsView.removeLoadingSpinnerFromWorkoutEntry(
                     newWorkoutEntry.localID
                 );
@@ -106,6 +113,15 @@ class WorkoutsController extends Controller {
         );
     }
 
+    private tokenErrorRoutine() {
+        this._unsavedWorkouts.clear();
+        this._workoutEntryLayerGroup.clearLayers();
+        this._userWorkoutTrail = null;
+        this.clearWorkoutFormValues();
+        workoutsView.clearAllWorkoutEntries();
+        LoginController.relogin();
+    }
+
     private clearWorkoutFormValues() {
         workoutsView.getWorkoutForm().reset();
     }
@@ -118,13 +134,15 @@ class WorkoutsController extends Controller {
             ? new Date(workoutForm["date"].value)
             : new Date();
 
-        let trailPoints = [];
+        let trailPoints = this._userWorkoutTrail
+            ? this._userWorkoutTrail.listOfCoordinates
+            : [];
         let workoutDistance = 0;
-        if (this._userWorkoutTrail) {
-            if (workoutForm["distance"] || workoutForm["distance"] === 0)
+
+        if (!workoutForm["distance"] || !workoutForm["distance"].value) {
+            if (this._userWorkoutTrail)
                 workoutDistance = Math.round(this._userWorkoutTrail.distance);
-            trailPoints = this._userWorkoutTrail.listOfCoordinates;
-        }
+        } else workoutDistance = Math.round(workoutForm["distance"].value);
 
         return new WorkoutEntry(
             workoutType,

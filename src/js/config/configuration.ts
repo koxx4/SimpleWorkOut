@@ -46,16 +46,19 @@ export const LEAFLET_CONFIG: LeafletConfiguration = {
     MAP_AUTOMATIC_SIZE_REFRESH: true,
     MAP_AUTOMATIC_SIZE_REFRESH_INTERVAL: 2000,
 };
-
-export const INITIAL_SECTION = "#home";
-export const INITIAL_SECTION_DEBUG = "#workouts";
+export const AUTO_LOGIN_IN_DEV = true;
+export const INITIAL_SECTION_DEV = "#home";
 export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
 export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";
 export const FADEIN_ELEMENT_CLASS_NAME = "element-fade-in";
 export const FADE_BETWEEN_PAGE_SECTIONS = true;
-export const API_HOST = "https://sws-server.koxx4.me:8080";
+export const API_HOST =
+    process.env.NODE_ENV === "development"
+        ? "http://localhost:8080"
+        : "https://sws-server.koxx4.me:8080";
 export const REGISTRATION_ENDPOINT = `${API_HOST}/register/user`;
-export const USER_DATA_ENDPOINT = `${API_HOST}/user/actions`;
+export const USER_DATA_ENDPOINT = `${API_HOST}/user`;
+export const USER_LOGIN_ENDPOINT = `${API_HOST}/login`;
 export const PATH_OPTIONS: PolylineOptions = {
     color: "red",
     opacity: 0.9,
@@ -96,3 +99,9 @@ export const WORKOUT_ENTRY_DATE_FORMAT: Intl.DateTimeFormatOptions = {
     month: "long",
     day: "numeric",
 };
+export class TokenNotValidError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "TokenNotValidError";
+    }
+}
