@@ -46,7 +46,7 @@ export const LEAFLET_CONFIG: LeafletConfiguration = {
     MAP_AUTOMATIC_SIZE_REFRESH: true,
     MAP_AUTOMATIC_SIZE_REFRESH_INTERVAL: 2000,
 };
-export const AUTO_LOGIN_IN_DEV = true;
+export const AUTO_LOGIN_IN_DEV = false;
 export const INITIAL_SECTION_DEV = "#home";
 export const HIDDEN_ELEMENT_CLASS_NAME = "hidden";
 export const FADEOUT_ELEMENT_CLASS_NAME = "element-fade-out";

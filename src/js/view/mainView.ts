@@ -3,10 +3,12 @@ import { faderUtility } from "../helpers/helpers";
 import { HIDDEN_ELEMENT_CLASS_NAME } from "../config/configuration";
 
 class MainView extends View {
-    private _homeButton;
-    private _demoButton;
-    private _loginButton;
-    private _myProfileButton;
+    private _homeButton: HTMLElement;
+    private _demoButton: HTMLElement;
+    private _loginButton: HTMLElement;
+    private _myProfileButton: HTMLElement;
+    private _hamburgerButton: HTMLElement;
+    private _hamburgerMenuShown = false;
 
     constructor() {
         super(document.querySelector("body"));
@@ -17,6 +19,22 @@ class MainView extends View {
         this._myProfileButton = this.rootElement.querySelector(
             "#nav__button-profile"
         );
+        this._hamburgerButton = document.querySelector("#nav__hamburger");
+
+        this._hamburgerButton.addEventListener("click", e => {
+            e.preventDefault();
+            const navMenu: HTMLElement = document.querySelector(
+                ".app-bar__nav__menu"
+            );
+            if (this._hamburgerMenuShown) {
+                navMenu.style.flexBasis = "15em";
+                this._hamburgerButton.innerHTML = "Menu &uArr;";
+            } else {
+                navMenu.style.flexBasis = "0";
+                this._hamburgerButton.innerHTML = "Menu &dArr;";
+            }
+            this._hamburgerMenuShown = !this._hamburgerMenuShown;
+        });
     }
 
     showSection(section, fadeActive = false, duration) {
