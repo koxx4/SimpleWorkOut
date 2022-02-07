@@ -16,7 +16,7 @@
 }
 
 .modal-text-card-info{
-  @extend .text-card-unrounded;
+  @extend .text-card;
   @extend .modal-content;
   position: relative;
   background-color: #99bb99;
