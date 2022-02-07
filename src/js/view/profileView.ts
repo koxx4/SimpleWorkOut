@@ -42,6 +42,10 @@ class ProfileView extends View {
         this._profileDescription.innerHTML = "";
     }
 
+    clearUserInfo() {
+        this._profileDescription.innerHTML = "";
+    }
+
     showPasswordUpdateForm(confirmCallback, cancelCallback) {
         this.rootElement.insertAdjacentHTML(
             "beforeend",
