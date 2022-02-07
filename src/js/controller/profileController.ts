@@ -1,5 +1,5 @@
 import mainView from "../view/mainView";
-import { fetchWithUserToken, getUserStats } from "../helpers/helpers";
+import { fetchWithUserToken, getUserStats, metersToKilometersFormatted } from "../helpers/helpers";
 import {
     TokenNotValidError,
     USER_DATA_ENDPOINT,
@@ -205,13 +205,16 @@ class ProfileController extends Controller {
             return;
         }
 
+        let distance: any = userStats.workoutTotalDistance;
+        if (distance >= 10000) distance = metersToKilometersFormatted(distance, 3);
+
         profileView.profileStats.insertAdjacentHTML(
             "afterbegin",
             `<h2>Your stats:</h2>
                 <ul>
                     <li>You had ${userStats.workoutCount} workouts total</li> 
                     <li>${
-                        userStats.workoutTotalDistance
+                        distance
                     }[m] is total distance you have accumulated while doing your workouts</li> 
                     <li>Your most active month was ${new Date(
                         0,
