@@ -15,7 +15,7 @@ export class Fader {
                 element.style.removeProperty("animation-fill-mode");
                 element.style.removeProperty("animation");
                 resolve();
-            }, duration + 25);
+            }, duration);
         });
     }
 
@@ -29,7 +29,7 @@ export class Fader {
                 element.style.removeProperty("animation-fill-mode");
                 element.style.removeProperty("animation");
                 resolve();
-            }, duration + 25);
+            }, duration);
         });
     }
 }

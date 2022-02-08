@@ -83,16 +83,22 @@ export class LoginController extends Controller {
     }
 
     public static async tryToAutoLogin() {
-        const modal = showModal("Auto-login", "Trying to restore session...");
-
         const token = realUserModel.token;
         if (!token) throw new Error("Could not auto-login");
 
+        const modal = showModal(
+            "Auto-login",
+            "Trying to restore session... (10s)"
+        );
+
         try {
-            realUserModel.appUser = await fetchAndConvertAppUserData(token);
+            realUserModel.appUser = await fetchAndConvertAppUserData(
+                token,
+                10000
+            );
         } catch (error) {
             modal.remove();
-            if (error instanceof TokenNotValidError) realUserModel.token = "";
+            realUserModel.token = "";
             throw error;
         }
         realUserModel.isUserLoggedIn = true;

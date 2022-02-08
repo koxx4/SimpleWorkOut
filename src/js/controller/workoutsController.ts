@@ -7,7 +7,7 @@ import {
 } from "../config/configuration";
 import WorkoutEntry from "../data/workoutEntry";
 import demoModel from "../model/demoUserModel";
-import { stripHTML } from "../helpers/helpers";
+import { showModal, stripHTML } from "../helpers/helpers";
 import { LatLng, LayerGroup, layerGroup } from "leaflet";
 import Controller from "./controller";
 import WorkoutMapTrail from "../data/workoutMapTrail";
@@ -288,7 +288,7 @@ class WorkoutsController extends Controller {
         if (this._isUserEditingWorkout) return;
 
         if (!workout.trailCoordinates || workout.trailCoordinates.length < 1) {
-            alert("No trail was saved for this workout!");
+            workoutsView.showNoPathSavedInfo();
             return;
         }
 

@@ -14,6 +14,7 @@ import UserModel from "../model/userModel";
 import * as Process from "process";
 import realUserModel from "../model/realUserModel";
 import loginView from "../view/loginView";
+import registerView from "../view/registerView";
 
 export const faderUtility = new Fader(HIDDEN_ELEMENT_CLASS_NAME);
 
@@ -113,7 +114,8 @@ export const fetchWithUserCredentials = function (
 export const fetchWithUserToken = function (
     endpoint: RequestInfo,
     token: string,
-    callOptions: RequestInit
+    callOptions: RequestInit,
+    timeoutSec = 60000
 ): Promise<Response | any> {
     const httpBasicHeaderValue = `Bearer ${token}`;
 
@@ -122,7 +124,14 @@ export const fetchWithUserToken = function (
 
     callOptions.headers = reqHeaders;
 
+    const abortController = new AbortController();
+    const failTimeout = setTimeout(() => {
+        abortController.abort();
+    }, timeoutSec);
+    callOptions.signal = abortController.signal;
+
     return fetch(endpoint, callOptions).then(response => {
+        clearTimeout(failTimeout);
         if (response.status === 401 || response.status === 403)
             throw new TokenNotValidError("Token is not longer valid");
 
@@ -155,13 +164,17 @@ export const dbUserDataToAppUser = function (userData): AppUser {
     return new AppUser(userData.nickname, jsWorkouts, userData.email);
 };
 
-export const fetchAndConvertAppUserData = async function (token: string) {
+export const fetchAndConvertAppUserData = async function (
+    token: string,
+    timeoutSec = 60000
+) {
     const response = await fetchWithUserToken(
         `${USER_DATA_ENDPOINT}/data`,
         token,
         {
             method: "GET",
-        }
+        },
+        timeoutSec
     );
     if (!response.ok) throw new Error(response.statusText);
     const userData = await response.json();
