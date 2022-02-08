@@ -7,6 +7,7 @@ import {
     createLoadingSpinnerElement,
     faderUtility,
     metersToKilometersFormatted,
+    showModal,
 } from "../helpers/helpers";
 import WorkoutEntry from "../data/workoutEntry";
 import { DomUtil } from "leaflet";
@@ -83,6 +84,10 @@ export class WorkoutsView extends View {
         faderUtility.fadeOut(this._workoutHTMLForm, 600).then(() => {
             this._addWorkoutButton.classList.remove(HIDDEN_ELEMENT_CLASS_NAME);
         });
+    }
+
+    showNoPathSavedInfo() {
+        showModal("Nope", "No trail was saved for this workout!");
     }
 
     scrollToMap() {

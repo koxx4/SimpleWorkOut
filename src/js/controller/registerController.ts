@@ -41,7 +41,7 @@ class RegisterController extends Controller {
         const timeout = setTimeout(() => {
             abortController.abort();
             registerView.showRegistrationFailureInfo("Timed out");
-        }, 5000);
+        }, 60000);
         registerView.showLoadingSpinner();
         fetch(REGISTRATION_ENDPOINT, {
             method: "POST",
